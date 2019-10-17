@@ -7,6 +7,7 @@
     <Authors>Israel Chavez</Authors>
     <Product>Servicios Dinamicos</Product>
     <Description>Permite Crear Servicios de manera dinamica sobre entidades de repositorio de datos</Description>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup>
