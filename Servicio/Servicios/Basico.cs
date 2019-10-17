@@ -549,7 +549,7 @@ namespace Servicio.Servicios
     /// Guarda cambios efectuados a una serie de modelos de entidad
     /// </summary>
     /// <param name="entidades">Lista de Entidades</param>
-    /// <returns>Verdadero o Falso</returns>
+    /// <returns>Arreglo de identificadores primarios guardados</returns>
     public virtual RespuestaColeccion<int> Guardar(List<T> entidades)
     {
       if (entidades.NoEsValida()) return new RespuestaColeccion<int> { Correcto = false, Mensaje = Error.ListaInvalida };
