@@ -1,4 +1,4 @@
-# Servicios-Dinamicos
+# NetCore Servicios-Dinamicos
 	Permite crear servicios genéricos de manera dinámica
 
 ### Agrega tu entidad dentro del nombre de espacio de "Entidades"
