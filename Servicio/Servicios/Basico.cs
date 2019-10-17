@@ -23,7 +23,7 @@ namespace Servicio.Servicios
     /// <summary>
     /// Nombre de la tabla asociada a la entidad
     /// </summary>
-    public string Tabla => Tipo.Name;
+    public string Tabla { get; }
 
     /// <summary>
     /// Entidad asociada al servicio
@@ -77,6 +77,7 @@ namespace Servicio.Servicios
       Repositorio = new Repositorio();
       Entidad = new T();
       Tipo = Entidad.GetType();
+      Tabla = Tipo.Name;
       Columnas = Entidad.NombreColumnas;
       ColumnasBusqueda = Entidad.ColumnasParaBuscar;
     }
@@ -101,14 +102,18 @@ namespace Servicio.Servicios
       StringBuilder consulta = new StringBuilder();
       for (int i = 0; i < Columnas.Count; i++)
       {
+        //Nombre de la propiedad (columna)
         string prop = Columnas.ElementAt(i);
+        //El id se omite
         if (prop.Equals(@"Id")) continue;
+        //Los campos de fecha se agregan acorde a la configuracion del servidor
         if (prop.Equals(@"Creado") || prop.Equals(@"Modificado")) consulta.Append(@"GETDATE()");
         else if (prop.Equals(@"Eliminado")) consulta.Append(@"NULL");
         else
         {
-          string columna = $"@{Columnas.ElementAt(i)}";
-          parametros.Add(new SqlParameter(columna, ""));
+          string columna = $"@{prop}";
+          //Agregar parametro vacio
+          parametros.Add(new SqlParameter(columna, DBNull.Value));
           consulta.Append(columna);
         }
         consulta.Append((i + 1).Equals(Columnas.Count) ? @"" : @",");
@@ -132,15 +137,18 @@ namespace Servicio.Servicios
       //Agregar columnas y valores para la consulta
       for (int i = 0; i < Columnas.Count; i++)
       {
+        //Nombre de la propiedad (columna)
         string prop = Columnas.ElementAt(i);
+        //El Id y la fecha de creación se omite
         if (prop.Equals(@"Id") || prop.Equals(@"Creado")) continue;
         consulta.Append(@"[").Append(prop).Append(@"]=");
         if (prop.Equals(@"Modificado")) consulta.Append(@"GETDATE()");
         else if (prop.Equals(@"Eliminado")) consulta.Append(@"NULL");
         else
         {
-          string columna = $"@{Columnas.ElementAt(i)}";
-          parametros.Add(new SqlParameter(columna, ""));
+          string columna = $"@{prop}";
+          //Agregar parametro vacio
+          parametros.Add(new SqlParameter(columna, DBNull.Value));
           consulta.Append(columna);
         }
         consulta.Append((i + 1).Equals(Columnas.Count) ? @"" : @",");
@@ -172,7 +180,6 @@ namespace Servicio.Servicios
     {
       if (ids.NoEsValida() || ids.Any(id => id <= 0)) return new RespuestaBasica(false, Error.ListaInvalida);
       RespuestaBasica respuesta;
-
       using (SqlConnection conexion = new SqlConnection(Repositorio.CadenaDeConexion))
       {
         try
@@ -183,7 +190,7 @@ namespace Servicio.Servicios
             try
             {
               //Actualizar la columna de eliminado al momento actual en las entidades
-              using (SqlCommand comando = new SqlCommand($@"UPDATE {Tabla} SET [Eliminado] = GETDATE() WHERE ELIMINADO IS NULL AND [Id] IN ({ string.Join(",", ids) });", transaccion.Connection, transaccion))
+              using (SqlCommand comando = new SqlCommand($@"UPDATE [dbo].[{Tabla}] SET [Eliminado] = GETDATE() WHERE ELIMINADO IS NULL AND [Id] IN ({ string.Join(",", ids) });", transaccion.Connection, transaccion))
               {
                 try
                 {
@@ -561,12 +568,15 @@ namespace Servicio.Servicios
           conexion.Open();
           using (SqlTransaction transaccion = conexion.BeginTransaction())
           {
+            //Coleccion de ids insertados/actualizados
             List<int> ids = new List<int>(entidades.Count);
+            //Insertar las entidades
             if (entidades.Any(e => e.Id.Equals(0)))
             {
               RespuestaColeccion<int> insertados = Insertar(entidades.Where(e => e.Id.Equals(0)).ToList(), transaccion);
               if (insertados.Correcto) ids.AddRange(insertados.Coleccion);
             }
+            //Actualizar las entidades
             if (entidades.Any(e => !e.Id.Equals(0)))
             {
               RespuestaModelo<int> actualizados = Actualizar(entidades.Where(e => !e.Id.Equals(0)).ToList(), transaccion);
@@ -650,6 +660,7 @@ namespace Servicio.Servicios
       {
         try
         {
+          //Agregar valores a los parametros acorde a la propiedad de la entidad
           parametros.ForEach(p =>
           {
             p.Value = Tipo.GetProperty(p.ParameterName.TrimStart('@'))?.GetValue(modelo);
@@ -657,6 +668,7 @@ namespace Servicio.Servicios
           });
           //Id de la entidad insertada
           int id = Convert.ToInt32(comando.ExecuteScalar());
+          //Limpiar objetos utilizados
           parametros.Clear();
           parametros.TrimExcess();
           comando.Parameters.Clear();
@@ -738,6 +750,7 @@ namespace Servicio.Servicios
             if (id <= 0) break;
             ids.Add(id);
           }
+          //Limpiar objetos utilizados
           parametros.Clear();
           parametros.TrimExcess();
           comando.Parameters.Clear();
@@ -819,6 +832,7 @@ namespace Servicio.Servicios
           });
           //El número de afectados debe ser al menos 1
           int afectados = comando.ExecuteNonQuery();
+          //Limpiar objetos utilizados
           parametros.Clear();
           parametros.TrimExcess();
           comando.Parameters.Clear();
