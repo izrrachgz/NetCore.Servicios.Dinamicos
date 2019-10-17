@@ -1,10 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
-using Microsoft.EntityFrameworkCore;
 using Servicio.Contexto;
 using Servicio.Contratos;
 using Servicio.Extensiones;
@@ -235,10 +234,7 @@ namespace Servicio.Servicios
       RespuestaModelo<T> respuesta;
       try
       {
-        respuesta = new RespuestaModelo<T>(
-          Repositorio.Set<T>()
-            .FirstOrDefault(e => e.Id.Equals(id))
-        );
+        respuesta = new RespuestaModelo<T>(Repositorio.Set<T>().FirstOrDefault(e => e.Id.Equals(id)));
       }
       catch (Exception ex)
       {
@@ -345,9 +341,9 @@ namespace Servicio.Servicios
                       resultado.Close();
                       respuesta = new RespuestaColeccion<T>(paginado, lista);
                     }
-                    catch (Exception e)
+                    catch (Exception ex)
                     {
-                      respuesta = new RespuestaColeccion<T>(e);
+                      respuesta = new RespuestaColeccion<T>(ex);
                     }
                     resultado.Dispose();
                   }
@@ -415,24 +411,24 @@ namespace Servicio.Servicios
                   resultado.Close();
                   respuesta = new RespuestaColeccion<ClaveValor>(lista);
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                  respuesta = new RespuestaColeccion<ClaveValor>(e);
+                  respuesta = new RespuestaColeccion<ClaveValor>(ex);
                 }
                 resultado.Dispose();
               }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-              respuesta = new RespuestaColeccion<ClaveValor>(e);
+              respuesta = new RespuestaColeccion<ClaveValor>(ex);
             }
             comando.Dispose();
           }
           if (conexion.State.Equals(ConnectionState.Open)) conexion.Close();
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-          respuesta = new RespuestaColeccion<ClaveValor>(e);
+          respuesta = new RespuestaColeccion<ClaveValor>(ex);
         }
         conexion.Dispose();
       }
@@ -513,25 +509,25 @@ namespace Servicio.Servicios
                     resultado.Close();
                     respuesta = new RespuestaColeccion<T>(lista);
                   }
-                  catch (Exception e)
+                  catch (Exception ex)
                   {
-                    respuesta = new RespuestaColeccion<T>(e);
+                    respuesta = new RespuestaColeccion<T>(ex);
                   }
                   resultado.Dispose();
                 }
               }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-              respuesta = new RespuestaColeccion<T>(e);
+              respuesta = new RespuestaColeccion<T>(ex);
             }
             comando.Dispose();
           }
           if (conexion.State.Equals(ConnectionState.Open)) conexion.Close();
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-          respuesta = new RespuestaColeccion<T>(e);
+          respuesta = new RespuestaColeccion<T>(ex);
         }
         conexion.Dispose();
       }
@@ -546,36 +542,7 @@ namespace Servicio.Servicios
     public virtual RespuestaBasica Guardar(T modelo)
     {
       if (modelo == null) return new RespuestaBasica(false, Error.ModeloInvalido);
-      RespuestaBasica respuesta;
-      try
-      {
-        DateTime ahora = DateTime.Now;
-        modelo.Modificado = ahora;
-        //Agregar como nuevo
-        if (modelo.Id.Equals(0))
-        {
-          modelo.Creado = ahora;
-          Repositorio.Set<T>().Add(modelo);
-          Repositorio.Entry(modelo).State = EntityState.Added;
-        }
-        //Agregar como modificado
-        else if (modelo.Id > 0)
-        {
-          modelo.Creado = Repositorio.Set<T>()
-           .AsNoTracking()
-           .Where(e => e.Id.Equals(modelo.Id))
-           .Select(e => e.Creado)
-           .FirstOrDefault();
-          Repositorio.Set<T>().Attach(modelo);
-          Repositorio.Entry(modelo).State = EntityState.Modified;
-        }
-        respuesta = new RespuestaBasica(Repositorio.SaveChanges() >= 1);
-      }
-      catch (Exception ex)
-      {
-        respuesta = new RespuestaBasica(ex);
-      }
-      return respuesta;
+      return modelo.Id.Equals(0) ? Insertar(modelo) : Actualizar(modelo);
     }
 
     /// <summary>
@@ -587,63 +554,44 @@ namespace Servicio.Servicios
     {
       if (entidades.NoEsValida()) return new RespuestaColeccion<int> { Correcto = false, Mensaje = Error.ListaInvalida };
       RespuestaColeccion<int> respuesta;
-      try
+      using (SqlConnection conexion = new SqlConnection(Repositorio.CadenaDeConexion))
       {
-        DateTime ahora = DateTime.Now;
-        //Iniciar transacción
-        Repositorio.Database.BeginTransaction();
-        //Elementos para agregar
-        int totalAgregar = entidades.Select(m => m.Id).Count(id => id.Equals(0));
-        bool agregar = totalAgregar > 0;
-        if (agregar)
-          Repositorio.Set<T>()
-            .AddRange(
-              entidades
-                .Where(m => m.Id.Equals(0))
-                .Select(m =>
-                {
-                  m.Creado = ahora;
-                  m.Modificado = ahora;
-                  return m;
-                })
-                .ToList()
-            );
-        //Elementos para actualizar
-        int totalActualizar = entidades.Select(m => m.Id).Count(id => id > 0);
-        bool actualizar = totalActualizar > 0;
-        if (actualizar)
-          entidades
-            .Where(m => m.Id > 0)
-            .Select(m =>
+        try
+        {
+          conexion.Open();
+          using (SqlTransaction transaccion = conexion.BeginTransaction())
+          {
+            List<int> ids = new List<int>(entidades.Count);
+            if (entidades.Any(e => e.Id.Equals(0)))
             {
-              m.Modificado = ahora;
-              return m;
-            }).ToList().ForEach(m =>
+              RespuestaColeccion<int> insertados = Insertar(entidades.Where(e => e.Id.Equals(0)).ToList(), transaccion);
+              if (insertados.Correcto) ids.AddRange(insertados.Coleccion);
+            }
+            if (entidades.Any(e => !e.Id.Equals(0)))
             {
-              m.Creado = Repositorio.Set<T>()
-                .AsNoTracking()
-                .Where(t => t.Id.Equals(m.Id))
-                .Select(t => t.Creado)
-                .FirstOrDefault();
-              Repositorio.Set<T>().Attach(m);
-              Repositorio.Entry(m).State = EntityState.Modified;
-            });
-        //El total de elementos debe ser la suma de los agregados y actualizados
-        bool guardados = Repositorio.SaveChanges() >= totalAgregar + totalActualizar;
-        List<int> ids = entidades.Where(e => e.Id > 0)
-          .Select(e => e.Id)
-          .ToList();
-        entidades.Clear();
-        respuesta = new RespuestaColeccion<int>(ids) { Correcto = guardados && !ids.NoEsValida() && ids.All(id => id > 0) };
-        if (respuesta.Correcto)
-          Repositorio.Database.CurrentTransaction.Commit();
-        else
-          Repositorio.Database.CurrentTransaction.Rollback();
-      }
-      catch (Exception ex)
-      {
-        respuesta = new RespuestaColeccion<int>(ex);
-        Repositorio.Database.CurrentTransaction.Rollback();
+              RespuestaModelo<int> actualizados = Actualizar(entidades.Where(e => !e.Id.Equals(0)).ToList(), transaccion);
+              if (actualizados.Correcto) ids.AddRange(entidades.Where(e => !e.Id.Equals(0)).Select(e => e.Id).ToList());
+            }
+            respuesta = new RespuestaColeccion<int>(ids) { Correcto = !ids.NoEsValida() && ids.All(id => id > 0) };
+            try
+            {
+              if (respuesta.Correcto) transaccion.Commit();
+              else transaccion.Rollback();
+            }
+            catch (Exception ex)
+            {
+              respuesta = new RespuestaColeccion<int>(ex);
+              transaccion.Rollback();
+            }
+            transaccion.Dispose();
+          }
+          if (conexion.State.Equals(ConnectionState.Open)) conexion.Close();
+        }
+        catch (Exception ex)
+        {
+          respuesta = new RespuestaColeccion<int>(ex);
+        }
+        conexion.Dispose();
       }
       return respuesta;
     }
@@ -666,30 +614,9 @@ namespace Servicio.Servicios
           {
             try
             {
-              using (SqlCommand comando = new SqlCommand(@"", transaccion.Connection, transaccion))
-              {
-                try
-                {
-                  comando.CommandText = CrearSqlInsertar(out List<SqlParameter> parametros);
-                  parametros.ForEach(p =>
-                  {
-                    p.Value = Tipo.GetProperty(p.ParameterName.TrimStart('@'))?.GetValue(modelo);
-                    comando.Parameters.Add(p);
-                  });
-                  //Id de la entidad insertada
-                  int id = Convert.ToInt32(comando.ExecuteScalar());
-                  respuesta = new RespuestaModelo<int>(id) { Correcto = id > 0 };
-                }
-                catch (Exception ex)
-                {
-                  respuesta = new RespuestaModelo<int>(ex);
-                }
-                comando.Dispose();
-              }
-              if (respuesta.Correcto)
-                transaccion.Commit();
-              else
-                transaccion.Rollback();
+              respuesta = Insertar(modelo, transaccion);
+              if (respuesta.Correcto) transaccion.Commit();
+              else transaccion.Rollback();
             }
             catch (Exception ex)
             {
@@ -719,11 +646,10 @@ namespace Servicio.Servicios
     {
       if (modelo == null || !modelo.Id.Equals(0)) return new RespuestaModelo<int> { Correcto = false, Mensaje = Error.ModeloInvalido };
       RespuestaModelo<int> respuesta;
-      using (SqlCommand comando = new SqlCommand(@"", transaccion.Connection, transaccion))
+      using (SqlCommand comando = new SqlCommand(CrearSqlInsertar(out List<SqlParameter> parametros), transaccion.Connection, transaccion))
       {
         try
         {
-          comando.CommandText = CrearSqlInsertar(out List<SqlParameter> parametros);
           parametros.ForEach(p =>
           {
             p.Value = Tipo.GetProperty(p.ParameterName.TrimStart('@'))?.GetValue(modelo);
@@ -763,44 +689,9 @@ namespace Servicio.Servicios
           {
             try
             {
-              List<int> ids = new List<int>(entidades.Count);
-              using (SqlCommand comando = new SqlCommand(@"", transaccion.Connection, transaccion))
-              {
-                try
-                {
-                  comando.CommandText = CrearSqlInsertar(out List<SqlParameter> parametros);
-                  comando.Parameters.AddRange(parametros.ToArray());
-                  foreach (T e in entidades)
-                  {
-                    parametros.ForEach(p =>
-                    {
-                      p.Value = Tipo.GetProperty(p.ParameterName.TrimStart('@'))?.GetValue(e);
-                      comando.Parameters[p.ParameterName].Value = p.Value;
-                    });
-                    int id = Convert.ToInt32(comando.ExecuteScalar());
-                    if (id <= 0) break;
-                    ids.Add(id);
-                  }
-                  parametros.Clear();
-                  parametros.TrimExcess();
-                  comando.Parameters.Clear();
-                  bool correcto = !ids.NoEsValida() && ids.All(id => id > 0);
-                  respuesta = new RespuestaColeccion<int>(ids)
-                  {
-                    Correcto = correcto,
-                    Mensaje = correcto ? Correcto.SolicitudCompletada : Error.DiferenciaDeElementosAfectados
-                  };
-                }
-                catch (Exception e)
-                {
-                  respuesta = new RespuestaColeccion<int>(e);
-                }
-                comando.Dispose();
-              }
-              if (respuesta.Correcto)
-                transaccion.Commit();
-              else
-                transaccion.Rollback();
+              respuesta = Insertar(entidades, transaccion);
+              if (respuesta.Correcto) transaccion.Commit();
+              else transaccion.Rollback();
             }
             catch (Exception ex)
             {
@@ -832,18 +723,16 @@ namespace Servicio.Servicios
         return new RespuestaColeccion<int> { Correcto = false, Mensaje = Error.ListaInvalida };
       RespuestaColeccion<int> respuesta;
       List<int> ids = new List<int>(entidades.Count);
-      using (SqlCommand comando = new SqlCommand(@"", transaccion.Connection, transaccion))
+      using (SqlCommand comando = new SqlCommand(CrearSqlInsertar(out List<SqlParameter> parametros), transaccion.Connection, transaccion))
       {
         try
         {
-          comando.CommandText = CrearSqlInsertar(out List<SqlParameter> parametros);
           comando.Parameters.AddRange(parametros.ToArray());
           foreach (T e in entidades)
           {
             parametros.ForEach(p =>
             {
-              p.Value = Tipo.GetProperty(p.ParameterName.TrimStart('@'))?.GetValue(e);
-              comando.Parameters[p.ParameterName].Value = p.Value;
+              comando.Parameters[p.ParameterName].Value = Tipo.GetProperty(p.ParameterName.TrimStart('@'))?.GetValue(e);
             });
             int id = Convert.ToInt32(comando.ExecuteScalar());
             if (id <= 0) break;
@@ -860,9 +749,9 @@ namespace Servicio.Servicios
             Mensaje = correcto ? Correcto.SolicitudCompletada : Error.DiferenciaDeElementosAfectados
           };
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-          respuesta = new RespuestaColeccion<int>(e);
+          respuesta = new RespuestaColeccion<int>(ex);
         }
         comando.Dispose();
       }
@@ -887,33 +776,9 @@ namespace Servicio.Servicios
           {
             try
             {
-              using (SqlCommand comando = new SqlCommand(@"", transaccion.Connection, transaccion))
-              {
-                try
-                {
-                  comando.CommandText = CrearSqlActualizar(out List<SqlParameter> parametros);
-                  parametros.ForEach(p =>
-                  {
-                    p.Value = Tipo.GetProperty(p.ParameterName.TrimStart('@'))?.GetValue(modelo);
-                    comando.Parameters.Add(p);
-                  });
-                  //El número de afectados debe ser al menos 1
-                  int afectados = comando.ExecuteNonQuery();
-                  parametros.Clear();
-                  parametros.TrimExcess();
-                  comando.Parameters.Clear();
-                  respuesta = new RespuestaModelo<int>(afectados) { Correcto = afectados > 0 };
-                }
-                catch (Exception ex)
-                {
-                  respuesta = new RespuestaModelo<int>(ex);
-                }
-                comando.Dispose();
-              }
-              if (respuesta.Correcto)
-                transaccion.Commit();
-              else
-                transaccion.Rollback();
+              respuesta = Actualizar(modelo, transaccion);
+              if (respuesta.Correcto) transaccion.Commit();
+              else transaccion.Rollback();
             }
             catch (Exception ex)
             {
@@ -943,11 +808,10 @@ namespace Servicio.Servicios
     {
       if (modelo == null || modelo.Id.Equals(0)) return new RespuestaModelo<int> { Correcto = false, Mensaje = Error.ModeloInvalido };
       RespuestaModelo<int> respuesta;
-      using (SqlCommand comando = new SqlCommand(@"", transaccion.Connection, transaccion))
+      using (SqlCommand comando = new SqlCommand(CrearSqlActualizar(out List<SqlParameter> parametros), transaccion.Connection, transaccion))
       {
         try
         {
-          comando.CommandText = CrearSqlActualizar(out List<SqlParameter> parametros);
           parametros.ForEach(p =>
           {
             p.Value = Tipo.GetProperty(p.ParameterName.TrimStart('@'))?.GetValue(modelo);
@@ -987,38 +851,9 @@ namespace Servicio.Servicios
           {
             try
             {
-              using (SqlCommand comando = new SqlCommand(@"", transaccion.Connection, transaccion))
-              {
-                try
-                {
-                  int afectadas = 0;
-                  comando.CommandText = CrearSqlActualizar(out List<SqlParameter> parametros);
-                  comando.Parameters.AddRange(parametros.ToArray());
-                  foreach (T e in entidades)
-                  {
-                    parametros.ForEach(p =>
-                    {
-                      p.Value = Tipo.GetProperty(p.ParameterName.TrimStart('@'))?.GetValue(e);
-                      comando.Parameters[p.ParameterName].Value = p.Value;
-                    });
-                    afectadas += comando.ExecuteNonQuery();
-                  }
-                  parametros.Clear();
-                  parametros.TrimExcess();
-                  comando.Parameters.Clear();
-                  //La cantidad de filas afectadas debe ser igual a la cantidad total de elementos contenidos en la lista de entidades
-                  respuesta = new RespuestaModelo<int>(afectadas) { Correcto = afectadas.Equals(entidades.Count) };
-                }
-                catch (Exception ex)
-                {
-                  respuesta = new RespuestaModelo<int>(ex);
-                }
-                comando.Dispose();
-              }
-              if (respuesta.Correcto)
-                transaccion.Commit();
-              else
-                transaccion.Rollback();
+              respuesta = Actualizar(entidades, transaccion);
+              if (respuesta.Correcto) transaccion.Commit();
+              else transaccion.Rollback();
             }
             catch (Exception ex)
             {
@@ -1049,19 +884,17 @@ namespace Servicio.Servicios
       if (entidades.NoEsValida() || entidades.Any(m => m.Id.Equals(0)) || transaccion.Connection.NoEsValida())
         return new RespuestaModelo<int> { Correcto = false, Mensaje = Error.ListaInvalida };
       RespuestaModelo<int> respuesta;
-      using (SqlCommand comando = new SqlCommand(@"", transaccion.Connection, transaccion))
+      using (SqlCommand comando = new SqlCommand(CrearSqlActualizar(out List<SqlParameter> parametros), transaccion.Connection, transaccion))
       {
         try
         {
           int afectadas = 0;
-          comando.CommandText = CrearSqlActualizar(out List<SqlParameter> parametros);
           comando.Parameters.AddRange(parametros.ToArray());
           foreach (T e in entidades)
           {
             parametros.ForEach(p =>
             {
-              p.Value = Tipo.GetProperty(p.ParameterName.TrimStart('@'))?.GetValue(e);
-              comando.Parameters[p.ParameterName].Value = p.Value;
+              comando.Parameters[p.ParameterName].Value = Tipo.GetProperty(p.ParameterName.TrimStart('@'))?.GetValue(e);
             });
             afectadas += comando.ExecuteNonQuery();
           }
