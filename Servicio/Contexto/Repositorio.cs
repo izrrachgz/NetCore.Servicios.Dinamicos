@@ -5,7 +5,7 @@ namespace Servicio.Contexto
 {
   internal class Repositorio : DbContext
   {
-    public const string CadenaDeConexion = @"Data Source =.\SQLEXPRESS;Initial Catalog = Servicios.Dinamicos;Integrated Security = true;";
+    public const string CadenaDeConexion = @"Data Source =.\SQLEXPRESS;Initial Catalog =NetCore.Servicios.Dinamicos;Integrated Security = true;";
 
     public DbSet<Usuario> Usuarios { get; set; }
 
