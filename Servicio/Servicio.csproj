@@ -2,6 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <Copyright>Izrra.Ch@2019</Copyright>
+    <Company>Izrra.Ch</Company>
+    <Authors>Israel Chavez</Authors>
+    <Product>Servicios Dinamicos</Product>
+    <Description>Permite Crear Servicios de manera dinamica sobre entidades de repositorio de datos</Description>
   </PropertyGroup>
 
   <ItemGroup>
