@@ -664,6 +664,7 @@ namespace Servicio.Servicios
           parametros.ForEach(p =>
           {
             p.Value = Tipo.GetProperty(p.ParameterName.TrimStart('@'))?.GetValue(modelo);
+            p.Value = p.Value ?? DBNull.Value;
             comando.Parameters.Add(p);
           });
           //Id de la entidad insertada
@@ -744,7 +745,9 @@ namespace Servicio.Servicios
           {
             parametros.ForEach(p =>
             {
-              comando.Parameters[p.ParameterName].Value = Tipo.GetProperty(p.ParameterName.TrimStart('@'))?.GetValue(e);
+              object valor = Tipo.GetProperty(p.ParameterName.TrimStart('@'))?.GetValue(e);
+              valor = valor ?? DBNull.Value;
+              comando.Parameters[p.ParameterName].Value = valor;
             });
             int id = Convert.ToInt32(comando.ExecuteScalar());
             if (id <= 0) break;
@@ -828,6 +831,7 @@ namespace Servicio.Servicios
           parametros.ForEach(p =>
           {
             p.Value = Tipo.GetProperty(p.ParameterName.TrimStart('@'))?.GetValue(modelo);
+            p.Value = p.Value ?? DBNull.Value;
             comando.Parameters.Add(p);
           });
           //El número de afectados debe ser al menos 1
@@ -908,7 +912,9 @@ namespace Servicio.Servicios
           {
             parametros.ForEach(p =>
             {
-              comando.Parameters[p.ParameterName].Value = Tipo.GetProperty(p.ParameterName.TrimStart('@'))?.GetValue(e);
+              object valor = Tipo.GetProperty(p.ParameterName.TrimStart('@'))?.GetValue(e);
+              valor = valor ?? DBNull.Value;
+              comando.Parameters[p.ParameterName].Value = valor;
             });
             afectadas += comando.ExecuteNonQuery();
           }
