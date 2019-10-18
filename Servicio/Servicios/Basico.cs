@@ -342,7 +342,7 @@ namespace Servicio.Servicios
                       while (resultado.Read())
                       {
                         T e = new T();
-                        foreach (string columna in Columnas) Tipo.GetProperty(columna)?.SetValue(e, resultado[columna]);
+                        foreach (string columna in Columnas) Tipo.GetProperty(columna)?.SetValue(e, resultado[columna].Equals(DBNull.Value) ? null : resultado[columna]);
                         lista.Add(e);
                       }
                       resultado.Close();
@@ -510,7 +510,7 @@ namespace Servicio.Servicios
                     while (resultado.Read())
                     {
                       T e = new T();
-                      foreach (string columna in columnas) Tipo.GetProperty(columna)?.SetValue(e, resultado[columna]);
+                      foreach (string columna in columnas) Tipo.GetProperty(columna)?.SetValue(e, resultado[columna].Equals(DBNull.Value) ? null : resultado[columna]);
                       lista.Add(e);
                     }
                     resultado.Close();
