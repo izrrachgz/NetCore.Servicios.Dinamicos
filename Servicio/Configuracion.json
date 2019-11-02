@@ -1,0 +1,3 @@
+{
+  "CadenaDeConexion": "Data Source =.\\SQLEXPRESS;Initial Catalog =NetCore.Servicios.Dinamicos;Integrated Security = true;"
+}

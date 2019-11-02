@@ -1,17 +1,34 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Servicio.Entidades;
+using Servicio.Modelos;
 
 namespace Servicio.Contexto
 {
   internal class Repositorio : DbContext
   {
-    public const string CadenaDeConexion = @"Data Source =.\SQLEXPRESS;Initial Catalog =NetCore.Servicios.Dinamicos;Integrated Security = true;";
+    #region Propiedades
+
+    /// <summary>
+    /// Cadena de conexion al repositorio de datos
+    /// </summary>
+    public string CadenaDeConexion { get; }
+
+    #endregion
+
+    #region Entidades
 
     public DbSet<Usuario> Usuarios { get; set; }
 
     //Agrega tus colecciones aquí
 
-    public Repositorio() { }
+    #endregion
+
+    public Repositorio()
+    {
+      CadenaDeConexion = Configuracion.Instancia.CadenaDeConexion;
+    }
+
+    #region Configuraciones
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
@@ -24,5 +41,7 @@ namespace Servicio.Contexto
       base.OnModelCreating(modelBuilder);
       //Agrega tus configuraciones aquí
     }
+
+    #endregion
   }
 }
