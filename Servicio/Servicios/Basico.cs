@@ -257,123 +257,118 @@ namespace Servicio.Servicios
     /// <returns>Lista de Entidades</returns>
     public virtual RespuestaColeccion<T> Obtener(Paginado paginado)
     {
-      if (paginado == null) return new RespuestaColeccion<T> { Correcto = false, Mensaje = Error.IdentificadorInvalido };
+      //Verificar páginado
+      if (paginado == null)
+        return new RespuestaColeccion<T> { Correcto = false, Mensaje = Error.IdentificadorInvalido };
+      //Verificar que las columnas de ordenamiento pertenezcan a la entidad
+      if (!paginado.Orden.Columnas.TrueForAll(c => Columnas.Contains(c)))
+        return new RespuestaColeccion<T> { Correcto = false, Mensaje = Error.IdentificadorInvalido };
       RespuestaColeccion<T> respuesta;
-      try
+      using (SqlConnection conexion = new SqlConnection(Repositorio.CadenaDeConexion))
       {
-        StringBuilder consulta = new StringBuilder();
-        //Agregar la tabla asociada
-        string sql = SqlSeleccionar
-          .Replace("{tabla}", Tabla)
-          .Replace("{columnas}", $"[{string.Join("], [", Columnas)}]");
-        //Agregar las condiciones
-        consulta.Append(@"[Eliminado] is ").Append(paginado.Eliminados ? @"not NULL" : @"NULL");
-        //Agregar filtro de rango de fecha
-        if (!paginado.RangoFechaInicio.NoEsValida())
-          consulta.Append(@" AND [FechaModificado]>='@RangoFechaInicio'");
-        //Agregar filtro de rango de fecha
-        if (!paginado.RangoFechaFin.NoEsValida())
-          consulta.Append(@" AND [FechaModificado]<='@RangoFechaFin'");
-        //Agregar filtro de busqueda
-        if (!paginado.Busqueda.NoEsValida() && !ColumnasBusqueda.NoEsValida())
-          consulta.Append($" AND ([{string.Join("] LIKE '%@Busqueda%' OR [", ColumnasBusqueda)}] LIKE '%@Busqueda%')");
-        //Contar el total de elementos con la condición dada
-        int total;
-        using (SqlConnection conexion = new SqlConnection(Repositorio.CadenaDeConexion))
+        try
         {
-          try
+          conexion.Open();
+          //Consulta para agregar las condiciones de búsqueda
+          StringBuilder condiciones = new StringBuilder();
+          //Agregar las condiciones
+          condiciones.Append(@"[Eliminado] is ").Append(paginado.Eliminados ? @"not NULL" : @"NULL");
+          //Agregar filtro de rango de fecha
+          if (!paginado.RangoFechaInicio.NoEsValida())
+            condiciones.Append(@" AND [Modificado] >= @RangoFechaInicio");
+          //Agregar filtro de rango de fecha
+          if (!paginado.RangoFechaFin.NoEsValida())
+            condiciones.Append(@" AND [Modificado] <= @RangoFechaFin");
+          //Agregar filtro de búsqueda
+          if (!paginado.Busqueda.NoEsValida() && !ColumnasBusqueda.NoEsValida())
+            condiciones.Append($" AND ([{string.Join("] LIKE N'%@Busqueda%' OR [", ColumnasBusqueda)}] LIKE N'%@Busqueda%')");
+          using (SqlCommand comando = new SqlCommand("", conexion))
           {
-            conexion.Open();
-            using (SqlCommand comando = new SqlCommand($@"SELECT COUNT(*) FROM [dbo].[{Tabla}] WHERE {consulta};", conexion))
+            comando.CommandType = CommandType.Text;
+            //Consulta de conteo de registros acorde a las condiciones
+            StringBuilder conteo = new StringBuilder($@"SELECT COUNT(*) FROM [dbo].[{Tabla}] WHERE ");
+            conteo.Append(condiciones);
+            comando.CommandText = conteo.ToString();
+            //limpia consulta de conteo
+            conteo.Clear();
+            //Agregar parámetros
+            object[] parametros = new object[3];
+            if (!paginado.RangoFechaInicio.NoEsValida())
+              parametros[0] = new SqlParameter(@"@RangoFechaInicio", paginado.RangoFechaInicio);
+            if (!paginado.RangoFechaFin.NoEsValida())
+              parametros[1] = new SqlParameter(@"@RangoFechaFin", paginado.RangoFechaFin);
+            if (!paginado.Busqueda.NoEsValida())
+              parametros[2] = new SqlParameter(@"@Busqueda", paginado.Busqueda);
+            //Si hay al menos un parámetros, se agregan a la consulta.
+            if (parametros.Any(p => p != null)) comando.Parameters.AddRange(parametros.Where(p => p != null).ToArray());
+            //Contar la cantidad de registros acorde a las condiciones
+            int total;
+            using (SqlDataReader lector = comando.ExecuteReader())
             {
               try
               {
-                total = Convert.ToInt32(comando.ExecuteScalar());
+                total = lector.Read() ? lector.GetInt32(0) : 0;
+                lector.Close();
               }
               catch (Exception)
               {
                 total = 0;
               }
-              comando.Dispose();
+              lector.Dispose();
             }
-            if (conexion.State.Equals(ConnectionState.Open)) conexion.Close();
-          }
-          catch (Exception)
-          {
-            total = 0;
-          }
-          conexion.Dispose();
-        }
-        //Actualizar estado del indice de pagína
-        paginado.CalcularPaginado(total);
-        //Verificar que al menos contenga 1 elemento
-        if (total <= 0)
-          respuesta = new RespuestaColeccion<T>(paginado, new List<T>(0));
-        else
-        {
-          consulta.Append($@" ORDER BY [Id] OFFSET {paginado.PaginaIndice * paginado.Elementos} ROWS FETCH NEXT {paginado.Elementos} ROWS ONLY");
-          sql = sql.Replace(@"{condicion}", consulta.ToString());
-          consulta.Clear();
-          //Agregar parámetros
-          object[] parametros = new object[3];
-          if (!paginado.RangoFechaInicio.NoEsValida())
-            parametros[0] = new SqlParameter(@"@RangoFechaInicio", paginado.RangoFechaInicio.ToString("s"));
-          if (!paginado.RangoFechaFin.NoEsValida())
-            parametros[1] = new SqlParameter(@"@RangoFechaFin", paginado.RangoFechaFin.ToString("s"));
-          if (!paginado.Busqueda.NoEsValida())
-            parametros[2] = new SqlParameter(@"@Busqueda", paginado.Busqueda);
-          //Si hay al menos un parámetros, se agregan a la consulta.
-          using (SqlConnection conexion = new SqlConnection(Repositorio.CadenaDeConexion))
-          {
-            try
+            //Inicializar la configuración de paginado
+            paginado.CalcularPaginado(total);
+            //No hay registros
+            if (total.Equals(0))
             {
-              conexion.Open();
-              using (SqlCommand comando = new SqlCommand(sql, conexion))
+              respuesta = new RespuestaColeccion<T>()
+              {
+                Correcto = false,
+                Coleccion = null,
+                Paginado = paginado
+              };
+            }
+            else
+            {
+              condiciones.Append($@" ORDER BY [{string.Join("], [", paginado.Orden.Columnas)}] {(paginado.Orden.Ascendente ? "ASC" : "DESC")} OFFSET {paginado.PaginaIndice * paginado.Elementos} ROWS FETCH NEXT {paginado.Elementos} ROWS ONLY");
+              comando.ResetCommandTimeout();
+              comando.CommandText = SqlSeleccionar
+                .Replace("{tabla}", Tabla)
+                .Replace("{columnas}", $"[{string.Join("], [", Columnas)}]")
+                .Replace("{condicion}", condiciones.ToString());
+              //limpia consulta de registros
+              using (SqlDataReader resultado = comando.ExecuteReader())
               {
                 try
                 {
-                  if (parametros.Any(p => p != null)) comando.Parameters.AddRange(parametros.Where(p => p != null).ToArray());
-                  using (SqlDataReader resultado = comando.ExecuteReader())
+                  //Obtener la pagína solo con las columnas seleccionadas
+                  List<T> lista = new List<T>();
+                  while (resultado.Read())
                   {
-                    try
-                    {
-                      //Obtener la pagína solo con las columnas seleccionadas
-                      List<T> lista = new List<T>();
-                      while (resultado.Read())
-                      {
-                        T e = new T();
-                        foreach (string columna in Columnas) Tipo.GetProperty(columna)?.SetValue(e, resultado[columna].Equals(DBNull.Value) ? null : resultado[columna]);
-                        lista.Add(e);
-                      }
-                      resultado.Close();
-                      respuesta = new RespuestaColeccion<T>(paginado, lista);
-                    }
-                    catch (Exception ex)
-                    {
-                      respuesta = new RespuestaColeccion<T>(ex);
-                    }
-                    resultado.Dispose();
+                    T e = new T();
+                    foreach (string columna in Columnas) Tipo.GetProperty(columna)?.SetValue(e, resultado[columna].Equals(DBNull.Value) ? null : resultado[columna]);
+                    lista.Add(e);
                   }
+                  resultado.Close();
+                  respuesta = new RespuestaColeccion<T>(paginado, lista);
                 }
                 catch (Exception ex)
                 {
                   respuesta = new RespuestaColeccion<T>(ex);
                 }
-                comando.Dispose();
+                resultado.Dispose();
               }
-              if (conexion.State.Equals(ConnectionState.Open)) conexion.Close();
+              condiciones.Clear();
             }
-            catch (Exception ex)
-            {
-              respuesta = new RespuestaColeccion<T>(ex);
-            }
-            conexion.Dispose();
+            comando.Dispose();
           }
+          if (conexion.State.Equals(ConnectionState.Open)) conexion.Close();
         }
-      }
-      catch (Exception ex)
-      {
-        respuesta = new RespuestaColeccion<T>(ex);
+        catch (Exception ex)
+        {
+          respuesta = new RespuestaColeccion<T>(ex);
+        }
+        conexion.Dispose();
       }
       return respuesta;
     }
@@ -450,83 +445,111 @@ namespace Servicio.Servicios
     /// <returns>Lista de entidades asociadas al servicio</returns>
     public virtual RespuestaColeccion<T> Obtener(string[] columnas, Paginado paginado)
     {
-      if (columnas.NoEsValida() || paginado == null) return new RespuestaColeccion<T> { Correcto = false, Mensaje = Error.IdentificadorInvalido };
-      if (!columnas.ToList().TrueForAll(Columnas.Contains)) return new RespuestaColeccion<T> { Correcto = false, Mensaje = @"La columna proporcionada no se encuentra en la entidad." };
+      //Verificar paginado y columnas
+      if (paginado == null || columnas.NoEsValida())
+        return new RespuestaColeccion<T> { Correcto = false, Mensaje = Error.IdentificadorInvalido };
+      //Verificar columnas de seleccion existentes dentro de las de la entidad
+      if (!columnas.ToList().TrueForAll(Columnas.Contains))
+        return new RespuestaColeccion<T> { Correcto = false, Mensaje = @"La columna proporcionada no se encuentra en la entidad." };
+      //Verificar que las columnas de ordenamiento pertenezcan a la entidad
+      if (!paginado.Orden.Columnas.TrueForAll(columnas.Contains))
+        return new RespuestaColeccion<T> { Correcto = false, Mensaje = Error.IdentificadorInvalido };
       RespuestaColeccion<T> respuesta;
       using (SqlConnection conexion = new SqlConnection(Repositorio.CadenaDeConexion))
       {
         try
         {
           conexion.Open();
-          using (SqlCommand comando = new SqlCommand(@"", conexion))
+          //Consulta para agregar las condiciones de búsqueda
+          StringBuilder condiciones = new StringBuilder();
+          //Agregar las condiciones
+          condiciones.Append(@"[Eliminado] is ").Append(paginado.Eliminados ? @"not NULL" : @"NULL");
+          //Agregar filtro de rango de fecha
+          if (!paginado.RangoFechaInicio.NoEsValida())
+            condiciones.Append(@" AND [Modificado] >= @RangoFechaInicio");
+          //Agregar filtro de rango de fecha
+          if (!paginado.RangoFechaFin.NoEsValida())
+            condiciones.Append(@" AND [Modificado] <= @RangoFechaFin");
+          //Agregar filtro de búsqueda
+          if (!paginado.Busqueda.NoEsValida() && !ColumnasBusqueda.NoEsValida())
+            condiciones.Append($" AND ([{string.Join("] LIKE N'%@Busqueda%' OR [", ColumnasBusqueda)}] LIKE N'%@Busqueda%')");
+          using (SqlCommand comando = new SqlCommand("", conexion))
           {
-            try
+            comando.CommandType = CommandType.Text;
+            //Consulta de conteo de registros acorde a las condiciones
+            StringBuilder conteo = new StringBuilder($@"SELECT COUNT(*) FROM [dbo].[{Tabla}] WHERE ");
+            conteo.Append(condiciones);
+            comando.CommandText = conteo.ToString();
+            //limpia consulta de conteo
+            conteo.Clear();
+            //Agregar parámetros
+            object[] parametros = new object[3];
+            if (!paginado.RangoFechaInicio.NoEsValida())
+              parametros[0] = new SqlParameter(@"@RangoFechaInicio", paginado.RangoFechaInicio);
+            if (!paginado.RangoFechaFin.NoEsValida())
+              parametros[1] = new SqlParameter(@"@RangoFechaFin", paginado.RangoFechaFin);
+            if (!paginado.Busqueda.NoEsValida())
+              parametros[2] = new SqlParameter(@"@Busqueda", paginado.Busqueda);
+            //Si hay al menos un parámetros, se agregan a la consulta.
+            if (parametros.Any(p => p != null)) comando.Parameters.AddRange(parametros.Where(p => p != null).ToArray());
+            //Contar la cantidad de registros acorde a las condiciones
+            int total;
+            using (SqlDataReader lector = comando.ExecuteReader())
             {
-              StringBuilder consulta = new StringBuilder();
-              string sql = SqlSeleccionar
-                .Replace("{tabla}", Tabla)
-                .Replace("{columnas}", $"[{string.Join("], [", columnas)}]");
-              //Agregar las condiciones
-              consulta.Append(@"[Eliminado] is ").Append(paginado.Eliminados ? @"not NULL" : @"NULL");
-              //Agregar filtro de rango de fecha
-              if (!paginado.RangoFechaInicio.NoEsValida())
-                consulta.Append(@" AND [FechaModificado]>='@RangoFechaInicio'");
-              //Agregar filtro de rango de fecha
-              if (!paginado.RangoFechaFin.NoEsValida())
-                consulta.Append(@" AND [FechaModificado]<='@RangoFechaFin'");
-              //Agregar filtro de busqueda
-              if (!paginado.Busqueda.NoEsValida() && !ColumnasBusqueda.NoEsValida())
-                consulta.Append($" AND ([{string.Join("] LIKE '%@Busqueda%' OR [", ColumnasBusqueda)}] LIKE '%@Busqueda%')");
-              //Contar el total de elementos con la condición dada
-              comando.CommandText = $@"SELECT COUNT(*) FROM [dbo].[{Tabla}] WHERE {consulta};";
-              int total = Convert.ToInt32(comando.ExecuteScalar());
-              //Actualizar estado del indice de pagína
-              paginado.CalcularPaginado(total);
-              //Verificar que al menos contenga 1 elemento
-              if (total <= 0)
-                respuesta = new RespuestaColeccion<T>(paginado, new List<T>(0));
-              else
+              try
               {
-                consulta.Append($@" ORDER BY [Id] OFFSET {paginado.PaginaIndice * paginado.Elementos} ROWS FETCH NEXT {paginado.Elementos} ROWS ONLY");
-                sql = sql.Replace(@"{condicion}", consulta.ToString());
-                consulta.Clear();
-                //Agregar parámetros
-                object[] parametros = new object[3];
-                if (!paginado.RangoFechaInicio.NoEsValida())
-                  parametros[0] = new SqlParameter(@"@RangoFechaInicio", paginado.RangoFechaInicio.ToString("s"));
-                if (!paginado.RangoFechaFin.NoEsValida())
-                  parametros[1] = new SqlParameter(@"@RangoFechaFin", paginado.RangoFechaFin.ToString("s"));
-                if (!paginado.Busqueda.NoEsValida())
-                  parametros[2] = new SqlParameter(@"@Busqueda", paginado.Busqueda);
-                //Si hay al menos un parámetros, se agregan a la consulta.
-                if (parametros.Any(p => p != null)) comando.Parameters.AddRange(parametros.Where(p => p != null).ToArray());
-                comando.CommandText = sql;
-                using (SqlDataReader resultado = comando.ExecuteReader())
-                {
-                  try
-                  {
-                    //Obtener la pagína solo con las columnas seleccionadas
-                    List<T> lista = new List<T>();
-                    while (resultado.Read())
-                    {
-                      T e = new T();
-                      foreach (string columna in columnas) Tipo.GetProperty(columna)?.SetValue(e, resultado[columna].Equals(DBNull.Value) ? null : resultado[columna]);
-                      lista.Add(e);
-                    }
-                    resultado.Close();
-                    respuesta = new RespuestaColeccion<T>(lista);
-                  }
-                  catch (Exception ex)
-                  {
-                    respuesta = new RespuestaColeccion<T>(ex);
-                  }
-                  resultado.Dispose();
-                }
+                total = lector.Read() ? lector.GetInt32(0) : 0;
+                lector.Close();
               }
+              catch (Exception)
+              {
+                total = 0;
+              }
+              lector.Dispose();
             }
-            catch (Exception ex)
+            //Inicializar la configuración de paginado
+            paginado.CalcularPaginado(total);
+            //No hay registros
+            if (total.Equals(0))
             {
-              respuesta = new RespuestaColeccion<T>(ex);
+              respuesta = new RespuestaColeccion<T>()
+              {
+                Correcto = false,
+                Coleccion = null,
+                Paginado = paginado
+              };
+            }
+            else
+            {
+              condiciones.Append($@" ORDER BY [{string.Join("], [", paginado.Orden.Columnas)}] {(paginado.Orden.Ascendente ? "ASC" : "DESC")} OFFSET {paginado.PaginaIndice * paginado.Elementos} ROWS FETCH NEXT {paginado.Elementos} ROWS ONLY");
+              comando.ResetCommandTimeout();
+              comando.CommandText = SqlSeleccionar
+                .Replace("{tabla}", Tabla)
+                .Replace("{columnas}", $"[{string.Join("], [", columnas)}]")
+                .Replace("{condicion}", condiciones.ToString());
+              //limpia consulta de registros
+              using (SqlDataReader resultado = comando.ExecuteReader())
+              {
+                try
+                {
+                  //Obtener la pagína solo con las columnas seleccionadas
+                  List<T> lista = new List<T>();
+                  while (resultado.Read())
+                  {
+                    T e = new T();
+                    foreach (string columna in columnas) Tipo.GetProperty(columna)?.SetValue(e, resultado[columna].Equals(DBNull.Value) ? null : resultado[columna]);
+                    lista.Add(e);
+                  }
+                  resultado.Close();
+                  respuesta = new RespuestaColeccion<T>(paginado, lista);
+                }
+                catch (Exception ex)
+                {
+                  respuesta = new RespuestaColeccion<T>(ex);
+                }
+                resultado.Dispose();
+              }
+              condiciones.Clear();
             }
             comando.Dispose();
           }

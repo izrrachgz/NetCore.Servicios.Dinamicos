@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using Servicio.Extensiones;
@@ -57,6 +58,11 @@ namespace Servicio.Modelos
     public int TotalElementos { get; set; }
 
     /// <summary>
+    /// Especifica la manera de ordenamiento
+    /// </summary>
+    public Ordenamiento Orden { get; set; }
+
+    /// <summary>
     /// Inicializa la solicitud de pagina con valores predeterminados
     /// </summary>
     public Paginado()
@@ -70,6 +76,7 @@ namespace Servicio.Modelos
       TotalElementos = 0;
       RangoFechaInicio = DateTime.MinValue;
       RangoFechaFin = DateTime.MinValue;
+      Orden = new Ordenamiento();
     }
 
     /// <summary>
@@ -96,6 +103,7 @@ namespace Servicio.Modelos
         DateTime.TryParse(solicitud.FechaFin + @" 23:59:59", out DateTime fin);
         RangoFechaFin = fin;
       }
+      Orden = solicitud.Orden ?? new Ordenamiento();
     }
 
     /// <summary>
@@ -147,6 +155,9 @@ namespace Servicio.Modelos
     [JsonProperty("pagina")]
     public int Pagina { get; set; }
 
+    [JsonProperty("orden")]
+    public Ordenamiento Orden { get; set; }
+
     public SolicitudPagina()
     {
       Eliminados = false;
@@ -155,6 +166,34 @@ namespace Servicio.Modelos
       FechaInicio = @"";
       FechaFin = @"";
       Pagina = 1;
+      Orden = new Ordenamiento();
+    }
+  }
+
+  /// <summary>
+  /// Provee un modelo de datos
+  /// para especificar la manera de ordenamiento
+  /// </summary>
+  public class Ordenamiento
+  {
+    /// <summary>
+    /// Especifica las columnas por las que
+    /// se deben ordenar el conjunto
+    /// </summary>
+    [JsonProperty("columnas")]
+    public List<string> Columnas { get; set; }
+
+    /// <summary>
+    /// Especifica la manera de ordenar
+    /// el conjunto
+    /// </summary>
+    [JsonProperty("ascendente")]
+    public bool Ascendente { get; set; }
+
+    public Ordenamiento()
+    {
+      Columnas = new List<string>(1) { "Id" };
+      Ascendente = true;
     }
   }
 }
