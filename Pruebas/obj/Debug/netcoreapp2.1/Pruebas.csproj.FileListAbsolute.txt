@@ -1,0 +1,3 @@
+C:\NetCore\Servicio\Pruebas\obj\Debug\netcoreapp2.1\Pruebas.csproj.CoreCompileInputs.cache
+C:\NetCore\Servicio\Pruebas\obj\Debug\netcoreapp2.1\Pruebas.AssemblyInfoInputs.cache
+C:\NetCore\Servicio\Pruebas\obj\Debug\netcoreapp2.1\Pruebas.AssemblyInfo.cs
