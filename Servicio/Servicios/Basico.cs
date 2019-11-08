@@ -254,14 +254,18 @@ namespace Servicio.Servicios
     /// Devuelve una lista de entidades asociadas al servicio dentro de un modelo de datos paginado
     /// </summary>
     /// <param name="paginado">Solicitud de página</param>
+    /// <param name="condicion">Condiciones para obtener las entidades</param>
     /// <returns>Lista de Entidades</returns>
-    public virtual RespuestaColeccion<T> Obtener(Paginado paginado)
+    public virtual RespuestaColeccion<T> Obtener(Paginado paginado, List<Condicion> condicion = null)
     {
       //Verificar páginado
       if (paginado == null)
         return new RespuestaColeccion<T> { Correcto = false, Mensaje = Error.IdentificadorInvalido };
       //Verificar que las columnas de ordenamiento pertenezcan a la entidad
       if (!paginado.Orden.Columnas.TrueForAll(c => Columnas.Contains(c)))
+        return new RespuestaColeccion<T> { Correcto = false, Mensaje = Error.IdentificadorInvalido };
+      //Verificar las condiciones si se encuentran definidas
+      if (condicion != null && condicion.NoEsValida())
         return new RespuestaColeccion<T> { Correcto = false, Mensaje = Error.IdentificadorInvalido };
       RespuestaColeccion<T> respuesta;
       using (SqlConnection conexion = new SqlConnection(Repositorio.CadenaDeConexion))
@@ -281,7 +285,12 @@ namespace Servicio.Servicios
             condiciones.Append(@" AND [Modificado] <= @RangoFechaFin");
           //Agregar filtro de búsqueda
           if (!paginado.Busqueda.NoEsValida() && !ColumnasBusqueda.NoEsValida())
-            condiciones.Append($" AND ([{string.Join("] LIKE N'%@Busqueda%' OR [", ColumnasBusqueda)}] LIKE N'%@Busqueda%')");
+            condiciones.Append($" AND ([{string.Join("] LIKE '%'+ @Busqueda +'%' OR [", ColumnasBusqueda)}] LIKE '%'+ @Busqueda +'%' )");
+          //Obtener condiciones extra de búsqueda
+          Tuple<string, SqlParameter[]> condicionesExtra = condicion?.Sql();
+          //Agregar condiciones extra
+          if (condicionesExtra != null)
+            condiciones.Append(" AND ").Append(condicionesExtra.Item1);
           using (SqlCommand comando = new SqlCommand("", conexion))
           {
             comando.CommandType = CommandType.Text;
@@ -301,6 +310,8 @@ namespace Servicio.Servicios
               parametros[2] = new SqlParameter(@"@Busqueda", paginado.Busqueda);
             //Si hay al menos un parámetros, se agregan a la consulta.
             if (parametros.Any(p => p != null)) comando.Parameters.AddRange(parametros.Where(p => p != null).ToArray());
+            //Agregar parametros extra
+            if (condicionesExtra != null) comando.Parameters.AddRange(condicionesExtra.Item2);
             //Contar la cantidad de registros acorde a las condiciones
             int total;
             using (SqlDataReader lector = comando.ExecuteReader())
@@ -442,8 +453,9 @@ namespace Servicio.Servicios
     /// </summary>
     /// <param name="columnas">Nombre de las columnas para seleccionar</param>
     /// <param name="paginado">Solicitud de página</param>
+    /// <param name="condicion">Condiciones para obtener las entidades</param>
     /// <returns>Lista de entidades asociadas al servicio</returns>
-    public virtual RespuestaColeccion<T> Obtener(string[] columnas, Paginado paginado)
+    public virtual RespuestaColeccion<T> Obtener(string[] columnas, Paginado paginado, List<Condicion> condicion = null)
     {
       //Verificar paginado y columnas
       if (paginado == null || columnas.NoEsValida())
@@ -453,6 +465,9 @@ namespace Servicio.Servicios
         return new RespuestaColeccion<T> { Correcto = false, Mensaje = @"La columna proporcionada no se encuentra en la entidad." };
       //Verificar que las columnas de ordenamiento pertenezcan a la entidad
       if (!paginado.Orden.Columnas.TrueForAll(columnas.Contains))
+        return new RespuestaColeccion<T> { Correcto = false, Mensaje = Error.IdentificadorInvalido };
+      //Verificar las condiciones si se encuentran definidas
+      if (condicion != null && condicion.NoEsValida())
         return new RespuestaColeccion<T> { Correcto = false, Mensaje = Error.IdentificadorInvalido };
       RespuestaColeccion<T> respuesta;
       using (SqlConnection conexion = new SqlConnection(Repositorio.CadenaDeConexion))
@@ -472,7 +487,12 @@ namespace Servicio.Servicios
             condiciones.Append(@" AND [Modificado] <= @RangoFechaFin");
           //Agregar filtro de búsqueda
           if (!paginado.Busqueda.NoEsValida() && !ColumnasBusqueda.NoEsValida())
-            condiciones.Append($" AND ([{string.Join("] LIKE N'%@Busqueda%' OR [", ColumnasBusqueda)}] LIKE N'%@Busqueda%')");
+            condiciones.Append($" AND ([{string.Join("] LIKE '%'+ @Busqueda +'%' OR [", ColumnasBusqueda)}] LIKE '%'+ @Busqueda +'%')");
+          //Obtener condiciones extra de búsqueda
+          Tuple<string, SqlParameter[]> condicionesExtra = condicion?.Sql();
+          //Agregar condiciones extra
+          if (condicionesExtra != null)
+            condiciones.Append(" AND ").Append(condicionesExtra.Item1);
           using (SqlCommand comando = new SqlCommand("", conexion))
           {
             comando.CommandType = CommandType.Text;
@@ -492,6 +512,8 @@ namespace Servicio.Servicios
               parametros[2] = new SqlParameter(@"@Busqueda", paginado.Busqueda);
             //Si hay al menos un parámetros, se agregan a la consulta.
             if (parametros.Any(p => p != null)) comando.Parameters.AddRange(parametros.Where(p => p != null).ToArray());
+            //Agregar parametros extra
+            if (condicionesExtra != null) comando.Parameters.AddRange(condicionesExtra.Item2);
             //Contar la cantidad de registros acorde a las condiciones
             int total;
             using (SqlDataReader lector = comando.ExecuteReader())

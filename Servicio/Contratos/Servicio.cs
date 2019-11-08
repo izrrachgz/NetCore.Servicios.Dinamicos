@@ -53,8 +53,9 @@ namespace Servicio.Contratos
     /// Deberá regresar una entidades de entidades dentro de un modelo de datos paginado
     /// </summary>
     /// <param name="paginado">Solicitud de página</param>
+    /// <param name="condicion">Condiciones para obtener las entidades</param>
     /// <returns>Lista de Entidades</returns>
-    RespuestaColeccion<T> Obtener(Paginado paginado);
+    RespuestaColeccion<T> Obtener(Paginado paginado, List<Condicion> condicion = null);
 
     /// <summary>
     /// Deberá regresar una lista de clave/valor asociadas a la entidad
@@ -69,8 +70,9 @@ namespace Servicio.Contratos
     /// </summary>
     /// <param name="columnas">Nombre de las columnas para seleccionar</param>
     /// <param name="paginado">Solicitud de página</param>
+    /// <param name="condicion">Condiciones para obtener las entidades</param>
     /// <returns>Lista de entidades asociadas al servicio</returns>
-    RespuestaColeccion<T> Obtener(string [] columnas, Paginado paginado);
+    RespuestaColeccion<T> Obtener(string[] columnas, Paginado paginado, List<Condicion> condicion = null);
 
     /// <summary>
     /// Deberá Insertar o actualizar el modelo en el contexto de datos
