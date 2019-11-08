@@ -5,7 +5,7 @@ namespace Servicio.Extensiones
   /// <summary>
   /// Provee metodos de extensión para cadenas de caracteres
   /// </summary>
-  public static class ExtensionesDeCadena
+  public static class ExtensionesDeCadenas
   {
     /// <summary>
     /// Indica si una cadena es nula o al unirla sin espacios esta vacia
