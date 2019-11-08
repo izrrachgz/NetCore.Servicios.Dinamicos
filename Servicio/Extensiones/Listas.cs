@@ -6,7 +6,7 @@ namespace Servicio.Extensiones
   /// <summary>
   /// Provee metodos de extensión para listas
   /// </summary>
-  public static class ListsExtensions
+  public static class ExtensionesDeListas
   {
     /// <summary>
     /// Indica si la lista es nula o no contiene ningun elemento

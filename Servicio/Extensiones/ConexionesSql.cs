@@ -6,7 +6,7 @@ namespace Servicio.Extensiones
   /// <summary>
   /// Provee metodos de extensión para conexines sql
   /// </summary>
-  public static class SqlConnectionsExtensions
+  public static class ExtensionesDeConexionesSql
   {
     /// <summary>
     /// Indica si una conexión es nula o se encuentra abierta para su uso

@@ -5,7 +5,7 @@ namespace Servicio.Extensiones
   /// <summary>
   /// Provee metodos de extensión para fechas
   /// </summary>
-  public static class DateExtensions
+  public static class ExtensionesDeFechas
   {
     /// <summary>
     /// Indica si la fecha es nula o se ha iniciado en su minimo valor

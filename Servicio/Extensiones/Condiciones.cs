@@ -7,7 +7,7 @@ using Servicio.Modelos;
 
 namespace Servicio.Extensiones
 {
-  public static class CondicionExtensions
+  public static class ExtensionesDeCondicion
   {
     /// <summary>
     /// Indica si la lista es nula o no contiene ningun elemento
