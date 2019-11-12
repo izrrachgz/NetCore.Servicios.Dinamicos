@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Net.Mail;
+using System.Text.RegularExpressions;
 
 namespace Servicio.Extensiones
 {
@@ -20,11 +23,50 @@ namespace Servicio.Extensiones
     /// <summary>
     /// Indica si una cadena de la coleccón es nula o al unirla sin espacios esta vacia
     /// </summary>
-    /// <param name="cadenas"></param>
-    /// <returns></returns>
+    /// <param name="cadenas">Cadenas para comprobar</param>
+    /// <returns>Verdadero o falso</returns>
     public static bool NoEsValida(this string[] cadenas)
     {
       return cadenas.Any(c => c.NoEsValida());
+    }
+
+    /// <summary>
+    /// Indica si el formato de una cadena es un numero valido
+    /// </summary>
+    /// <param name="cadena">Cadena para comprobar</param>
+    /// <returns>Verdadero o falso</returns>
+    public static bool EsNumero(this string cadena)
+    {
+      return !cadena.NoEsValida() && new Regex(@"^[0-9]$").IsMatch(cadena);
+    }
+
+    /// <summary>
+    /// Indica si el formato de una cadena es un numero telefonico celular valido
+    /// </summary>
+    /// <param name="cadena">Cadena para comprobar</param>
+    /// <returns>Verdadero o falso</returns>
+    public static bool EsCelular(this string cadena)
+    {
+      return !cadena.NoEsValida() && new Regex(@"^[0-9]{10,12}$").IsMatch(cadena);
+    }
+
+    /// <summary>
+    /// Indica si el formato de una cadena es un correo electronico valido
+    /// </summary>
+    /// <param name="cadena">Cadena para comprobar</param>
+    /// <returns>Verdadero o falso</returns>
+    public static bool EsCorreo(this string cadena)
+    {
+      if (cadena.NoEsValida()) return false;
+      try
+      {
+        MailAddress correo = new MailAddress(cadena);
+        return true;
+      }
+      catch (Exception)
+      {
+        return false;
+      }
     }
   }
 }
