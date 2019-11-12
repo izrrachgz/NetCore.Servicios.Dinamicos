@@ -1,9 +1,9 @@
 ﻿using Servicio.Extensiones;
 using Xunit;
 
-namespace Pruebas.Hechos
+namespace Pruebas.Hechos.Extensiones
 {
-  public class Extensiones
+  public class CadenasAlfanumericas
   {
     [Fact]
     public void NoEsValida()
