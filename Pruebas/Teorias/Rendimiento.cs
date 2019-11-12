@@ -24,7 +24,7 @@ namespace Pruebas.Teorias
       };
     }
 
-    [Theory, InlineData(1, 1000)]
+    [Theory, InlineData(2, 2000)]
     public void GuardarUsuarios(short estimado = 1, int cantidad = 1000)
     {
       Servicio<Usuario> servicio = new Servicio<Usuario>();
@@ -42,7 +42,7 @@ namespace Pruebas.Teorias
       guardados.Coleccion = null;
     }
 
-    [Theory, InlineData(1, 1000)]
+    [Theory, InlineData(1, 4000)]
     public void ObtenerUsuarios(short estimado = 1, int cantidad = 1000)
     {
       Servicio<Usuario> servicio = new Servicio<Usuario>();
@@ -51,6 +51,37 @@ namespace Pruebas.Teorias
       Stopwatch temporizador = new Stopwatch();
       temporizador.Start();
       RespuestaColeccion<Usuario> usuarios = servicio.Obtener(paginado);
+      temporizador.Stop();
+      Assert.True(usuarios.Correcto && temporizador.Elapsed.TotalSeconds <= estimado);
+      usuarios.Coleccion.Clear();
+      usuarios.Coleccion.TrimExcess();
+      usuarios.Coleccion = null;
+    }
+
+    [Theory, InlineData(1)]
+    public void ObtenerUsuariosClaveValor(short estimado)
+    {
+      Servicio<Usuario> servicio = new Servicio<Usuario>();
+      Stopwatch temporizador = new Stopwatch();
+      temporizador.Start();
+      RespuestaColeccion<ClaveValor> usuarios = servicio.Obtener("Correo");
+      temporizador.Stop();
+      Assert.True(usuarios.Correcto && temporizador.Elapsed.TotalSeconds <= estimado);
+      usuarios.Coleccion.Clear();
+      usuarios.Coleccion.TrimExcess();
+      usuarios.Coleccion = null;
+    }
+
+    [Theory, InlineData(1)]
+    public void ObtenerUsuariosColumnas(short estimado, int cantidad = 1000)
+    {
+      Servicio<Usuario> servicio = new Servicio<Usuario>();
+      Paginado paginado = new Paginado();
+      paginado.Elementos = cantidad;
+      string[] columnas = { "Id", "Nombre", "Correo" };
+      Stopwatch temporizador = new Stopwatch();
+      temporizador.Start();
+      RespuestaColeccion<Usuario> usuarios = servicio.Obtener(columnas, paginado);
       temporizador.Stop();
       Assert.True(usuarios.Correcto && temporizador.Elapsed.TotalSeconds <= estimado);
       usuarios.Coleccion.Clear();
