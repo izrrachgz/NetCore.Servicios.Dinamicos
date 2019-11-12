@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using Servicio.Extensiones;
@@ -72,7 +71,7 @@ namespace Servicio.Modelos
       Pagina = 1;
       TotalPaginas = 0;
       PaginaIndice = Pagina - 1;
-      Elementos = 10;
+      Elementos = 50;
       TotalElementos = 0;
       RangoFechaInicio = DateTime.MinValue;
       RangoFechaFin = DateTime.MinValue;
@@ -92,15 +91,15 @@ namespace Servicio.Modelos
       PaginaIndice = Pagina - 1;
       PaginaIndice = PaginaIndice < 0 ? 0 : PaginaIndice;
       Elementos = solicitud.Elementos;
-      Elementos = Elementos < 10 ? 10 : Elementos;
+      Elementos = Elementos < 50 ? 50 : Elementos;
       if (!solicitud.FechaInicio.NoEsValida())
       {
-        DateTime.TryParse(solicitud.FechaInicio + @" 00:00:00", out DateTime inicio);
+        DateTime.TryParse(solicitud.FechaInicio, out DateTime inicio);
         RangoFechaInicio = inicio;
       }
       if (!solicitud.FechaFin.NoEsValida())
       {
-        DateTime.TryParse(solicitud.FechaFin + @" 23:59:59", out DateTime fin);
+        DateTime.TryParse(solicitud.FechaFin, out DateTime fin);
         RangoFechaFin = fin;
       }
       Orden = solicitud.Orden ?? new Ordenamiento();
@@ -112,9 +111,7 @@ namespace Servicio.Modelos
     /// </summary>
     /// <param name="query"></param>
     public void CalcularPaginado<T>(IQueryable<T> query)
-    {
-      CalcularPaginado(query.Count());
-    }
+      => CalcularPaginado(query.Count());
 
     /// <summary>
     /// Prepara el paginado mediante las condiciones especificadas en la consulta
@@ -129,71 +126,6 @@ namespace Servicio.Modelos
       Pagina = Pagina > TotalPaginas ? TotalPaginas : Pagina;
       PaginaIndice = Pagina - 1;
       PaginaIndice = PaginaIndice < 0 ? 0 : PaginaIndice;
-    }
-  }
-
-  /// <summary>
-  /// Provee un modelo de datos utilizado para inicializar los valores de búsqueda paginada
-  /// </summary>
-  public class SolicitudPagina
-  {
-    [JsonProperty("eliminados")]
-    public bool Eliminados { get; set; }
-
-    [JsonProperty("busqueda")]
-    public string Busqueda { get; set; }
-
-    [JsonProperty("elementos")]
-    public int Elementos { get; set; }
-
-    [JsonProperty("fechaInicio")]
-    public string FechaInicio { get; set; }
-
-    [JsonProperty("fechaFin")]
-    public string FechaFin { get; set; }
-
-    [JsonProperty("pagina")]
-    public int Pagina { get; set; }
-
-    [JsonProperty("orden")]
-    public Ordenamiento Orden { get; set; }
-
-    public SolicitudPagina()
-    {
-      Eliminados = false;
-      Busqueda = @"";
-      Elementos = 10;
-      FechaInicio = @"";
-      FechaFin = @"";
-      Pagina = 1;
-      Orden = new Ordenamiento();
-    }
-  }
-
-  /// <summary>
-  /// Provee un modelo de datos
-  /// para especificar la manera de ordenamiento
-  /// </summary>
-  public class Ordenamiento
-  {
-    /// <summary>
-    /// Especifica las columnas por las que
-    /// se deben ordenar el conjunto
-    /// </summary>
-    [JsonProperty("columnas")]
-    public List<string> Columnas { get; set; }
-
-    /// <summary>
-    /// Especifica la manera de ordenar
-    /// el conjunto
-    /// </summary>
-    [JsonProperty("ascendente")]
-    public bool Ascendente { get; set; }
-
-    public Ordenamiento()
-    {
-      Columnas = new List<string>(1) { "Id" };
-      Ascendente = true;
     }
   }
 }

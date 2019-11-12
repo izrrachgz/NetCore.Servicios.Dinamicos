@@ -29,47 +29,60 @@ namespace Servicio.Extensiones
     /// <returns>Tupla con consulta sql y parametros</returns>
     public static Tuple<string, SqlParameter[]> Sql(this List<Condicion> condiciones)
     {
-      if (condiciones.NoEsValida()) return new Tuple<string, SqlParameter[]>("", new SqlParameter[0]);
+      //Verificar las condiciones proporcionadas
+      if (condiciones.NoEsValida())
+        return new Tuple<string, SqlParameter[]>("", new SqlParameter[0]);
+      condiciones = condiciones
+        .Where(c => !c.Columna.Equals("Eliminado"))
+        .ToList();
+      //Verificar las condiciones proporcionadas
+      if (condiciones.NoEsValida())
+        return new Tuple<string, SqlParameter[]>("", new SqlParameter[0]);
+      //Construir la serie de condiciones
       StringBuilder sb = new StringBuilder(" ");
       SqlParameter[] parametros = new SqlParameter[condiciones.Count];
       for (int i = 0; i < condiciones.Count; i++)
       {
         Condicion c = condiciones.ElementAt(i);
-        parametros[i] = new SqlParameter(c.Columna, c.Valor ?? DBNull.Value);
+        string parametro = $@"{c.Columna}{i}";
+        parametros[i] = new SqlParameter(parametro, c.Valor ?? DBNull.Value);
         switch (c.Operador)
         {
           case Operador.Igual:
-            sb.Append($"([{c.Columna}] = @{c.Columna})");
+            sb.Append($@"([{c.Columna}] = @{parametro})");
             break;
           case Operador.Menor:
-            sb.Append($"([{c.Columna}] < @{c.Columna})");
+            sb.Append($@"([{c.Columna}] < @{parametro})");
             break;
           case Operador.MenorIgual:
-            sb.Append($"([{c.Columna}] <= @{c.Columna})");
+            sb.Append($@"([{c.Columna}] <= @{parametro})");
             break;
           case Operador.Distinto:
-            sb.Append($"([{c.Columna}] <> @{c.Columna})");
+            sb.Append($@"([{c.Columna}] <> @{parametro})");
             break;
           case Operador.Mayor:
-            sb.Append($"([{c.Columna}] > @{c.Columna})");
+            sb.Append($@"([{c.Columna}] > @{parametro})");
             break;
           case Operador.MayorIgual:
-            sb.Append($"([{c.Columna}] >= @{c.Columna})");
+            sb.Append($@"([{c.Columna}] >= @{parametro})");
             break;
           case Operador.Diferente:
-            sb.Append($"([{c.Columna}] != @{c.Columna})");
+            sb.Append($@"([{c.Columna}] != @{parametro})");
             break;
           case Operador.Es:
-            sb.Append($"([{c.Columna}] is @{c.Columna})");
+            sb.Append($@"([{c.Columna}] is @{parametro})");
             break;
           case Operador.NoEs:
-            sb.Append($"([{c.Columna}] is not @{c.Columna})");
+            sb.Append($@"([{c.Columna}] is not @{parametro})");
+            break;
+          case Operador.Parecido:
+            sb.Append($@"([{c.Columna}] LIKE '%'+ @{parametro} +'%')");
             break;
           default:
-            sb.Append($"([{c.Columna}] = @{c.Columna})");
+            sb.Append($@"([{c.Columna}] = @{parametro})");
             break;
         }
-        if (i + 1 != condiciones.Count) sb.Append(" AND");
+        if (i + 1 != condiciones.Count) sb.Append(@" AND");
       }
       return new Tuple<string, SqlParameter[]>(sb.ToString(), parametros);
     }

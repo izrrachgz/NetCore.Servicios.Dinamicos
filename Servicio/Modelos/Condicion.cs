@@ -24,7 +24,7 @@
     public Condicion()
     {
       Columna = "Id";
-      Operador = Operador.Mayor;
+      Operador = Operador.NoEs;
       Valor = 0;
     }
 
@@ -94,5 +94,11 @@
     /// proporcionado (is not)
     /// </summary>
     NoEs = 8,
+
+    /// <summary>
+    /// Se utiliza cuando se requiere comparar un valor de cadena parecido que al valor
+    /// proporcionado (LIKE)
+    /// </summary>
+    Parecido = 9,
   }
 }

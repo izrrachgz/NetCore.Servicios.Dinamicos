@@ -237,7 +237,9 @@ namespace Servicio.Servicios
     /// <returns>Entidad</returns>
     public virtual RespuestaModelo<T> Obtener(int id)
     {
-      if (id <= 0) return new RespuestaModelo<T> { Mensaje = Error.IdentificadorInvalido };
+      //Verificar el identificador primario de la entidad
+      if (id <= 0)
+        return new RespuestaModelo<T> { Mensaje = Error.IdentificadorInvalido };
       RespuestaModelo<T> respuesta;
       try
       {
@@ -260,40 +262,43 @@ namespace Servicio.Servicios
     {
       //Verificar páginado
       if (paginado == null)
-        return new RespuestaColeccion<T> { Correcto = false, Mensaje = Error.IdentificadorInvalido };
+        return new RespuestaColeccion<T> { Correcto = false, Mensaje = Error.PaginadoNoEsValido };
       //Verificar que las columnas de ordenamiento pertenezcan a la entidad
       if (!paginado.Orden.Columnas.TrueForAll(c => Columnas.Contains(c)))
-        return new RespuestaColeccion<T> { Correcto = false, Mensaje = Error.IdentificadorInvalido };
+        return new RespuestaColeccion<T> { Correcto = false, Mensaje = Error.ColumnasDeBusquedaNoCoinciden };
       //Verificar las condiciones si se encuentran definidas
       if (condicion != null && condicion.NoEsValida())
         return new RespuestaColeccion<T> { Correcto = false, Mensaje = Error.IdentificadorInvalido };
+      //Verificar que las columnas de condicion pertenezcan a la entidad
+      if (condicion != null && !condicion.Select(c => c.Columna).ToList().TrueForAll(c => Columnas.Contains(c)))
+        return new RespuestaColeccion<T> { Correcto = false, Mensaje = Error.ColumnasDeBusquedaNoCoinciden };
       RespuestaColeccion<T> respuesta;
       using (SqlConnection conexion = new SqlConnection(Repositorio.CadenaDeConexion))
       {
         try
         {
           conexion.Open();
-          //Consulta para agregar las condiciones de búsqueda
-          StringBuilder condiciones = new StringBuilder();
-          //Agregar las condiciones
-          condiciones.Append(@"[Eliminado] is ").Append(paginado.Eliminados ? @"not NULL" : @"NULL");
-          //Agregar filtro de rango de fecha
-          if (!paginado.RangoFechaInicio.NoEsValida())
-            condiciones.Append(@" AND [Modificado] >= @RangoFechaInicio");
-          //Agregar filtro de rango de fecha
-          if (!paginado.RangoFechaFin.NoEsValida())
-            condiciones.Append(@" AND [Modificado] <= @RangoFechaFin");
-          //Agregar filtro de búsqueda
-          if (!paginado.Busqueda.NoEsValida() && !ColumnasBusqueda.NoEsValida())
-            condiciones.Append($" AND ([{string.Join("] LIKE '%'+ @Busqueda +'%' OR [", ColumnasBusqueda)}] LIKE '%'+ @Busqueda +'%' )");
-          //Obtener condiciones extra de búsqueda
-          Tuple<string, SqlParameter[]> condicionesExtra = condicion?.Sql();
-          //Agregar condiciones extra
-          if (condicionesExtra != null)
-            condiciones.Append(" AND ").Append(condicionesExtra.Item1);
           using (SqlCommand comando = new SqlCommand("", conexion))
           {
             comando.CommandType = CommandType.Text;
+            //Consulta para agregar las condiciones de búsqueda
+            StringBuilder condiciones = new StringBuilder();
+            //Agregar las condiciones
+            condiciones.Append(@"[Eliminado] is ").Append(paginado.Eliminados ? @"not NULL" : @"NULL");
+            //Agregar filtro de rango de fecha
+            if (!paginado.RangoFechaInicio.NoEsValida())
+              condiciones.Append(@" AND [Modificado] >= @RangoFechaInicio");
+            //Agregar filtro de rango de fecha
+            if (!paginado.RangoFechaFin.NoEsValida())
+              condiciones.Append(@" AND [Modificado] <= @RangoFechaFin");
+            //Agregar filtro de búsqueda
+            if (!paginado.Busqueda.NoEsValida() && !ColumnasBusqueda.NoEsValida())
+              condiciones.Append($" AND ([{string.Join("] LIKE '%'+ @Busqueda +'%' OR [", ColumnasBusqueda)}] LIKE '%'+ @Busqueda +'%' )");
+            //Obtener condiciones extra de búsqueda
+            Tuple<string, SqlParameter[]> condicionesExtra = condicion?.Sql();
+            //Agregar condiciones extra
+            if (condicionesExtra != null)
+              condiciones.Append(" AND ").Append(condicionesExtra.Item1);
             //Consulta de conteo de registros acorde a las condiciones
             StringBuilder conteo = new StringBuilder($@"SELECT COUNT(*) FROM [dbo].[{Tabla}] WHERE ");
             conteo.Append(condiciones);
@@ -391,8 +396,12 @@ namespace Servicio.Servicios
     /// <returns>Lista de clave/valor asociados a la Entidad</returns>
     public virtual RespuestaColeccion<ClaveValor> Obtener(string columna)
     {
-      if (columna.NoEsValida()) return new RespuestaColeccion<ClaveValor> { Correcto = false, Mensaje = Error.IdentificadorInvalido };
-      if (!Columnas.Contains(columna)) return new RespuestaColeccion<ClaveValor> { Correcto = false, Mensaje = @"La columna proporcionada no se encuentra en la entidad." };
+      //Verificar la columna definida
+      if (columna.NoEsValida())
+        return new RespuestaColeccion<ClaveValor> { Correcto = false, Mensaje = Error.IdentificadorInvalido };
+      //Verificar que la columna pertenezca a la entidad
+      if (!Columnas.Contains(columna))
+        return new RespuestaColeccion<ClaveValor> { Correcto = false, Mensaje = Error.ColumnasDeBusquedaNoCoinciden };
       RespuestaColeccion<ClaveValor> respuesta;
       string sql = SqlSeleccionar
         .Replace("{tabla}", Tabla)
@@ -458,44 +467,47 @@ namespace Servicio.Servicios
     public virtual RespuestaColeccion<T> Obtener(string[] columnas, Paginado paginado, List<Condicion> condicion = null)
     {
       //Verificar paginado y columnas
-      if (paginado == null || columnas.NoEsValida())
-        return new RespuestaColeccion<T> { Correcto = false, Mensaje = Error.IdentificadorInvalido };
+      if (paginado == null)
+        return new RespuestaColeccion<T> { Correcto = false, Mensaje = Error.PaginadoNoEsValido };
       //Verificar columnas de seleccion existentes dentro de las de la entidad
-      if (!columnas.ToList().TrueForAll(Columnas.Contains))
-        return new RespuestaColeccion<T> { Correcto = false, Mensaje = @"La columna proporcionada no se encuentra en la entidad." };
+      if (columnas.NoEsValida() || !columnas.ToList().TrueForAll(Columnas.Contains))
+        return new RespuestaColeccion<T> { Correcto = false, Mensaje = Error.ColumnasDeBusquedaNoCoinciden };
       //Verificar que las columnas de ordenamiento pertenezcan a la entidad
       if (!paginado.Orden.Columnas.TrueForAll(columnas.Contains))
         return new RespuestaColeccion<T> { Correcto = false, Mensaje = Error.IdentificadorInvalido };
       //Verificar las condiciones si se encuentran definidas
       if (condicion != null && condicion.NoEsValida())
         return new RespuestaColeccion<T> { Correcto = false, Mensaje = Error.IdentificadorInvalido };
+      //Verificar que las columnas de condicion pertenezcan a la entidad
+      if (condicion != null && !condicion.Select(c => c.Columna).ToList().TrueForAll(columnas.Contains))
+        return new RespuestaColeccion<T> { Correcto = false, Mensaje = Error.ColumnasDeBusquedaNoCoinciden };
       RespuestaColeccion<T> respuesta;
       using (SqlConnection conexion = new SqlConnection(Repositorio.CadenaDeConexion))
       {
         try
         {
           conexion.Open();
-          //Consulta para agregar las condiciones de búsqueda
-          StringBuilder condiciones = new StringBuilder();
-          //Agregar las condiciones
-          condiciones.Append(@"[Eliminado] is ").Append(paginado.Eliminados ? @"not NULL" : @"NULL");
-          //Agregar filtro de rango de fecha
-          if (!paginado.RangoFechaInicio.NoEsValida())
-            condiciones.Append(@" AND [Modificado] >= @RangoFechaInicio");
-          //Agregar filtro de rango de fecha
-          if (!paginado.RangoFechaFin.NoEsValida())
-            condiciones.Append(@" AND [Modificado] <= @RangoFechaFin");
-          //Agregar filtro de búsqueda
-          if (!paginado.Busqueda.NoEsValida() && !ColumnasBusqueda.NoEsValida())
-            condiciones.Append($" AND ([{string.Join("] LIKE '%'+ @Busqueda +'%' OR [", ColumnasBusqueda)}] LIKE '%'+ @Busqueda +'%')");
-          //Obtener condiciones extra de búsqueda
-          Tuple<string, SqlParameter[]> condicionesExtra = condicion?.Sql();
-          //Agregar condiciones extra
-          if (condicionesExtra != null)
-            condiciones.Append(" AND ").Append(condicionesExtra.Item1);
           using (SqlCommand comando = new SqlCommand("", conexion))
           {
             comando.CommandType = CommandType.Text;
+            //Consulta para agregar las condiciones de búsqueda
+            StringBuilder condiciones = new StringBuilder();
+            //Agregar las condiciones
+            condiciones.Append(@"[Eliminado] is ").Append(paginado.Eliminados ? @"not NULL" : @"NULL");
+            //Agregar filtro de rango de fecha
+            if (!paginado.RangoFechaInicio.NoEsValida())
+              condiciones.Append(@" AND [Modificado] >= @RangoFechaInicio");
+            //Agregar filtro de rango de fecha
+            if (!paginado.RangoFechaFin.NoEsValida())
+              condiciones.Append(@" AND [Modificado] <= @RangoFechaFin");
+            //Agregar filtro de búsqueda
+            if (!paginado.Busqueda.NoEsValida() && !ColumnasBusqueda.NoEsValida())
+              condiciones.Append($" AND ([{string.Join("] LIKE '%'+ @Busqueda +'%' OR [", ColumnasBusqueda)}] LIKE '%'+ @Busqueda +'%')");
+            //Obtener condiciones extra de búsqueda
+            Tuple<string, SqlParameter[]> condicionesExtra = condicion?.Sql();
+            //Agregar condiciones extra
+            if (condicionesExtra != null)
+              condiciones.Append(" AND ").Append(condicionesExtra.Item1);
             //Consulta de conteo de registros acorde a las condiciones
             StringBuilder conteo = new StringBuilder($@"SELECT COUNT(*) FROM [dbo].[{Tabla}] WHERE ");
             conteo.Append(condiciones);
@@ -593,7 +605,9 @@ namespace Servicio.Servicios
     /// <returns>Verdadero o Falso</returns>
     public virtual RespuestaBasica Guardar(T modelo)
     {
-      if (modelo == null) return new RespuestaBasica(false, Error.ModeloInvalido);
+      //Verificar el modelo de datos de la entidad
+      if (modelo == null)
+        return new RespuestaBasica(false, Error.ModeloInvalido);
       return modelo.Id.Equals(0) ? Insertar(modelo) : Actualizar(modelo);
     }
 
@@ -604,7 +618,9 @@ namespace Servicio.Servicios
     /// <returns>Arreglo de identificadores primarios guardados</returns>
     public virtual RespuestaColeccion<int> Guardar(List<T> entidades)
     {
-      if (entidades.NoEsValida()) return new RespuestaColeccion<int> { Correcto = false, Mensaje = Error.ListaInvalida };
+      //Verificar la lista de modelos de datos asociados a la entidad
+      if (entidades.NoEsValida())
+        return new RespuestaColeccion<int> { Correcto = false, Mensaje = Error.ListaInvalida };
       RespuestaColeccion<int> respuesta;
       using (SqlConnection conexion = new SqlConnection(Repositorio.CadenaDeConexion))
       {
@@ -658,7 +674,9 @@ namespace Servicio.Servicios
     /// <returns>Identificador primario insertado</returns>
     public virtual RespuestaModelo<int> Insertar(T modelo)
     {
-      if (modelo == null || !modelo.Id.Equals(0)) return new RespuestaModelo<int> { Correcto = false, Mensaje = Error.ModeloInvalido };
+      //Verificar el modelo de datos y el identificador primario del modelo asociado a la entidad
+      if (modelo == null || !modelo.Id.Equals(0))
+        return new RespuestaModelo<int> { Correcto = false, Mensaje = Error.ModeloInvalido };
       RespuestaModelo<int> respuesta;
       using (SqlConnection conexion = new SqlConnection(Repositorio.CadenaDeConexion))
       {
@@ -699,7 +717,9 @@ namespace Servicio.Servicios
     /// <returns>Identificador primario insertado</returns>
     public virtual RespuestaModelo<int> Insertar(T modelo, SqlTransaction transaccion)
     {
-      if (modelo == null || !modelo.Id.Equals(0)) return new RespuestaModelo<int> { Correcto = false, Mensaje = Error.ModeloInvalido };
+      //Verificar el modelo de datos y el identificador primario del modelo asociado a la entidad
+      if (modelo == null || !modelo.Id.Equals(0))
+        return new RespuestaModelo<int> { Correcto = false, Mensaje = Error.ModeloInvalido };
       RespuestaModelo<int> respuesta;
       using (SqlCommand comando = new SqlCommand(CrearSqlInsertar(out List<SqlParameter> parametros), transaccion.Connection, transaccion))
       {
@@ -736,7 +756,9 @@ namespace Servicio.Servicios
     /// <returns>Arreglo de identificadores primarios insertados</returns>
     public virtual RespuestaColeccion<int> Insertar(List<T> entidades)
     {
-      if (entidades.NoEsValida() || entidades.Any(m => !m.Id.Equals(0))) return new RespuestaColeccion<int> { Correcto = false, Mensaje = Error.ListaInvalida };
+      //Verificar la lista de modelo de datos y el identificador primario del modelo asociado a la entidad
+      if (entidades.NoEsValida() || entidades.Any(m => !m.Id.Equals(0)))
+        return new RespuestaColeccion<int> { Correcto = false, Mensaje = Error.ListaInvalida };
       RespuestaColeccion<int> respuesta;
       using (SqlConnection conexion = new SqlConnection(Repositorio.CadenaDeConexion))
       {
@@ -777,6 +799,8 @@ namespace Servicio.Servicios
     /// <returns>Arreglo de identificadores primarios insertados</returns>
     public virtual RespuestaColeccion<int> Insertar(List<T> entidades, SqlTransaction transaccion)
     {
+      //Verificar el modelo de datos y el identificador primario del modelo asociado a la entidad
+      //y que la transacción proporcionada se encuentra activa
       if (entidades.NoEsValida() || entidades.Any(m => !m.Id.Equals(0)) || transaccion.Connection.NoEsValida())
         return new RespuestaColeccion<int> { Correcto = false, Mensaje = Error.ListaInvalida };
       RespuestaColeccion<int> respuesta;
@@ -826,7 +850,9 @@ namespace Servicio.Servicios
     /// <returns>Cantidad de filas afectadas</returns>
     public virtual RespuestaModelo<int> Actualizar(T modelo)
     {
-      if (modelo == null || modelo.Id.Equals(0)) return new RespuestaModelo<int> { Correcto = false, Mensaje = Error.ModeloInvalido };
+      //Verificar el modelo de datos y el identificador primario del modelo asociado a la entidad
+      if (modelo == null || modelo.Id.Equals(0))
+        return new RespuestaModelo<int> { Correcto = false, Mensaje = Error.ModeloInvalido };
       RespuestaModelo<int> respuesta;
       using (SqlConnection conexion = new SqlConnection(Repositorio.CadenaDeConexion))
       {
@@ -867,7 +893,9 @@ namespace Servicio.Servicios
     /// <returns>Cantidad de filas afectadas</returns>
     public virtual RespuestaModelo<int> Actualizar(T modelo, SqlTransaction transaccion)
     {
-      if (modelo == null || modelo.Id.Equals(0)) return new RespuestaModelo<int> { Correcto = false, Mensaje = Error.ModeloInvalido };
+      //Verificar el modelo de datos y el identificador primario del modelo asociado a la entidad
+      if (modelo == null || modelo.Id.Equals(0))
+        return new RespuestaModelo<int> { Correcto = false, Mensaje = Error.ModeloInvalido };
       RespuestaModelo<int> respuesta;
       using (SqlCommand comando = new SqlCommand(CrearSqlActualizar(out List<SqlParameter> parametros), transaccion.Connection, transaccion))
       {
@@ -903,7 +931,9 @@ namespace Servicio.Servicios
     /// <returns>Cantidad de filas afectadas</returns>
     public virtual RespuestaModelo<int> Actualizar(List<T> entidades)
     {
-      if (entidades.NoEsValida() || entidades.Any(m => m.Id.Equals(0))) return new RespuestaModelo<int> { Correcto = false, Mensaje = Error.ListaInvalida };
+      //Verificar el modelo de datos y el identificador primario del modelo asociado a la entidad
+      if (entidades.NoEsValida() || entidades.Any(m => m.Id.Equals(0)))
+        return new RespuestaModelo<int> { Correcto = false, Mensaje = Error.ListaInvalida };
       RespuestaModelo<int> respuesta;
       using (SqlConnection conexion = new SqlConnection(Repositorio.CadenaDeConexion))
       {
@@ -944,6 +974,8 @@ namespace Servicio.Servicios
     /// <returns>Cantidad de filas afectadas</returns>
     public virtual RespuestaModelo<int> Actualizar(List<T> entidades, SqlTransaction transaccion)
     {
+      //Verificar el modelo de datos y el identificador primario del modelo asociado a la entidad
+      //y que la transacción proporcionada se encuentra activa
       if (entidades.NoEsValida() || entidades.Any(m => m.Id.Equals(0)) || transaccion.Connection.NoEsValida())
         return new RespuestaModelo<int> { Correcto = false, Mensaje = Error.ListaInvalida };
       RespuestaModelo<int> respuesta;
