@@ -24,7 +24,7 @@ namespace Pruebas.Teorias
       };
     }
 
-    [Theory, InlineData(2, 2000)]
+    [Theory, InlineData(1, 1000)]
     public void GuardarUsuarios(short estimado = 1, int cantidad = 1000)
     {
       Servicio<Usuario> servicio = new Servicio<Usuario>();
@@ -42,7 +42,7 @@ namespace Pruebas.Teorias
       guardados.Coleccion = null;
     }
 
-    [Theory, InlineData(1, 4000)]
+    [Theory, InlineData(1, 1000)]
     public void ObtenerUsuarios(short estimado = 1, int cantidad = 1000)
     {
       Servicio<Usuario> servicio = new Servicio<Usuario>();
