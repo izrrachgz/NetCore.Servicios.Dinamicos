@@ -1,9 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
+using Servicio.Modelos;
+using Servicio.Extensiones;
 
-namespace Servicio.Modelos
+namespace Servicio.Utilidades
 {
+  /// <summary>
+  /// Provee la funcionalidad para obtener la informacion
+  /// sobre configuraciones de la aplicacion
+  /// </summary>
   internal sealed class Configuracion
   {
     /// <summary>
@@ -38,5 +46,25 @@ namespace Servicio.Modelos
     /// Cadena de conexion al repositorio de datos
     /// </summary>
     public string CadenaDeConexion { get; set; }
+
+    /// <summary>
+    /// Lista de configuraciones
+    /// </summary>
+    private List<ElementoConfiguracion> Configuraciones { get; set; }
+
+    /// <summary>
+    /// Permite obtener un valor de configuracion
+    /// utilizando como busqueda la clave unica
+    /// del elemento
+    /// </summary>
+    /// <typeparam name="T">Tipo de objeto interpretado retenido en el valor asociado</typeparam>
+    /// <param name="clave">Clave de identificacion unica</param>
+    /// <returns></returns>
+    public T Obtener<T>(string clave)
+    {
+      if (Configuraciones.NoEsValida() || !Configuraciones.Any(c => c.Clave.Equals(clave)))
+        return default(T);
+      return (T)Configuraciones.First(c => c.Clave.Equals(clave)).Valor;
+    }
   }
 }

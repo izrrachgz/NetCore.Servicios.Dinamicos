@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Servicio.Entidades;
-using Servicio.Modelos;
+using Servicio.Utilidades;
 
 namespace Servicio.Contexto
 {
