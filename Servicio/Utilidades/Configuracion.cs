@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Newtonsoft.Json;
+using Servicio.Extensiones;
 using Servicio.Modelos;
 
 namespace Servicio.Utilidades
@@ -51,7 +52,7 @@ namespace Servicio.Utilidades
     public string CadenaDeConexion { get; set; }
 
     /// <summary>
-    /// Lista de configuraciones
+    /// Coleccion de elementos de configuracion
     /// </summary>
     public List<ElementoConfiguracion> Configuraciones { get; set; }
   }
