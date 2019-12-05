@@ -27,7 +27,6 @@ namespace Servicio.Contexto
     public Repositorio()
     {
       CadenaDeConexion = Configuracion.Instancia.CadenaDeConexion;
-      Configuracion.Instancia.Configuraciones.Obtener<string>("CorreoNotificacion");
     }
 
     #region Configuraciones
