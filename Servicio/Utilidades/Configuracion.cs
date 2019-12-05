@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Newtonsoft.Json;
+using Servicio.Extensiones;
 using Servicio.Modelos;
 
 namespace Servicio.Utilidades
@@ -21,7 +22,11 @@ namespace Servicio.Utilidades
       get
       {
         FileInfo info = new FileInfo(AppDomain.CurrentDomain.BaseDirectory + "Configuracion.json");
-        if (!info.Exists) throw new Exception("No se ha encontrado el archivo de configuracion.");
+        if (!info.Exists)
+        {
+          //El archivo de configuracion es obligatorio
+          throw new Exception(@"No se ha encontrado el archivo de configuracion.");
+        }
         Configuracion configuracion;
         using (FileStream fs = info.OpenRead())
         {
@@ -35,6 +40,11 @@ namespace Servicio.Utilidades
             sr.Dispose();
           }
           fs.Dispose();
+        }
+        if (configuracion.CadenaDeConexion.NoEsValida())
+        {
+          //La cadena de conexion es obligatoria
+          throw new Exception(@"Es necesario definir la cadena de conexion para acceder al repositorio de datos.");
         }
         return configuracion;
       }
