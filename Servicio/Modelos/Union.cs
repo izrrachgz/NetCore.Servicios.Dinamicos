@@ -4,8 +4,7 @@ using System.Collections.Generic;
 namespace Servicio.Modelos
 {
   /// <summary>
-  /// Provee el modelo de datos
-  /// para unir dos entidades
+  /// Provee el modelo de datos para unir dos entidades
   /// </summary>
   public class Union
   {

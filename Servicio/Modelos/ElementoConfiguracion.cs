@@ -1,8 +1,9 @@
 ﻿namespace Servicio.Modelos
 {
   /// <summary>
-  /// Permite representar un valor de configuracion a su nivel basico
-  /// con su identificador unico y un valor asignado
+  /// Provee un modelo de datos para representar un valor
+  /// de configuracion a su nivel basico con su identificador
+  /// unico y un valor asignado
   /// </summary>
   public class ElementoConfiguracion
   {
