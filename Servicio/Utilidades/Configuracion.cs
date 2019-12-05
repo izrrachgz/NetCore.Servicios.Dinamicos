@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.Text;
 using Newtonsoft.Json;
 using Servicio.Modelos;
-using Servicio.Extensiones;
 
 namespace Servicio.Utilidades
 {
@@ -28,7 +27,11 @@ namespace Servicio.Utilidades
         {
           using (StreamReader sr = new StreamReader(fs))
           {
-            configuracion = JsonConvert.DeserializeObject<Configuracion>(sr.ReadToEnd());
+            StringBuilder sb = new StringBuilder();
+            while (!sr.EndOfStream)
+              sb.Append(sr.ReadLine());
+            configuracion = JsonConvert.DeserializeObject<Configuracion>(sb.ToString());
+            sb.Clear();
             sr.Dispose();
           }
           fs.Dispose();
@@ -50,21 +53,6 @@ namespace Servicio.Utilidades
     /// <summary>
     /// Lista de configuraciones
     /// </summary>
-    private List<ElementoConfiguracion> Configuraciones { get; set; }
-
-    /// <summary>
-    /// Permite obtener un valor de configuracion
-    /// utilizando como busqueda la clave unica
-    /// del elemento
-    /// </summary>
-    /// <typeparam name="T">Tipo de objeto interpretado retenido en el valor asociado</typeparam>
-    /// <param name="clave">Clave de identificacion unica</param>
-    /// <returns></returns>
-    public T Obtener<T>(string clave)
-    {
-      if (Configuraciones.NoEsValida() || !Configuraciones.Any(c => c.Clave.Equals(clave)))
-        return default(T);
-      return (T)Configuraciones.First(c => c.Clave.Equals(clave)).Valor;
-    }
+    public List<ElementoConfiguracion> Configuraciones { get; set; }
   }
 }

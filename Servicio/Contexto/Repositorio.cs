@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Servicio.Entidades;
+using Servicio.Extensiones;
 using Servicio.Utilidades;
 
 namespace Servicio.Contexto
@@ -26,6 +27,7 @@ namespace Servicio.Contexto
     public Repositorio()
     {
       CadenaDeConexion = Configuracion.Instancia.CadenaDeConexion;
+      Configuracion.Instancia.Configuraciones.Obtener<string>("CorreoNotificacion");
     }
 
     #region Configuraciones
