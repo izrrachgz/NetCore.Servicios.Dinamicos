@@ -21,11 +21,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Configuracion.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Update="ConfiguracionServicio.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties Configuracion_1json__JSONSchema="http://json.schemastore.org/appsettings" /></VisualStudio></ProjectExtensions>
+  <ProjectExtensions><VisualStudio><UserProperties ConfiguracionServicio_1json__JSONSchema="http://json.schemastore.org/appsettings" /></VisualStudio></ProjectExtensions>
 
 </Project>

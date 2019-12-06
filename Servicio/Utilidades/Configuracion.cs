@@ -21,7 +21,7 @@ namespace Servicio.Utilidades
     {
       get
       {
-        FileInfo info = new FileInfo(AppDomain.CurrentDomain.BaseDirectory + "Configuracion.json");
+        FileInfo info = new FileInfo(AppDomain.CurrentDomain.BaseDirectory + "ConfiguracionServicio.json");
         if (!info.Exists)
         {
           //El archivo de configuracion es obligatorio
