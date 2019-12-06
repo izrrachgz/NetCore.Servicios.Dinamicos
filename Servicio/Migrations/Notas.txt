@@ -3,3 +3,12 @@ EntityFrameworkCore\Add-Migration Nombre
 
 Actualizar Contexto de Datos>
 EntityFrameworkCore\Update-Database
+
+Remover Ultima Migracion aplicada>
+EntityFrameworkCore\Remove-Migration
+
+Regresar a una Migracion aplicada>
+EntityFrameworkCore\Update-Database Nombre
+
+Generar SQL de las migraciones aplicadas>
+EntityFrameworkCore\Script-Migration
