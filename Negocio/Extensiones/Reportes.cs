@@ -1,0 +1,17 @@
+﻿using DocumentFormat.OpenXml.Packaging;
+
+namespace Negocio.Extensiones
+{
+  public static class ExtensionesDeReportesExcel
+  {
+    /// <summary>
+    /// Indica si un documento de reporte es nulo
+    /// </summary>
+    /// <param name="documento">Referencia al documento de reporte</param>
+    /// <returns>Verdadero o falso</returns>
+    public static bool NoEsValido(this SpreadsheetDocument documento)
+    {
+      return documento == null;
+    }
+  }
+}
