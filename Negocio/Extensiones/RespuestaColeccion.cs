@@ -35,7 +35,6 @@ namespace Negocio.Extensiones
           Mensaje = @"No se ha encontrado la plantilla para generar el reporte."
         };
       }
-      SpreadsheetDocument documento = SpreadsheetDocument.CreateFromTemplate(direccionPlantilla);
       //Verificar que la respuesta de coleccion sea correcta
       if (!respuesta.Correcto)
       {
@@ -55,46 +54,61 @@ namespace Negocio.Extensiones
           Mensaje = @"Las columnas que has proporcionado no pertenecen a la entidad asociada."
         };
       }
-      Sheet hojaPrincipal = documento.WorkbookPart.Workbook.Descendants<Sheet>().FirstOrDefault();
-      //Agregar el contenido a la hoja principal del documento
-      if (hojaPrincipal != null)
+      SpreadsheetDocument documento;
+      RespuestaModelo<SpreadsheetDocument> resultado;
+      using (documento = SpreadsheetDocument.CreateFromTemplate(direccionPlantilla))
       {
-        List<Row> filas = hojaPrincipal.Descendants<Row>().ToList();
-        //Si no contiene encabezados se agregan unos nuevos
-        if (!filas.Any()) filas.Add(new Row());
-        Row encabezados = filas.ElementAt(0);
-        List<Cell> celdas = hojaPrincipal.Descendants<Cell>().ToList();
-        //Decidir que titulos se mostraranen los encabezados del reporte
-        List<string> titulos = columnas ?? entidad.NombreColumnas;
-        titulos.ForEach(t =>
+        try
         {
-          Cell celda = new Cell()
+          Sheet hojaPrincipal = documento.WorkbookPart.Workbook.Descendants<Sheet>().FirstOrDefault();
+          //Agregar el contenido a la hoja principal del documento
+          if (hojaPrincipal != null)
           {
-            CellValue = new CellValue(t),
-            DataType = new EnumValue<CellValues>(CellValues.String)
-          };
-          celdas.Add(celda);
-          encabezados.AppendChild(celda);
-        });
-        //Agregar el contenido de la respuesta como contenido del reporte
-        PropertyInfo[] propiedadesEntidad = entidad.GetType().GetProperties();
-        respuesta.Coleccion.ForEach(c =>
-        {
-          Row fila = new Row();
-          titulos.ForEach(t =>
-          {
-            Cell celda = new Cell()
+            List<Row> filas = hojaPrincipal.Descendants<Row>().ToList();
+            //Si no contiene encabezados se agregan unos nuevos
+            if (!filas.Any()) filas.Add(new Row());
+            Row encabezados = filas.ElementAt(0);
+            List<Cell> celdas = hojaPrincipal.Descendants<Cell>().ToList();
+            //Decidir que titulos se mostraranen los encabezados del reporte
+            List<string> titulos = columnas ?? entidad.NombreColumnas;
+            titulos.ForEach(t =>
             {
-              CellValue = new CellValue($"{propiedadesEntidad.First(p => p.Name.Equals(t)).GetValue(c)}"),
-              DataType = new EnumValue<CellValues>(CellValues.String)
-            };
-            fila.AppendChild(celda);
-          });
-          filas.Add(fila);
-        });
+              Cell celda = new Cell()
+              {
+                CellValue = new CellValue(t),
+                DataType = new EnumValue<CellValues>(CellValues.String)
+              };
+              celdas.Add(celda);
+              encabezados.AppendChild(celda);
+            });
+            //Agregar el contenido de la respuesta como contenido del reporte
+            PropertyInfo[] propiedadesEntidad = entidad.GetType().GetProperties();
+            respuesta.Coleccion.ForEach(c =>
+            {
+              Row fila = new Row();
+              titulos.ForEach(t =>
+              {
+                Cell celda = new Cell()
+                {
+                  CellValue = new CellValue($"{propiedadesEntidad.First(p => p.Name.Equals(t)).GetValue(c)}"),
+                  DataType = new EnumValue<CellValues>(CellValues.String)
+                };
+                fila.AppendChild(celda);
+              });
+              filas.Add(fila);
+            });
+          }
+          //Guardar todos los cambio
+          documento.Save();
+          documento.Close();
+          resultado = new RespuestaModelo<SpreadsheetDocument>(documento);
+        }
+        catch (Exception ex)
+        {
+          resultado = new RespuestaModelo<SpreadsheetDocument>(ex);
+        }
       }
-      documento.Close();
-      return new RespuestaModelo<SpreadsheetDocument>(documento);
+      return resultado;
     }
   }
 }

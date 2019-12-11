@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Packaging;
+﻿using System.Linq;
+using DocumentFormat.OpenXml.Packaging;
 
 namespace Negocio.Extensiones
 {
@@ -11,7 +12,7 @@ namespace Negocio.Extensiones
     /// <returns>Verdadero o falso</returns>
     public static bool NoEsValido(this SpreadsheetDocument documento)
     {
-      return documento == null;
+      return documento == null || !documento.WorkbookPart.WorksheetParts.Any();
     }
   }
 }
