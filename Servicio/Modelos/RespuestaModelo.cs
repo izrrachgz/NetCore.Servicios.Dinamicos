@@ -6,7 +6,7 @@ namespace Servicio.Modelos
   /// Provee un modelo de datos para retener un objeto dentro de una respuesta simple
   /// </summary>
   /// <typeparam name="T">Entidad o clase</typeparam>
-  public class RespuestaModelo<T> : RespuestaBasica where T : new()
+  public class RespuestaModelo<T> : RespuestaBasica
   {
     /// <summary>
     /// Modelo de datos genérico para evaluar si la respuesta es correcta

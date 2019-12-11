@@ -8,7 +8,7 @@ namespace Servicio.Modelos
   /// Provee un modelo de datos para retener una colección de objetos dentro de una respuesta simple
   /// </summary>
   /// <typeparam name="T">Entidad o clase</typeparam>
-  public class RespuestaColeccion<T> : RespuestaBasica where T : new()
+  public class RespuestaColeccion<T> : RespuestaBasica
   {
     /// <summary>
     /// Colección de datos genéricos para evaluar si la respuesta es correcta
