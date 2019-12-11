@@ -44,15 +44,7 @@ namespace Servicio.Extensiones
     /// <returns>Respuesta coleccion</returns>
     public static RespuestaColeccion<T> Convertir<T>(this List<T> lista)
     {
-      if (lista == null || !lista.Any())
-      {
-        return new RespuestaColeccion<T>(lista);
-      }
-      return new RespuestaColeccion<T>()
-      {
-        Correcto = true,
-        Coleccion = lista
-      };
+      return new RespuestaColeccion<T>(lista);
     }
   }
 }
