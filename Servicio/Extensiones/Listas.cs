@@ -35,5 +35,24 @@ namespace Servicio.Extensiones
         return default(T);
       return (T)lista.First(c => c.Clave.Equals(clave)).Valor;
     }
+
+    /// <summary>
+    /// Convierte una lista en una respuesta de coleccion
+    /// </summary>
+    /// <typeparam name="T">Tipo de objeto interpretado</typeparam>
+    /// <param name="lista">Coleccion de elementos</param>
+    /// <returns>Respuesta coleccion</returns>
+    public static RespuestaColeccion<T> Convertir<T>(this List<T> lista)
+    {
+      if (lista == null || !lista.Any())
+      {
+        return new RespuestaColeccion<T>(lista);
+      }
+      return new RespuestaColeccion<T>()
+      {
+        Correcto = true,
+        Coleccion = lista
+      };
+    }
   }
 }

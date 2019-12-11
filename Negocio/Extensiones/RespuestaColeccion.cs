@@ -98,7 +98,7 @@ namespace Negocio.Extensiones
               filas.Add(fila);
             });
           }
-          //Guardar todos los cambio
+          //Guardar todos los cambios
           documento.Save();
           documento.Close();
           resultado = new RespuestaModelo<SpreadsheetDocument>(documento);
