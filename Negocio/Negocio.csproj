@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Contratos\" />
     <Folder Include="Modelos\" />
   </ItemGroup>
 
@@ -16,6 +17,9 @@
   <ItemGroup>
     <Reference Include="Servicio">
       <HintPath>..\Servicio\bin\Debug\netcoreapp2.1\Servicio.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SqlClient">
+      <HintPath>..\..\..\Users\Israel\.nuget\packages\system.data.sqlclient\4.6.1\ref\netcoreapp2.1\System.Data.SqlClient.dll</HintPath>
     </Reference>
   </ItemGroup>
 

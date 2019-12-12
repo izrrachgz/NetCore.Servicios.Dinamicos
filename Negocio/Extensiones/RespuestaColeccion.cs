@@ -7,7 +7,6 @@ using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Servicio.Contratos;
-using Servicio.Extensiones;
 using Servicio.Modelos;
 
 namespace Negocio.Extensiones
@@ -56,20 +55,21 @@ namespace Negocio.Extensiones
       }
       SpreadsheetDocument documento;
       RespuestaModelo<SpreadsheetDocument> resultado;
-      using (documento = SpreadsheetDocument.CreateFromTemplate(direccionPlantilla))
+      using (documento = SpreadsheetDocument.Open(direccionPlantilla, true))
       {
         try
         {
-          Sheet hojaPrincipal = documento.WorkbookPart.Workbook.Descendants<Sheet>().FirstOrDefault();
+          WorksheetPart hojaPrincipal = documento.WorkbookPart.WorksheetParts.FirstOrDefault();
           //Agregar el contenido a la hoja principal del documento
-          if (hojaPrincipal != null)
+          SheetData datos = hojaPrincipal?.Worksheet.GetFirstChild<SheetData>();
+          if (datos != null)
           {
-            List<Row> filas = hojaPrincipal.Descendants<Row>().ToList();
+            List<Row> filas = datos.Elements<Row>().ToList();
             //Si no contiene encabezados se agregan unos nuevos
             if (!filas.Any()) filas.Add(new Row());
             Row encabezados = filas.ElementAt(0);
-            List<Cell> celdas = hojaPrincipal.Descendants<Cell>().ToList();
-            //Decidir que titulos se mostraranen los encabezados del reporte
+            List<Cell> celdas = encabezados.Elements<Cell>().ToList();
+            //Decidir que titulos se mostraran en los encabezados del reporte
             List<string> titulos = columnas ?? entidad.NombreColumnas;
             titulos.ForEach(t =>
             {
@@ -97,10 +97,10 @@ namespace Negocio.Extensiones
               });
               filas.Add(fila);
             });
+            datos.Append(filas);
           }
           //Guardar todos los cambios
           documento.Save();
-          documento.Close();
           resultado = new RespuestaModelo<SpreadsheetDocument>(documento);
         }
         catch (Exception ex)
