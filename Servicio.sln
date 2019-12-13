@@ -6,8 +6,14 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Servicio", "Servicio\Servicio.csproj", "{18550CF6-4788-48A6-A018-32D350E9EE7A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pruebas", "Pruebas\Pruebas.csproj", "{C3E54581-64ED-4870-936D-EB01118FA7DA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{18550CF6-4788-48A6-A018-32D350E9EE7A} = {18550CF6-4788-48A6-A018-32D350E9EE7A}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Negocio", "Negocio\Negocio.csproj", "{E8F40A38-22AF-4AAA-B552-8C086E54F119}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Negocio", "Negocio\Negocio.csproj", "{E8F40A38-22AF-4AAA-B552-8C086E54F119}"
+	ProjectSection(ProjectDependencies) = postProject
+		{18550CF6-4788-48A6-A018-32D350E9EE7A} = {18550CF6-4788-48A6-A018-32D350E9EE7A}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
