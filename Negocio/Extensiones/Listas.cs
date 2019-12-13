@@ -13,13 +13,152 @@ namespace Negocio.Extensiones
   public static class ExtensionesDeListas
   {
     /// <summary>
-    /// Crea un documento de excel a partir de la coleccion
-    /// de elementos contenida en una lista.
+    /// Determina si un valor forma parte
+    /// de los tipos de datos del sistema
     /// </summary>
-    /// <param name="lista">Instancia valida de respuesta coleccion</param>
-    /// <param name="columnas">Columnas opcionales que deberan aparecer como encabezados</param>
-    /// <returns>Documento Excel</returns>
-    public static RespuestaModelo<SpreadsheetDocument> ReporteExcel<T>(this List<T> lista, List<string> columnas)
+    /// <typeparam name="T">Tipo de entidad</typeparam>
+    /// <param name="e">Valor de entidad</param>
+    /// <returns>Verdadero o falso</returns>
+    private static bool EsUnidimencional<T>(T e)
+    {
+      string ns = e.GetType().Namespace;
+      return ns != null && ns.ToLowerInvariant().Contains("system");
+    }
+
+    /// <summary>
+    /// Inicializa una celda con el valor
+    /// de entidad proporcionado
+    /// </summary>
+    /// <typeparam name="T">Tipo de entidad</typeparam>
+    /// <param name="e">Valor de entidad</param>
+    /// <returns>Celda</returns>
+    private static Cell InicializarCelda<T>(T e)
+    {
+      CellValues tipoDeValor = CellValues.String;
+      if (e is bool) tipoDeValor = CellValues.Boolean;
+      if (e is byte) tipoDeValor = CellValues.Number;
+      if (e is short) tipoDeValor = CellValues.Number;
+      if (e is int) tipoDeValor = CellValues.Number;
+      if (e is long) tipoDeValor = CellValues.Number;
+      if (e is double) tipoDeValor = CellValues.Number;
+      if (e is decimal) tipoDeValor = CellValues.Number;
+      if (e is DateTime) tipoDeValor = CellValues.Date;
+      if (e is TimeSpan) tipoDeValor = CellValues.Date;
+      Cell celda = new Cell()
+      {
+        CellValue = new CellValue($"{e}"),
+        DataType = new EnumValue<CellValues>(tipoDeValor),
+      };
+      return celda;
+    }
+
+    /// <summary>
+    /// Guarda un archivo excel simple en el directorio
+    /// de ejecucion de la aplicacion, o en un directorio
+    /// si es proporcionada una ruta y tiene permisos de escritura.
+    /// </summary>
+    /// <typeparam name="T">Tipo de entidad</typeparam>
+    /// <param name="lista">Coleccion de entidades</param>
+    /// <param name="directorio">Directorio para guardar el archivo</param>
+    /// <returns>Directorio para acceder al archivo</returns>
+    public static RespuestaModelo<string> GuardarComoExcel<T>(this List<T> lista, string directorio = null)
+    {
+      //Verificar que la lista sea valida
+      if (!lista.Any())
+      {
+        return new RespuestaModelo<string>()
+        {
+          Correcto = false,
+          Mensaje = @"La lista proporcionada no es valida."
+        };
+      }
+      directorio = directorio ?? AppDomain.CurrentDomain.BaseDirectory;
+      //Verificar que exista el directorio
+      if (!Directory.Exists(directorio))
+      {
+        return new RespuestaModelo<string>()
+        {
+          Correcto = false,
+          Mensaje = @"El directorio de destino no es valido."
+        };
+      }
+      string directorioSalida = $@"{directorio}{Guid.NewGuid():N}.xlsx";
+      using (SpreadsheetDocument documento = SpreadsheetDocument.Create(directorioSalida, SpreadsheetDocumentType.Workbook))
+      {
+        //Agregar un libro nuevo al documento
+        WorkbookPart libro = documento.AddWorkbookPart();
+        libro.Workbook = new Workbook();
+        //Agregar el apartado de trabajo
+        WorksheetPart espacioDeTrabajo = libro.AddNewPart<WorksheetPart>();
+        espacioDeTrabajo.Worksheet = new Worksheet(new SheetData());
+        //Agregar una hoja de trabajo
+        Sheets hojas = documento.WorkbookPart.Workbook.AppendChild<Sheets>(new Sheets());
+        //Agregar la primera hoja de trabajo
+        Sheet sheet = new Sheet()
+        {
+          Id = documento.WorkbookPart.GetIdOfPart(espacioDeTrabajo),
+          SheetId = 1,
+          Name = "Reporte"
+        };
+        hojas.Append(sheet);
+        //Obtener la referencia a los datos contenidos en la primera hoja del espacio de trabajo
+        SheetData sheetData = espacioDeTrabajo.Worksheet.GetFirstChild<SheetData>();
+        //Agregar una fila nueva
+        Row encabezados = new Row() { RowIndex = 1 };
+        sheetData.Append(encabezados);
+        T entidad = lista.ElementAt(0);
+        //Obtener la informacion de las propiedades de la entidad
+        PropertyInfo[] propiedades = entidad.GetType().GetProperties();
+        //Si el tipo de entidad es un tipo de variable, se interpreta como lista de entidades de sistema
+        if (EsUnidimencional(entidad))
+        {
+          //Agregar todas las entidades como una fila
+          for (uint i = 0; i < lista.Count; i++)
+          {
+            //Crear una fila nueva
+            Row fila = new Row() { RowIndex = encabezados.RowIndex + i };
+            //Obtener la entidad en turno
+            T e = lista.ElementAt((int)i);
+            Cell celda = InicializarCelda(e);
+            fila.AppendChild(celda);
+            //Agregar la fila a los datos de la hoja
+            sheetData.Append(fila);
+          }
+        }
+        else
+        {
+          //Agregar todas las entidades como una fila
+          for (uint i = 0; i < lista.Count; i++)
+          {
+            //Crear una fila nueva
+            Row fila = new Row() { RowIndex = encabezados.RowIndex + i };
+            //Obtener la entidad en turno
+            T e = lista.ElementAt((int)i);
+            //Agregar todas las columnas de la entidad
+            foreach (PropertyInfo info in propiedades)
+            {
+              object valor = info.GetValue(e);
+              Cell celda = InicializarCelda(valor);
+              fila.AppendChild(celda);
+            }
+            //Agregar la fila a los datos de la hoja
+            sheetData.Append(fila);
+          }
+        }
+        //Cerrar el documento
+        documento.Close();
+      }
+      return new RespuestaModelo<string>(directorioSalida);
+    }
+
+    /// <summary>
+    /// Convierte una coleccion de entidades en un
+    /// documento de excel
+    /// </summary>
+    /// <typeparam name="T">Tipo de entidad</typeparam>
+    /// <param name="lista">Coleccion de entidades</param>
+    /// <returns>Directorio para acceder al archivo</returns>
+    public static RespuestaModelo<SpreadsheetDocument> ObtenerComoExcel<T>(this List<T> lista)
     {
       string directorioBase = AppDomain.CurrentDomain.BaseDirectory;
       string direccionPlantilla = $@"{directorioBase}\Plantillas\Reportes\RespuestaColeccion.xlsx";
@@ -33,8 +172,8 @@ namespace Negocio.Extensiones
           Mensaje = @"No se ha encontrado la plantilla para generar el reporte."
         };
       }
-      //Verificar que la respuesta de coleccion sea correcta
-      if (lista == null || !lista.Any())
+      //Verificar que la lista sea valida
+      if (!lista.Any())
       {
         return new RespuestaModelo<SpreadsheetDocument>()
         {
@@ -42,71 +181,73 @@ namespace Negocio.Extensiones
           Mensaje = @"La lista proporcionada no es valida."
         };
       }
-      T entidad = lista.First();
-      //Verificar las columnas proporcionadas
-      if (columnas == null || !columnas.Any())
-      {
-        return new RespuestaModelo<SpreadsheetDocument>()
-        {
-          Correcto = false,
-          Mensaje = @"Las columnas que has proporcionado no son validas."
-        };
-      }
       SpreadsheetDocument documento;
-      RespuestaModelo<SpreadsheetDocument> resultado;
       using (documento = SpreadsheetDocument.Open(direccionPlantilla, true))
       {
-        try
+        //Agregar un libro nuevo al documento
+        WorkbookPart libro = documento.WorkbookPart ?? documento.AddWorkbookPart();
+        libro.Workbook = new Workbook();
+        //Agregar el apartado de trabajo
+        WorksheetPart espacioDeTrabajo = libro.AddNewPart<WorksheetPart>();
+        espacioDeTrabajo.Worksheet = new Worksheet(new SheetData());
+        //Agregar una hoja de trabajo
+        Sheets hojas = documento.WorkbookPart.Workbook.AppendChild<Sheets>(new Sheets());
+        //Agregar la primera hoja de trabajo
+        Sheet sheet = new Sheet()
         {
-          WorksheetPart hojaPrincipal = documento.WorkbookPart.WorksheetParts.FirstOrDefault();
-          //Agregar el contenido a la hoja principal del documento
-          SheetData datos = hojaPrincipal?.Worksheet.GetFirstChild<SheetData>();
-          if (datos != null)
+          Id = documento.WorkbookPart.GetIdOfPart(espacioDeTrabajo),
+          SheetId = 1,
+          Name = "Reporte"
+        };
+        hojas.Append(sheet);
+        //Obtener la referencia a los datos contenidos en la primera hoja del espacio de trabajo
+        SheetData sheetData = espacioDeTrabajo.Worksheet.GetFirstChild<SheetData>();
+        //Agregar una fila nueva
+        Row encabezados = new Row() { RowIndex = 1 };
+        sheetData.Append(encabezados);
+        T entidad = lista.ElementAt(0);
+        //Obtener la informacion de las propiedades de la entidad
+        PropertyInfo[] propiedades = entidad.GetType().GetProperties();
+        //Si el tipo de entidad es un tipo de variable, se interpreta como lista de entidades de sistema
+        if (EsUnidimencional(entidad))
+        {
+          //Agregar todas las entidades como una fila
+          for (uint i = 0; i < lista.Count; i++)
           {
-            List<Row> filas = datos.Elements<Row>().ToList();
-            //Si no contiene encabezados se agregan unos nuevos
-            if (!filas.Any()) filas.Add(new Row());
-            Row encabezados = filas.ElementAt(0);
-            List<Cell> celdas = encabezados.Elements<Cell>().ToList();
-            //Decidir que titulos se mostraranen los encabezados del reporte
-            columnas.ForEach(t =>
-            {
-              Cell celda = new Cell()
-              {
-                CellValue = new CellValue(t),
-                DataType = new EnumValue<CellValues>(CellValues.String)
-              };
-              celdas.Add(celda);
-              encabezados.AppendChild(celda);
-            });
-            PropertyInfo[] propiedadesEntidad = entidad.GetType().GetProperties();
-            //Agregar el contenido de la respuesta como contenido del reporte
-            lista.ForEach(c =>
-            {
-              Row fila = new Row();
-              columnas.ForEach(t =>
-              {
-                Cell celda = new Cell()
-                {
-                  CellValue = new CellValue($"{propiedadesEntidad.First(p => p.Name.Equals(t)).GetValue(c)}"),
-                  DataType = new EnumValue<CellValues>(CellValues.String)
-                };
-                fila.AppendChild(celda);
-              });
-              filas.Add(fila);
-            });
-            datos.Append(filas);
+            //Crear una fila nueva
+            Row fila = new Row() { RowIndex = encabezados.RowIndex + i };
+            //Obtener la entidad en turno
+            T e = lista.ElementAt((int)i);
+            Cell celda = InicializarCelda(e);
+            fila.AppendChild(celda);
+            //Agregar la fila a los datos de la hoja
+            sheetData.Append(fila);
           }
-          //Guardar todos los cambios
-          documento.Save();
-          resultado = new RespuestaModelo<SpreadsheetDocument>(documento);
         }
-        catch (Exception ex)
+        else
         {
-          resultado = new RespuestaModelo<SpreadsheetDocument>(ex);
+          //Agregar todas las entidades como una fila
+          for (uint i = 0; i < lista.Count; i++)
+          {
+            //Crear una fila nueva
+            Row fila = new Row() { RowIndex = encabezados.RowIndex + i };
+            //Obtener la entidad en turno
+            T e = lista.ElementAt((int)i);
+            //Agregar todas las columnas de la entidad
+            foreach (PropertyInfo info in propiedades)
+            {
+              object valor = info.GetValue(e);
+              Cell celda = InicializarCelda(valor);
+              fila.AppendChild(celda);
+            }
+            //Agregar la fila a los datos de la hoja
+            sheetData.Append(fila);
+          }
         }
+        //Cerrar el documento
+        documento.Close();
       }
-      return resultado;
+      return new RespuestaModelo<SpreadsheetDocument>(documento);
     }
   }
 }

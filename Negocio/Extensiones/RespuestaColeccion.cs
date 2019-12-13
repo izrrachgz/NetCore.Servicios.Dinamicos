@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Spreadsheet;
+﻿using DocumentFormat.OpenXml.Packaging;
 using Servicio.Contratos;
 using Servicio.Modelos;
 
@@ -20,20 +13,8 @@ namespace Negocio.Extensiones
     /// <param name="respuesta">Instancia valida de respuesta coleccion</param>
     /// <param name="columnas">Columnas opcionales que deberan aparecer como encabezados</param>
     /// <returns>Documento Excel</returns>
-    public static RespuestaModelo<SpreadsheetDocument> ReporteExcel(this RespuestaColeccion<IEntidad> respuesta, List<string> columnas = null)
+    public static RespuestaModelo<SpreadsheetDocument> ReporteExcel(this RespuestaColeccion<IEntidad> respuesta)
     {
-      string directorioBase = AppDomain.CurrentDomain.BaseDirectory;
-      string direccionPlantilla = $@"{directorioBase}\Plantillas\Reportes\RespuestaColeccion.xlsx";
-      FileInfo infoPlantilla = new FileInfo(direccionPlantilla);
-      //Verificar que exista la plantilla de reporte
-      if (!infoPlantilla.Exists)
-      {
-        return new RespuestaModelo<SpreadsheetDocument>()
-        {
-          Correcto = false,
-          Mensaje = @"No se ha encontrado la plantilla para generar el reporte."
-        };
-      }
       //Verificar que la respuesta de coleccion sea correcta
       if (!respuesta.Correcto)
       {
@@ -43,72 +24,7 @@ namespace Negocio.Extensiones
           Mensaje = respuesta.Mensaje
         };
       }
-      IEntidad entidad = respuesta.Coleccion.First();
-      //Verificar las columnas proporcionadas
-      if (columnas != null && !entidad.NombreColumnas.TrueForAll(columnas.Contains))
-      {
-        return new RespuestaModelo<SpreadsheetDocument>()
-        {
-          Correcto = false,
-          Mensaje = @"Las columnas que has proporcionado no pertenecen a la entidad asociada."
-        };
-      }
-      SpreadsheetDocument documento;
-      RespuestaModelo<SpreadsheetDocument> resultado;
-      using (documento = SpreadsheetDocument.Open(direccionPlantilla, true))
-      {
-        try
-        {
-          WorksheetPart hojaPrincipal = documento.WorkbookPart.WorksheetParts.FirstOrDefault();
-          //Agregar el contenido a la hoja principal del documento
-          SheetData datos = hojaPrincipal?.Worksheet.GetFirstChild<SheetData>();
-          if (datos != null)
-          {
-            List<Row> filas = datos.Elements<Row>().ToList();
-            //Si no contiene encabezados se agregan unos nuevos
-            if (!filas.Any()) filas.Add(new Row());
-            Row encabezados = filas.ElementAt(0);
-            List<Cell> celdas = encabezados.Elements<Cell>().ToList();
-            //Decidir que titulos se mostraran en los encabezados del reporte
-            List<string> titulos = columnas ?? entidad.NombreColumnas;
-            titulos.ForEach(t =>
-            {
-              Cell celda = new Cell()
-              {
-                CellValue = new CellValue(t),
-                DataType = new EnumValue<CellValues>(CellValues.String)
-              };
-              celdas.Add(celda);
-              encabezados.AppendChild(celda);
-            });
-            //Agregar el contenido de la respuesta como contenido del reporte
-            PropertyInfo[] propiedadesEntidad = entidad.GetType().GetProperties();
-            respuesta.Coleccion.ForEach(c =>
-            {
-              Row fila = new Row();
-              titulos.ForEach(t =>
-              {
-                Cell celda = new Cell()
-                {
-                  CellValue = new CellValue($"{propiedadesEntidad.First(p => p.Name.Equals(t)).GetValue(c)}"),
-                  DataType = new EnumValue<CellValues>(CellValues.String)
-                };
-                fila.AppendChild(celda);
-              });
-              filas.Add(fila);
-            });
-            datos.Append(filas);
-          }
-          //Guardar todos los cambios
-          documento.Save();
-          resultado = new RespuestaModelo<SpreadsheetDocument>(documento);
-        }
-        catch (Exception ex)
-        {
-          resultado = new RespuestaModelo<SpreadsheetDocument>(ex);
-        }
-      }
-      return resultado;
+      return respuesta.Coleccion.ObtenerComoExcel();
     }
   }
 }
