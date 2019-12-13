@@ -63,6 +63,7 @@ namespace Negocio.Extensiones
     /// <returns>Directorio para acceder al archivo</returns>
     public static RespuestaModelo<string> GuardarComoExcel<T>(this List<T> lista, string directorio = null)
     {
+      string directorioBase = AppDomain.CurrentDomain.BaseDirectory;
       //Verificar que la lista sea valida
       if (!lista.Any())
       {
@@ -72,7 +73,7 @@ namespace Negocio.Extensiones
           Mensaje = @"La lista proporcionada no es valida."
         };
       }
-      directorio = directorio ?? AppDomain.CurrentDomain.BaseDirectory;
+      directorio = directorio ?? directorioBase;
       //Verificar que exista el directorio
       if (!Directory.Exists(directorio))
       {
@@ -82,8 +83,19 @@ namespace Negocio.Extensiones
           Mensaje = @"El directorio de destino no es valido."
         };
       }
+      string direccionPlantilla = $@"{directorioBase}\Plantillas\Reportes\RespuestaColeccion.xlsx";
+      FileInfo infoPlantilla = new FileInfo(direccionPlantilla);
+      //Verificar que exista la plantilla de reporte
+      if (!infoPlantilla.Exists)
+      {
+        return new RespuestaModelo<string>()
+        {
+          Correcto = false,
+          Mensaje = @"No se ha encontrado la plantilla para generar el reporte."
+        };
+      }
       string directorioSalida = $@"{directorio}{Guid.NewGuid():N}.xlsx";
-      using (SpreadsheetDocument documento = SpreadsheetDocument.Create(directorioSalida, SpreadsheetDocumentType.Workbook))
+      using (SpreadsheetDocument documento = SpreadsheetDocument.CreateFromTemplate(direccionPlantilla))
       {
         //Agregar un libro nuevo al documento
         WorkbookPart libro = documento.AddWorkbookPart();
@@ -146,7 +158,7 @@ namespace Negocio.Extensiones
           }
         }
         //Cerrar el documento
-        documento.Close();
+        documento.SaveAs(directorioSalida);
       }
       return new RespuestaModelo<string>(directorioSalida);
     }
@@ -182,7 +194,7 @@ namespace Negocio.Extensiones
         };
       }
       SpreadsheetDocument documento;
-      using (documento = SpreadsheetDocument.Open(direccionPlantilla, true))
+      using (documento = SpreadsheetDocument.CreateFromTemplate(direccionPlantilla))
       {
         //Agregar un libro nuevo al documento
         WorkbookPart libro = documento.WorkbookPart ?? documento.AddWorkbookPart();
