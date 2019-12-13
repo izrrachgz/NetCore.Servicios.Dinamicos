@@ -19,7 +19,7 @@ namespace Negocio.Extensiones
     /// <typeparam name="T">Tipo de entidad</typeparam>
     /// <param name="e">Valor de entidad</param>
     /// <returns>Verdadero o falso</returns>
-    private static bool EsUnidimencional<T>(T e)
+    private static bool EsEntidadDeSistema<T>(T e)
     {
       string ns = e.GetType().Namespace;
       return ns != null && ns.ToLowerInvariant().Contains("system");
@@ -98,15 +98,16 @@ namespace Negocio.Extensiones
       using (SpreadsheetDocument documento = SpreadsheetDocument.CreateFromTemplate(direccionPlantilla))
       {
         //Agregar un libro nuevo al documento
-        WorkbookPart libro = documento.AddWorkbookPart();
-        libro.Workbook = new Workbook();
+        WorkbookPart libro = documento.WorkbookPart ?? documento.AddWorkbookPart();
+        libro.Workbook = libro.Workbook ?? new Workbook();
         //Agregar el apartado de trabajo
-        WorksheetPart espacioDeTrabajo = libro.AddNewPart<WorksheetPart>();
-        espacioDeTrabajo.Worksheet = new Worksheet(new SheetData());
+        WorksheetPart espacioDeTrabajo = libro.WorksheetParts.FirstOrDefault() ?? libro.AddNewPart<WorksheetPart>();
+        espacioDeTrabajo.Worksheet = espacioDeTrabajo.Worksheet ?? new Worksheet(new SheetData());
         //Agregar una hoja de trabajo
-        Sheets hojas = documento.WorkbookPart.Workbook.AppendChild<Sheets>(new Sheets());
+        Sheets hojas = documento.WorkbookPart.Workbook.Sheets.GetFirstChild<Sheets>() ??
+          documento.WorkbookPart.Workbook.AppendChild<Sheets>(new Sheets());
         //Agregar la primera hoja de trabajo
-        Sheet sheet = new Sheet()
+        Sheet sheet = hojas.GetFirstChild<Sheet>() ?? new Sheet()
         {
           Id = documento.WorkbookPart.GetIdOfPart(espacioDeTrabajo),
           SheetId = 1,
@@ -122,7 +123,7 @@ namespace Negocio.Extensiones
         //Obtener la informacion de las propiedades de la entidad
         PropertyInfo[] propiedades = entidad.GetType().GetProperties();
         //Si el tipo de entidad es un tipo de variable, se interpreta como lista de entidades de sistema
-        if (EsUnidimencional(entidad))
+        if (EsEntidadDeSistema(entidad))
         {
           //Agregar todas las entidades como una fila
           for (uint i = 0; i < lista.Count; i++)
@@ -198,14 +199,15 @@ namespace Negocio.Extensiones
       {
         //Agregar un libro nuevo al documento
         WorkbookPart libro = documento.WorkbookPart ?? documento.AddWorkbookPart();
-        libro.Workbook = new Workbook();
+        libro.Workbook = libro.Workbook ?? new Workbook();
         //Agregar el apartado de trabajo
-        WorksheetPart espacioDeTrabajo = libro.AddNewPart<WorksheetPart>();
-        espacioDeTrabajo.Worksheet = new Worksheet(new SheetData());
+        WorksheetPart espacioDeTrabajo = libro.WorksheetParts.FirstOrDefault() ?? libro.AddNewPart<WorksheetPart>();
+        espacioDeTrabajo.Worksheet = espacioDeTrabajo.Worksheet ?? new Worksheet(new SheetData());
         //Agregar una hoja de trabajo
-        Sheets hojas = documento.WorkbookPart.Workbook.AppendChild<Sheets>(new Sheets());
+        Sheets hojas = documento.WorkbookPart.Workbook.Sheets.GetFirstChild<Sheets>() ??
+                       documento.WorkbookPart.Workbook.AppendChild<Sheets>(new Sheets());
         //Agregar la primera hoja de trabajo
-        Sheet sheet = new Sheet()
+        Sheet sheet = hojas.GetFirstChild<Sheet>() ?? new Sheet()
         {
           Id = documento.WorkbookPart.GetIdOfPart(espacioDeTrabajo),
           SheetId = 1,
@@ -221,7 +223,7 @@ namespace Negocio.Extensiones
         //Obtener la informacion de las propiedades de la entidad
         PropertyInfo[] propiedades = entidad.GetType().GetProperties();
         //Si el tipo de entidad es un tipo de variable, se interpreta como lista de entidades de sistema
-        if (EsUnidimencional(entidad))
+        if (EsEntidadDeSistema(entidad))
         {
           //Agregar todas las entidades como una fila
           for (uint i = 0; i < lista.Count; i++)
