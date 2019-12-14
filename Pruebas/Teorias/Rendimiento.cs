@@ -6,7 +6,7 @@ using Servicio.Modelos;
 using Servicio.Servicios;
 using Xunit;
 
-namespace Pruebas.Teorias
+namespace Servicio.Pruebas.Teorias
 {
   public class Rendimiento
   {

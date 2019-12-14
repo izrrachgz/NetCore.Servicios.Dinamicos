@@ -2,7 +2,7 @@
 using Servicio.Extensiones;
 using Xunit;
 
-namespace Pruebas.Hechos.Extensiones
+namespace Servicio.Pruebas.Hechos.Extensiones
 {
   public class Listas
   {

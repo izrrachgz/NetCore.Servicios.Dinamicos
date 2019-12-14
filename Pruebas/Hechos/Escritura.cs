@@ -3,7 +3,7 @@ using Servicio.Servicios;
 using Servicio.Modelos;
 using Xunit;
 
-namespace Pruebas.Hechos
+namespace Servicio.Pruebas.Hechos
 {
   public class Escritura
   {
