@@ -1,4 +1,5 @@
-﻿using Servicio.Extensiones;
+﻿using System;
+using Servicio.Extensiones;
 using Xunit;
 
 namespace Pruebas.Hechos.Extensiones
@@ -27,6 +28,20 @@ namespace Pruebas.Hechos.Extensiones
     public void EsCorreo()
     {
       Assert.True(@"izrra.ch@icloud.com".EsCorreo());
+    }
+
+    [Fact]
+    public void EsDireccionDeArchivo()
+    {
+      string archivo = AppDomain.CurrentDomain.BaseDirectory + @"ConfiguracionServicio.json";
+      Assert.True(archivo.EsDireccionDeArchivo());
+    }
+
+    [Fact]
+    public void EsDireccionWeb()
+    {
+      string url = @"http://google.com";
+      Assert.True(url.EsDireccionWeb());
     }
   }
 }
