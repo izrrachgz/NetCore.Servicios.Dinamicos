@@ -68,5 +68,45 @@ namespace Servicio.Extensiones
         return false;
       }
     }
+
+    /// <summary>
+    /// Indica si el formato de una cadena es una direccion de archivo valida
+    /// </summary>
+    /// <param name="cadena">Cadena para comprobar</param>
+    /// <returns>Verdadero o falso</returns>
+    public static bool EsDireccionDeArchivo(this string cadena)
+    {
+      if (cadena.NoEsValida()) return false;
+      bool resultado;
+      try
+      {
+        resultado = new Uri(cadena).IsFile;
+      }
+      catch (Exception)
+      {
+        resultado = false;
+      }
+      return resultado;
+    }
+
+    /// <summary>
+    /// Indica si el formato de una cadena es una direccion web valida
+    /// </summary>
+    /// <param name="cadena">Cadena para comprobar</param>
+    /// <returns>Verdadero o falso</returns>
+    public static bool EsDireccionWeb(this string cadena)
+    {
+      if (cadena.NoEsValida()) return false;
+      bool resultado;
+      try
+      {
+        resultado = new Uri(cadena).IsWellFormedOriginalString();
+      }
+      catch (Exception)
+      {
+        resultado = false;
+      }
+      return resultado;
+    }
   }
 }
