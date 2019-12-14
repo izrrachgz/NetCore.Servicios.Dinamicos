@@ -119,8 +119,11 @@ namespace Negocio.Utilidades
           espacioDeTrabajo.Worksheet.AppendChild(new SheetProtection()
           {
             Sheet = true,
-            InsertRows = true,
             DeleteRows = true,
+            DeleteColumns = true,
+            InsertRows = true,
+            InsertColumns = true,
+            InsertHyperlinks = true,
             Password = new HexBinaryValue(clave)
           });
         }
