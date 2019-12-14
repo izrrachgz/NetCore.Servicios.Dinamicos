@@ -4,6 +4,9 @@ using Servicio.Modelos;
 
 namespace Negocio.Extensiones
 {
+  /// <summary>
+  /// Provee metodos de extensión para respuestas del tipo coleccion
+  /// </summary>
   public static class ExtensionesDeRespuestaColeccion
   {
     /// <summary>

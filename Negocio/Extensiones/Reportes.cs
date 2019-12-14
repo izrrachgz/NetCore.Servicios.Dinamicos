@@ -3,6 +3,9 @@ using DocumentFormat.OpenXml.Packaging;
 
 namespace Negocio.Extensiones
 {
+  /// <summary>
+  /// Provee metodos de extensión para reportes del tipo excel
+  /// </summary>
   public static class ExtensionesDeReportesExcel
   {
     /// <summary>
