@@ -75,13 +75,16 @@ namespace Negocio.Utilidades
     }
 
     /// <summary>
-    /// Guarda el contenido proporcionado en el documento
+    /// Guarda el contenido en el documento proporcionado
     /// </summary>
     /// <typeparam name="T">Tipo de entidad</typeparam>
     /// <param name="documento">Referencia al documento</param>
     /// <param name="lista">Coleccion de entidades</param>
+    /// <param name="titulo">Titulo del documento</param>
+    /// <param name="encabezados">Encabezados</param>
+    /// <param name="clave">Contraseña de proteccion</param>
     /// <returns>Documento con el contenido</returns>
-    public static RespuestaModelo<SpreadsheetDocument> GuardarContenidoEnExcel<T>(SpreadsheetDocument documento, List<T> lista)
+    public static RespuestaModelo<SpreadsheetDocument> GuardarContenidoEnExcel<T>(SpreadsheetDocument documento, List<T> lista, string titulo = null, string[] encabezados = null, string clave = null)
     {
       //Verificar el documento
       if (documento.NoEsValido())
@@ -110,6 +113,17 @@ namespace Negocio.Utilidades
         //Agregar el apartado de trabajo
         WorksheetPart espacioDeTrabajo = libro.WorksheetParts.FirstOrDefault() ?? libro.AddNewPart<WorksheetPart>();
         espacioDeTrabajo.Worksheet = espacioDeTrabajo.Worksheet ?? new Worksheet(new SheetData());
+        //Agregar proteccion por clave
+        if (!clave.NoEsValida())
+        {
+          espacioDeTrabajo.Worksheet.AppendChild(new SheetProtection()
+          {
+            Sheet = true,
+            InsertRows = true,
+            DeleteRows = true,
+            Password = new HexBinaryValue(clave)
+          });
+        }
         //Agregar una hoja de trabajo
         Sheets hojas = documento.WorkbookPart.Workbook.Sheets.GetFirstChild<Sheets>() ??
                        documento.WorkbookPart.Workbook.AppendChild<Sheets>(new Sheets());
@@ -118,14 +132,32 @@ namespace Negocio.Utilidades
         {
           Id = documento.WorkbookPart.GetIdOfPart(espacioDeTrabajo),
           SheetId = 1,
-          Name = "Reporte"
+          Name = titulo ?? @"Reporte"
         };
         hojas.Append(sheet);
         //Obtener la referencia a los datos contenidos en la primera hoja del espacio de trabajo
         SheetData sheetData = espacioDeTrabajo.Worksheet.GetFirstChild<SheetData>();
+        //Determinar la primera fila con contenido
+        uint indiceComenzar = sheetData.GetFirstChild<Row>()?.RowIndex ?? 1;
+        //Agregar encabezados
+        if (encabezados != null && !encabezados.NoEsValida())
+        {
+          //Crear una fila nueva
+          Row fila = new Row() { RowIndex = indiceComenzar };
+          //Agregar todas las entidades como una fila
+          for (uint i = 0; i < encabezados.Length; i++)
+          {
+            //Obtener el encabezado en turno
+            Cell celda = InicializarCelda(encabezados[i]);
+            fila.AppendChild(celda);
+          }
+          //Agregar la fila a los datos de la hoja
+          sheetData.Append(fila);
+          indiceComenzar++;
+        }
         //Agregar una fila nueva
-        Row encabezados = new Row() { RowIndex = 1 };
-        sheetData.Append(encabezados);
+        Row primeraFila = new Row() { RowIndex = indiceComenzar };
+        sheetData.Append(primeraFila);
         T entidad = lista.ElementAt(0);
         //Obtener la informacion de las propiedades de la entidad
         PropertyInfo[] propiedades = entidad.GetType().GetProperties();
@@ -136,7 +168,7 @@ namespace Negocio.Utilidades
           for (uint i = 0; i < lista.Count; i++)
           {
             //Crear una fila nueva
-            Row fila = new Row() { RowIndex = encabezados.RowIndex + i };
+            Row fila = new Row() { RowIndex = primeraFila.RowIndex + i };
             //Obtener la entidad en turno
             T e = lista.ElementAt((int)i);
             Cell celda = InicializarCelda(e);
@@ -151,7 +183,7 @@ namespace Negocio.Utilidades
           for (uint i = 0; i < lista.Count; i++)
           {
             //Crear una fila nueva
-            Row fila = new Row() { RowIndex = encabezados.RowIndex + i };
+            Row fila = new Row() { RowIndex = primeraFila.RowIndex + i };
             //Obtener la entidad en turno
             T e = lista.ElementAt((int)i);
             //Agregar todas las columnas de la entidad
