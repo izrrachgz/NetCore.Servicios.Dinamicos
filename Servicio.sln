@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28307.852
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Servicio", "Servicio\Servicio.csproj", "{18550CF6-4788-48A6-A018-32D350E9EE7A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pruebas", "Pruebas\Pruebas.csproj", "{C3E54581-64ED-4870-936D-EB01118FA7DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Servicio.Pruebas", "Pruebas\Servicio.Pruebas.csproj", "{C3E54581-64ED-4870-936D-EB01118FA7DA}"
 	ProjectSection(ProjectDependencies) = postProject
 		{18550CF6-4788-48A6-A018-32D350E9EE7A} = {18550CF6-4788-48A6-A018-32D350E9EE7A}
 	EndProjectSection
