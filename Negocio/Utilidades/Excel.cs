@@ -108,10 +108,10 @@ namespace Negocio.Utilidades
       {
         //Agregar un libro nuevo al documento
         WorkbookPart libro = documento.WorkbookPart ?? documento.AddWorkbookPart();
-        libro.Workbook = libro.Workbook ?? new Workbook();
+        libro.Workbook = new Workbook();
         //Agregar el apartado de trabajo
-        WorksheetPart espacioDeTrabajo = libro.WorksheetParts.FirstOrDefault() ?? libro.AddNewPart<WorksheetPart>();
-        espacioDeTrabajo.Worksheet = espacioDeTrabajo.Worksheet ?? new Worksheet(new SheetData());
+        WorksheetPart espacioDeTrabajo = libro.AddNewPart<WorksheetPart>();
+        espacioDeTrabajo.Worksheet = new Worksheet(new SheetData());
         //Agregar proteccion por clave a las entidades del documento
         configuracion = configuracion ?? new ConfiguracionReporteExcel();
         if (!configuracion.Clave.NoEsValida())
@@ -128,16 +128,15 @@ namespace Negocio.Utilidades
           });
         }
         //Agregar una hoja de trabajo
-        Sheets hojas = documento.WorkbookPart.Workbook.Sheets.GetFirstChild<Sheets>() ??
-                       documento.WorkbookPart.Workbook.AppendChild<Sheets>(new Sheets());
+        Sheets hojas = documento.WorkbookPart.Workbook.AppendChild<Sheets>(new Sheets());
         //Agregar la primera hoja de trabajo
-        Sheet sheet = hojas.GetFirstChild<Sheet>() ?? new Sheet()
+        Sheet sheet = new Sheet()
         {
           Id = documento.WorkbookPart.GetIdOfPart(espacioDeTrabajo),
           SheetId = 1,
-          Name = configuracion?.Titulo ?? @"Reporte"
+          Name = configuracion.Titulo ?? @"Reporte"
         };
-        hojas.Append(sheet);
+        if (!hojas.Any()) hojas.Append(sheet);
         //Obtener la referencia a los datos contenidos en la primera hoja del espacio de trabajo
         SheetData sheetData = espacioDeTrabajo.Worksheet.GetFirstChild<SheetData>();
         //Determinar la primera fila con contenido
@@ -158,9 +157,6 @@ namespace Negocio.Utilidades
           sheetData.Append(fila);
           indiceComenzar++;
         }
-        //Agregar una fila nueva
-        Row primeraFila = new Row() { RowIndex = indiceComenzar };
-        sheetData.Append(primeraFila);
         T entidad = lista.ElementAt(0);
         //Obtener la informacion de las propiedades de la entidad
         PropertyInfo[] propiedades = entidad.GetType().GetProperties();
@@ -171,7 +167,7 @@ namespace Negocio.Utilidades
           for (uint i = 0; i < lista.Count; i++)
           {
             //Crear una fila nueva
-            Row fila = new Row() { RowIndex = primeraFila.RowIndex + i };
+            Row fila = new Row() { RowIndex = indiceComenzar + i };
             //Obtener la entidad en turno
             T e = lista.ElementAt((int)i);
             Cell celda = InicializarCelda(e);
@@ -186,7 +182,7 @@ namespace Negocio.Utilidades
           for (uint i = 0; i < lista.Count; i++)
           {
             //Crear una fila nueva
-            Row fila = new Row() { RowIndex = primeraFila.RowIndex + i };
+            Row fila = new Row() { RowIndex = indiceComenzar + i };
             //Obtener la entidad en turno
             T e = lista.ElementAt((int)i);
             //Agregar todas las columnas de la entidad
@@ -200,14 +196,12 @@ namespace Negocio.Utilidades
             sheetData.Append(fila);
           }
         }
+        documento.Save();
         //Guardar el documento en la direccion especificada
         if (configuracion.DirectorioDeSalida.EsDireccionDeDirectorio())
         {
           documento.SaveAs(configuracion.DirectorioDeSalida + $@"{Guid.NewGuid():N}.xlsx");
-        }
-        else
-        {
-          documento.Save();
+          documento.Close();
         }
         respuesta = new RespuestaModelo<SpreadsheetDocument>(documento);
       }

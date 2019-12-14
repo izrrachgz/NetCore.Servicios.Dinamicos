@@ -33,7 +33,7 @@ namespace Negocio.Extensiones
         };
       }
       string directorioBase = AppDomain.CurrentDomain.BaseDirectory;
-      string direccionPlantilla = $@"{directorioBase}\Plantillas\Reportes\RespuestaColeccion.xlsx";
+      string direccionPlantilla = $@"{directorioBase}Plantillas\Reportes\RespuestaColeccion.xlsx";
       RespuestaBasica existePlantilla = Excel.ExisteArchivo(direccionPlantilla);
       if (!existePlantilla.Correcto)
       {

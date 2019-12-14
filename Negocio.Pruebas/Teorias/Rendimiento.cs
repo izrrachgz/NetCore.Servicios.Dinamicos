@@ -22,7 +22,7 @@ namespace Negocio.Pruebas.Teorias
       RespuestaModelo<SpreadsheetDocument> documento = lista.DocumentoExcel(new ConfiguracionReporteExcel()
       {
         Titulo = @"Reporte de Prueba",
-        DirectorioDeSalida = @"C:\Users\Israel\Downloads",
+        DirectorioDeSalida = AppDomain.CurrentDomain.BaseDirectory,
         Encabezados = new[] { @"Nombre" }
       });
       temporizador.Stop();
