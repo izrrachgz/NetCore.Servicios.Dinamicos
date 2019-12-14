@@ -34,7 +34,7 @@ namespace Negocio.Extensiones
       }
       string directorioBase = AppDomain.CurrentDomain.BaseDirectory;
       string direccionPlantilla = $@"{directorioBase}\Plantillas\Reportes\RespuestaColeccion.xlsx";
-      RespuestaBasica existePlantilla = ReporteExcel.ExisteArchivo(direccionPlantilla);
+      RespuestaBasica existePlantilla = Excel.ExisteArchivo(direccionPlantilla);
       if (!existePlantilla.Correcto)
       {
         return new RespuestaModelo<SpreadsheetDocument>()
@@ -46,7 +46,7 @@ namespace Negocio.Extensiones
       SpreadsheetDocument documento;
       using (documento = SpreadsheetDocument.CreateFromTemplate(direccionPlantilla))
       {
-        RespuestaModelo<SpreadsheetDocument> guardado = ReporteExcel.GuardarContenidoEnExcel(documento, lista, configuracion);
+        RespuestaModelo<SpreadsheetDocument> guardado = Excel.GuardarContenidoDeLista(documento, lista, configuracion);
         if (guardado.Correcto)
         {
           documento = guardado.Modelo;

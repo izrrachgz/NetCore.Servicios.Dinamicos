@@ -13,7 +13,7 @@ using Servicio.Modelos;
 
 namespace Negocio.Utilidades
 {
-  internal static class ReporteExcel
+  internal static class Excel
   {
     /// <summary>
     /// Verifica si existe un archivo
@@ -83,7 +83,7 @@ namespace Negocio.Utilidades
     /// <param name="lista">Coleccion de entidades</param>
     /// <param name="configuracion">Configuracion del documento</param>
     /// <returns>Documento con el contenido</returns>
-    public static RespuestaModelo<SpreadsheetDocument> GuardarContenidoEnExcel<T>(SpreadsheetDocument documento, List<T> lista, ConfiguracionReporteExcel configuracion = null)
+    public static RespuestaModelo<SpreadsheetDocument> GuardarContenidoDeLista<T>(SpreadsheetDocument documento, List<T> lista, ConfiguracionReporteExcel configuracion = null)
     {
       //Verificar el documento
       if (documento.NoEsValido())
