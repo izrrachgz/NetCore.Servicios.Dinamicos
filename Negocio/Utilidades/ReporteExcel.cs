@@ -13,7 +13,7 @@ using Servicio.Modelos;
 
 namespace Negocio.Utilidades
 {
-  public static class ReporteExcel
+  internal static class ReporteExcel
   {
     /// <summary>
     /// Verifica si existe un archivo
