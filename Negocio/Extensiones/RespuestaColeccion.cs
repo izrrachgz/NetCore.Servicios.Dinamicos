@@ -1,4 +1,5 @@
 ﻿using DocumentFormat.OpenXml.Packaging;
+using Negocio.Modelos;
 using Servicio.Contratos;
 using Servicio.Modelos;
 
@@ -14,9 +15,9 @@ namespace Negocio.Extensiones
     /// de entidades contenidas en una respuesta.
     /// </summary>
     /// <param name="respuesta">Instancia valida de respuesta coleccion</param>
-    /// <param name="columnas">Columnas opcionales que deberan aparecer como encabezados</param>
+    /// <param name="configuracion">Configuracion para aplicar al documento</param>
     /// <returns>Documento Excel</returns>
-    public static RespuestaModelo<SpreadsheetDocument> ReporteExcel(this RespuestaColeccion<IEntidad> respuesta)
+    public static RespuestaModelo<SpreadsheetDocument> ReporteExcel(this RespuestaColeccion<IEntidad> respuesta, ConfiguracionReporteExcel configuracion = null)
     {
       //Verificar que la respuesta de coleccion sea correcta
       if (!respuesta.Correcto)
@@ -27,7 +28,7 @@ namespace Negocio.Extensiones
           Mensaje = respuesta.Mensaje
         };
       }
-      return respuesta.Coleccion.ObtenerComoExcel();
+      return respuesta.Coleccion.DocumentoExcel(configuracion);
     }
   }
 }

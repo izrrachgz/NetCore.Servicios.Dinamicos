@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
@@ -67,6 +68,16 @@ namespace Servicio.Extensiones
       {
         return false;
       }
+    }
+
+    /// <summary>
+    /// Indica si el formato de una cadena es una direccion de directorio valida
+    /// </summary>
+    /// <param name="cadena">Cadena para comprobar</param>
+    /// <returns>Verdadero o falso</returns>
+    public static bool EsDireccionDeDirectorio(this string cadena)
+    {
+      return !cadena.NoEsValida() && Directory.Exists(cadena);
     }
 
     /// <summary>

@@ -7,6 +7,7 @@ using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Negocio.Extensiones;
+using Negocio.Modelos;
 using Servicio.Extensiones;
 using Servicio.Modelos;
 
@@ -80,11 +81,9 @@ namespace Negocio.Utilidades
     /// <typeparam name="T">Tipo de entidad</typeparam>
     /// <param name="documento">Referencia al documento</param>
     /// <param name="lista">Coleccion de entidades</param>
-    /// <param name="titulo">Titulo del documento</param>
-    /// <param name="encabezados">Encabezados</param>
-    /// <param name="clave">Contraseña de proteccion</param>
+    /// <param name="configuracion">Configuracion del documento</param>
     /// <returns>Documento con el contenido</returns>
-    public static RespuestaModelo<SpreadsheetDocument> GuardarContenidoEnExcel<T>(SpreadsheetDocument documento, List<T> lista, string titulo = null, string[] encabezados = null, string clave = null)
+    public static RespuestaModelo<SpreadsheetDocument> GuardarContenidoEnExcel<T>(SpreadsheetDocument documento, List<T> lista, ConfiguracionReporteExcel configuracion = null)
     {
       //Verificar el documento
       if (documento.NoEsValido())
@@ -113,8 +112,9 @@ namespace Negocio.Utilidades
         //Agregar el apartado de trabajo
         WorksheetPart espacioDeTrabajo = libro.WorksheetParts.FirstOrDefault() ?? libro.AddNewPart<WorksheetPart>();
         espacioDeTrabajo.Worksheet = espacioDeTrabajo.Worksheet ?? new Worksheet(new SheetData());
-        //Agregar proteccion por clave
-        if (!clave.NoEsValida())
+        //Agregar proteccion por clave a las entidades del documento
+        configuracion = configuracion ?? new ConfiguracionReporteExcel();
+        if (!configuracion.Clave.NoEsValida())
         {
           espacioDeTrabajo.Worksheet.AppendChild(new SheetProtection()
           {
@@ -124,7 +124,7 @@ namespace Negocio.Utilidades
             InsertRows = true,
             InsertColumns = true,
             InsertHyperlinks = true,
-            Password = new HexBinaryValue(clave)
+            Password = new HexBinaryValue(configuracion.Clave)
           });
         }
         //Agregar una hoja de trabajo
@@ -135,7 +135,7 @@ namespace Negocio.Utilidades
         {
           Id = documento.WorkbookPart.GetIdOfPart(espacioDeTrabajo),
           SheetId = 1,
-          Name = titulo ?? @"Reporte"
+          Name = configuracion?.Titulo ?? @"Reporte"
         };
         hojas.Append(sheet);
         //Obtener la referencia a los datos contenidos en la primera hoja del espacio de trabajo
@@ -143,15 +143,15 @@ namespace Negocio.Utilidades
         //Determinar la primera fila con contenido
         uint indiceComenzar = sheetData.GetFirstChild<Row>()?.RowIndex ?? 1;
         //Agregar encabezados
-        if (encabezados != null && !encabezados.NoEsValida())
+        if (configuracion.Encabezados != null && !configuracion.Encabezados.NoEsValida())
         {
           //Crear una fila nueva
           Row fila = new Row() { RowIndex = indiceComenzar };
           //Agregar todas las entidades como una fila
-          for (uint i = 0; i < encabezados.Length; i++)
+          for (uint i = 0; i < configuracion.Encabezados.Length; i++)
           {
             //Obtener el encabezado en turno
-            Cell celda = InicializarCelda(encabezados[i]);
+            Cell celda = InicializarCelda(configuracion.Encabezados[i]);
             fila.AppendChild(celda);
           }
           //Agregar la fila a los datos de la hoja
@@ -200,8 +200,15 @@ namespace Negocio.Utilidades
             sheetData.Append(fila);
           }
         }
-        //Cerrar el documento
-        documento.Save();
+        //Guardar el documento en la direccion especificada
+        if (configuracion.DirectorioDeSalida.EsDireccionDeDirectorio())
+        {
+          documento.SaveAs(configuracion.DirectorioDeSalida + $@"{Guid.NewGuid():N}.xlsx");
+        }
+        else
+        {
+          documento.Save();
+        }
         respuesta = new RespuestaModelo<SpreadsheetDocument>(documento);
       }
       catch (Exception ex)

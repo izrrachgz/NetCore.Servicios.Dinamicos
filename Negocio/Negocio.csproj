@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <Folder Include="Contratos\" />
-    <Folder Include="Modelos\" />
     <Folder Include="ExtensionesDeModelos\" />
   </ItemGroup>
 
