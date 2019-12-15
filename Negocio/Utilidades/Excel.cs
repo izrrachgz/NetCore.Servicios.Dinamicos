@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.ExtendedProperties;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Negocio.Modelos;
@@ -109,42 +110,86 @@ namespace Negocio.Utilidades
       {
         try
         {
-          //Agregar un libro nuevo al documento
+          //Asociar el libro del documento si no agregar uno nuevo
           WorkbookPart libro = documento.WorkbookPart ?? documento.AddWorkbookPart();
-          libro.Workbook = new Workbook();
-          //Agregar el apartado de trabajo
-          WorksheetPart espacioDeTrabajo = libro.AddNewPart<WorksheetPart>();
-          espacioDeTrabajo.Worksheet = new Worksheet(new SheetData());
-          //Agregar proteccion por clave a las entidades del documento
+          //Referencia al espacio de trabajo
+          WorksheetPart espacioDeTrabajo;
+          //Referencia a las hojas
+          Sheets hojas;
+          //Referencia a la primera hoja
+          Sheet hoja;
+          //Verificar los valores de plantilla
+          if (libro.Workbook == null || libro.WorksheetParts.Count().Equals(0))
+          {
+            //Agregar nuevo libro y todas sus partes
+            libro.Workbook = new Workbook();
+            //Agregar un nuevo espacio de trabajo
+            espacioDeTrabajo = libro.AddNewPart<WorksheetPart>();
+            //Agregar una nueva hoja con nuevos datos
+            espacioDeTrabajo.Worksheet = new Worksheet(new SheetData());
+            //Agregar una nueva coleccion de hojas y sus datos
+            hojas = libro.Workbook.AppendChild<Sheets>(new Sheets());
+            //Agregar una nueva hoja a la coleccion de hojas
+            hoja = new Sheet()
+            {
+              Id = libro.GetIdOfPart(espacioDeTrabajo),
+              SheetId = 1,
+              Name = @"Reporte"
+            };
+            hojas.Append(hoja);
+          }
+          else
+          {
+            //Buscar el espacio de trabajo
+            espacioDeTrabajo = libro.WorksheetParts.First();
+            //Buscar la coleccion de hojas
+            hojas = libro.Workbook.GetFirstChild<Sheets>() ?? documento.WorkbookPart.Workbook.AppendChild<Sheets>(new Sheets());
+            //Buscar la primera hoja de la coleccion
+            hoja = hojas.GetFirstChild<Sheet>();
+            if (hoja == null)
+            {
+              //Agregar una nueva hoja a la coleccion de hojas
+              hoja = new Sheet()
+              {
+                Id = libro.GetIdOfPart(espacioDeTrabajo),
+                SheetId = 1,
+                Name = @"Reporte"
+              };
+              hojas.Append(hoja);
+            }
+          }
+          //Establecer instancia de configuracion
           configuracion = configuracion ?? new ConfiguracionReporteExcel();
+          //Actualizar el titulo de la hoja
+          hoja.Name = configuracion.Titulo ?? @"Listado";
+          //Agregar proteccion por clave a las entidades del documento
           if (!configuracion.Clave.NoEsValida())
           {
-            espacioDeTrabajo.Worksheet.AppendChild(new SheetProtection()
+            /*espacioDeTrabajo.Worksheet.AppendChild(new SheetProtection()
             {
-              Sheet = true,
               DeleteRows = true,
               DeleteColumns = true,
               InsertRows = true,
               InsertColumns = true,
-              InsertHyperlinks = true,
               Password = new HexBinaryValue(configuracion.Clave)
-            });
+            });*/
           }
-          //Agregar una hoja de trabajo
-          Sheets hojas = documento.WorkbookPart.Workbook.AppendChild<Sheets>(new Sheets());
-          //Agregar la primera hoja de trabajo
-          Sheet sheet = new Sheet()
-          {
-            Id = documento.WorkbookPart.GetIdOfPart(espacioDeTrabajo),
-            SheetId = 1,
-            Name = configuracion.Titulo ?? @"Reporte"
-          };
-          if (!hojas.Any()) hojas.Append(sheet);
           //Obtener la referencia a los datos contenidos en la primera hoja del espacio de trabajo
-          SheetData sheetData = espacioDeTrabajo.Worksheet.GetFirstChild<SheetData>();
-          //Determinar la primera fila con contenido
-          uint indiceComenzar = sheetData.GetFirstChild<Row>()?.RowIndex ?? 1;
-          //Agregar encabezados
+          SheetData datos = espacioDeTrabajo.Worksheet.GetFirstChild<SheetData>();
+          //Determinar la ultima fila para establecer el indice donde debe comenzar a escribir
+          uint indiceComenzar = 1;
+          Row ultimaFila = datos.GetFirstChild<Row>();
+          if (ultimaFila != null)
+          {
+            Row siguienteFila = ultimaFila.NextSibling<Row>();
+            while (siguienteFila != null)
+            {
+              indiceComenzar = siguienteFila.RowIndex.Value;
+              siguienteFila = siguienteFila.NextSibling<Row>();
+            }
+            indiceComenzar++;
+          }
+          //Agregar encabezados a partir de la ultima fila escrita en la plantilla
           if (configuracion.Encabezados != null && !configuracion.Encabezados.NoEsValida())
           {
             //Crear una fila nueva
@@ -157,7 +202,7 @@ namespace Negocio.Utilidades
               fila.AppendChild(celda);
             }
             //Agregar la fila a los datos de la hoja
-            sheetData.Append(fila);
+            datos.Append(fila);
             indiceComenzar++;
           }
           T entidad = lista.ElementAt(0);
@@ -176,7 +221,7 @@ namespace Negocio.Utilidades
               Cell celda = InicializarCelda(e);
               fila.AppendChild(celda);
               //Agregar la fila a los datos de la hoja
-              sheetData.Append(fila);
+              datos.Append(fila);
             }
           }
           else
@@ -196,9 +241,21 @@ namespace Negocio.Utilidades
                 fila.AppendChild(celda);
               }
               //Agregar la fila a los datos de la hoja
-              sheetData.Append(fila);
+              datos.Append(fila);
             }
           }
+          //Agregar propiedades de documento
+          documento.PackageProperties.Title = @"Reporte de Listado";
+          documento.PackageProperties.Creator = @"Israel Ch";
+          documento.PackageProperties.Category = @"Reporte";
+          documento.PackageProperties.Description = $@"Listado de entidades tipo {entidad.GetType()}";
+          documento.PackageProperties.LastModifiedBy = @"Israel Ch";
+          //Agregar propiedades extendidas
+          if (documento.ExtendedFilePropertiesPart == null) documento.AddExtendedFilePropertiesPart();
+          documento.ExtendedFilePropertiesPart.Properties = new Properties();
+          documento.ExtendedFilePropertiesPart.Properties.Company = new Company(@"izrra.ch");
+          documento.ExtendedFilePropertiesPart.Properties.Application = new Application("NetCore.Servicios.Dinamicos");
+          //Guardar todos los cambios en el documento
           documento.Save();
           //Guardar el documento en la direccion especificada
           if (configuracion.DirectorioDeSalida.EsDireccionDeDirectorio())

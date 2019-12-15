@@ -23,7 +23,8 @@ namespace Negocio.Pruebas.Teorias
       {
         Titulo = @"Reporte de Prueba",
         DirectorioDeSalida = AppDomain.CurrentDomain.BaseDirectory,
-        Encabezados = new[] { @"Nombre" }
+        Encabezados = new[] { @"Nombre" },
+        Clave = @"porcino"
       });
       temporizador.Stop();
       Assert.True(documento.Correcto && temporizador.Elapsed.TotalSeconds <= estimado);
