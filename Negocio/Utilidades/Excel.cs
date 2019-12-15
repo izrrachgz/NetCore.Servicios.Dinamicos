@@ -6,7 +6,6 @@ using System.Reflection;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
-using Negocio.Extensiones;
 using Negocio.Modelos;
 using Servicio.Extensiones;
 using Servicio.Modelos;
@@ -83,15 +82,17 @@ namespace Negocio.Utilidades
     /// <param name="lista">Coleccion de entidades</param>
     /// <param name="configuracion">Configuracion del documento</param>
     /// <returns>Documento con el contenido</returns>
-    public static RespuestaModelo<SpreadsheetDocument> GuardarContenidoDeLista<T>(SpreadsheetDocument documento, List<T> lista, ConfiguracionReporteExcel configuracion = null)
+    public static RespuestaModelo<SpreadsheetDocument> GuardarContenidoDeLista<T>(List<T> lista, ConfiguracionReporteExcel configuracion = null)
     {
-      //Verificar el documento
-      if (documento.NoEsValido())
+      string directorioBase = AppDomain.CurrentDomain.BaseDirectory;
+      string direccionPlantilla = $@"{directorioBase}Plantillas\Reportes\RespuestaColeccion.xlsx";
+      RespuestaBasica existePlantilla = ExisteArchivo(direccionPlantilla);
+      if (!existePlantilla.Correcto)
       {
         return new RespuestaModelo<SpreadsheetDocument>()
         {
           Correcto = false,
-          Mensaje = @"El documento proporcionado no es valido."
+          Mensaje = existePlantilla.Mensaje
         };
       }
       //Verificar el contenido que se incluira en el documento
@@ -104,110 +105,113 @@ namespace Negocio.Utilidades
         };
       }
       RespuestaModelo<SpreadsheetDocument> respuesta;
-      try
+      using (SpreadsheetDocument documento = SpreadsheetDocument.CreateFromTemplate(direccionPlantilla))
       {
-        //Agregar un libro nuevo al documento
-        WorkbookPart libro = documento.WorkbookPart ?? documento.AddWorkbookPart();
-        libro.Workbook = new Workbook();
-        //Agregar el apartado de trabajo
-        WorksheetPart espacioDeTrabajo = libro.AddNewPart<WorksheetPart>();
-        espacioDeTrabajo.Worksheet = new Worksheet(new SheetData());
-        //Agregar proteccion por clave a las entidades del documento
-        configuracion = configuracion ?? new ConfiguracionReporteExcel();
-        if (!configuracion.Clave.NoEsValida())
+        try
         {
-          espacioDeTrabajo.Worksheet.AppendChild(new SheetProtection()
+          //Agregar un libro nuevo al documento
+          WorkbookPart libro = documento.WorkbookPart ?? documento.AddWorkbookPart();
+          libro.Workbook = new Workbook();
+          //Agregar el apartado de trabajo
+          WorksheetPart espacioDeTrabajo = libro.AddNewPart<WorksheetPart>();
+          espacioDeTrabajo.Worksheet = new Worksheet(new SheetData());
+          //Agregar proteccion por clave a las entidades del documento
+          configuracion = configuracion ?? new ConfiguracionReporteExcel();
+          if (!configuracion.Clave.NoEsValida())
           {
-            Sheet = true,
-            DeleteRows = true,
-            DeleteColumns = true,
-            InsertRows = true,
-            InsertColumns = true,
-            InsertHyperlinks = true,
-            Password = new HexBinaryValue(configuracion.Clave)
-          });
-        }
-        //Agregar una hoja de trabajo
-        Sheets hojas = documento.WorkbookPart.Workbook.AppendChild<Sheets>(new Sheets());
-        //Agregar la primera hoja de trabajo
-        Sheet sheet = new Sheet()
-        {
-          Id = documento.WorkbookPart.GetIdOfPart(espacioDeTrabajo),
-          SheetId = 1,
-          Name = configuracion.Titulo ?? @"Reporte"
-        };
-        if (!hojas.Any()) hojas.Append(sheet);
-        //Obtener la referencia a los datos contenidos en la primera hoja del espacio de trabajo
-        SheetData sheetData = espacioDeTrabajo.Worksheet.GetFirstChild<SheetData>();
-        //Determinar la primera fila con contenido
-        uint indiceComenzar = sheetData.GetFirstChild<Row>()?.RowIndex ?? 1;
-        //Agregar encabezados
-        if (configuracion.Encabezados != null && !configuracion.Encabezados.NoEsValida())
-        {
-          //Crear una fila nueva
-          Row fila = new Row() { RowIndex = indiceComenzar };
-          //Agregar todas las entidades como una fila
-          for (uint i = 0; i < configuracion.Encabezados.Length; i++)
-          {
-            //Obtener el encabezado en turno
-            Cell celda = InicializarCelda(configuracion.Encabezados[i]);
-            fila.AppendChild(celda);
-          }
-          //Agregar la fila a los datos de la hoja
-          sheetData.Append(fila);
-          indiceComenzar++;
-        }
-        T entidad = lista.ElementAt(0);
-        //Obtener la informacion de las propiedades de la entidad
-        PropertyInfo[] propiedades = entidad.GetType().GetProperties();
-        //Si el tipo de entidad es un tipo de variable, se interpreta como lista de entidades de sistema
-        if (EsEntidadDeSistema(entidad))
-        {
-          //Agregar todas las entidades como una fila
-          for (uint i = 0; i < lista.Count; i++)
-          {
-            //Crear una fila nueva
-            Row fila = new Row() { RowIndex = indiceComenzar + i };
-            //Obtener la entidad en turno
-            T e = lista.ElementAt((int)i);
-            Cell celda = InicializarCelda(e);
-            fila.AppendChild(celda);
-            //Agregar la fila a los datos de la hoja
-            sheetData.Append(fila);
-          }
-        }
-        else
-        {
-          //Agregar todas las entidades como una fila
-          for (uint i = 0; i < lista.Count; i++)
-          {
-            //Crear una fila nueva
-            Row fila = new Row() { RowIndex = indiceComenzar + i };
-            //Obtener la entidad en turno
-            T e = lista.ElementAt((int)i);
-            //Agregar todas las columnas de la entidad
-            foreach (PropertyInfo info in propiedades)
+            espacioDeTrabajo.Worksheet.AppendChild(new SheetProtection()
             {
-              object valor = info.GetValue(e);
-              Cell celda = InicializarCelda(valor);
+              Sheet = true,
+              DeleteRows = true,
+              DeleteColumns = true,
+              InsertRows = true,
+              InsertColumns = true,
+              InsertHyperlinks = true,
+              Password = new HexBinaryValue(configuracion.Clave)
+            });
+          }
+          //Agregar una hoja de trabajo
+          Sheets hojas = documento.WorkbookPart.Workbook.AppendChild<Sheets>(new Sheets());
+          //Agregar la primera hoja de trabajo
+          Sheet sheet = new Sheet()
+          {
+            Id = documento.WorkbookPart.GetIdOfPart(espacioDeTrabajo),
+            SheetId = 1,
+            Name = configuracion.Titulo ?? @"Reporte"
+          };
+          if (!hojas.Any()) hojas.Append(sheet);
+          //Obtener la referencia a los datos contenidos en la primera hoja del espacio de trabajo
+          SheetData sheetData = espacioDeTrabajo.Worksheet.GetFirstChild<SheetData>();
+          //Determinar la primera fila con contenido
+          uint indiceComenzar = sheetData.GetFirstChild<Row>()?.RowIndex ?? 1;
+          //Agregar encabezados
+          if (configuracion.Encabezados != null && !configuracion.Encabezados.NoEsValida())
+          {
+            //Crear una fila nueva
+            Row fila = new Row() { RowIndex = indiceComenzar };
+            //Agregar todas las entidades como una fila
+            for (uint i = 0; i < configuracion.Encabezados.Length; i++)
+            {
+              //Obtener el encabezado en turno
+              Cell celda = InicializarCelda(configuracion.Encabezados[i]);
               fila.AppendChild(celda);
             }
             //Agregar la fila a los datos de la hoja
             sheetData.Append(fila);
+            indiceComenzar++;
           }
+          T entidad = lista.ElementAt(0);
+          //Obtener la informacion de las propiedades de la entidad
+          PropertyInfo[] propiedades = entidad.GetType().GetProperties();
+          //Si el tipo de entidad es un tipo de variable, se interpreta como lista de entidades de sistema
+          if (EsEntidadDeSistema(entidad))
+          {
+            //Agregar todas las entidades como una fila
+            for (uint i = 0; i < lista.Count; i++)
+            {
+              //Crear una fila nueva
+              Row fila = new Row() { RowIndex = indiceComenzar + i };
+              //Obtener la entidad en turno
+              T e = lista.ElementAt((int)i);
+              Cell celda = InicializarCelda(e);
+              fila.AppendChild(celda);
+              //Agregar la fila a los datos de la hoja
+              sheetData.Append(fila);
+            }
+          }
+          else
+          {
+            //Agregar todas las entidades como una fila
+            for (uint i = 0; i < lista.Count; i++)
+            {
+              //Crear una fila nueva
+              Row fila = new Row() { RowIndex = indiceComenzar + i };
+              //Obtener la entidad en turno
+              T e = lista.ElementAt((int)i);
+              //Agregar todas las columnas de la entidad
+              foreach (PropertyInfo info in propiedades)
+              {
+                object valor = info.GetValue(e);
+                Cell celda = InicializarCelda(valor);
+                fila.AppendChild(celda);
+              }
+              //Agregar la fila a los datos de la hoja
+              sheetData.Append(fila);
+            }
+          }
+          documento.Save();
+          //Guardar el documento en la direccion especificada
+          if (configuracion.DirectorioDeSalida.EsDireccionDeDirectorio())
+          {
+            documento.SaveAs(configuracion.DirectorioDeSalida + $@"{Guid.NewGuid():N}.xlsx");
+            documento.Close();
+          }
+          respuesta = new RespuestaModelo<SpreadsheetDocument>(documento);
         }
-        documento.Save();
-        //Guardar el documento en la direccion especificada
-        if (configuracion.DirectorioDeSalida.EsDireccionDeDirectorio())
+        catch (Exception ex)
         {
-          documento.SaveAs(configuracion.DirectorioDeSalida + $@"{Guid.NewGuid():N}.xlsx");
-          documento.Close();
+          respuesta = new RespuestaModelo<SpreadsheetDocument>(ex);
         }
-        respuesta = new RespuestaModelo<SpreadsheetDocument>(documento);
-      }
-      catch (Exception ex)
-      {
-        respuesta = new RespuestaModelo<SpreadsheetDocument>(ex);
       }
       return respuesta;
     }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DocumentFormat.OpenXml.Packaging;
 using Negocio.Modelos;
 using Negocio.Utilidades;
@@ -32,27 +31,7 @@ namespace Negocio.Extensiones
           Mensaje = @"La lista de contenido no es valida."
         };
       }
-      string directorioBase = AppDomain.CurrentDomain.BaseDirectory;
-      string direccionPlantilla = $@"{directorioBase}Plantillas\Reportes\RespuestaColeccion.xlsx";
-      RespuestaBasica existePlantilla = Excel.ExisteArchivo(direccionPlantilla);
-      if (!existePlantilla.Correcto)
-      {
-        return new RespuestaModelo<SpreadsheetDocument>()
-        {
-          Correcto = false,
-          Mensaje = existePlantilla.Mensaje
-        };
-      }
-      SpreadsheetDocument documento;
-      using (documento = SpreadsheetDocument.CreateFromTemplate(direccionPlantilla))
-      {
-        RespuestaModelo<SpreadsheetDocument> guardado = Excel.GuardarContenidoDeLista(documento, lista, configuracion);
-        if (guardado.Correcto)
-        {
-          documento = guardado.Modelo;
-        }
-      }
-      return new RespuestaModelo<SpreadsheetDocument>(documento);
+      return Excel.GuardarContenidoDeLista(lista, configuracion);
     }
   }
 }
