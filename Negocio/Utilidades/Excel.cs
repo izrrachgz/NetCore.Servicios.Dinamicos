@@ -165,30 +165,20 @@ namespace Negocio.Utilidades
           //Agregar proteccion por clave a las entidades del documento
           if (!configuracion.Clave.NoEsValida())
           {
-            /*espacioDeTrabajo.Worksheet.AppendChild(new SheetProtection()
-            {
-              DeleteRows = true,
-              DeleteColumns = true,
-              InsertRows = true,
-              InsertColumns = true,
-              Password = new HexBinaryValue(configuracion.Clave)
-            });*/
+            //espacioDeTrabajo.Worksheet.AppendChild(new SheetProtection()
+            //{
+            //  DeleteRows = true,
+            //  DeleteColumns = true,
+            //  InsertRows = true,
+            //  InsertColumns = true,
+            //  Password = new HexBinaryValue(configuracion.Clave)
+            //});
           }
           //Obtener la referencia a los datos contenidos en la primera hoja del espacio de trabajo
           SheetData datos = espacioDeTrabajo.Worksheet.GetFirstChild<SheetData>();
           //Determinar la ultima fila para establecer el indice donde debe comenzar a escribir
-          uint indiceComenzar = 1;
-          Row ultimaFila = datos.GetFirstChild<Row>();
-          if (ultimaFila != null)
-          {
-            Row siguienteFila = ultimaFila.NextSibling<Row>();
-            while (siguienteFila != null)
-            {
-              indiceComenzar = siguienteFila.RowIndex.Value;
-              siguienteFila = siguienteFila.NextSibling<Row>();
-            }
-            indiceComenzar++;
-          }
+          uint indiceComenzar = datos.Descendants<Row>().LastOrDefault()?.RowIndex.Value ?? 0;
+          indiceComenzar++;
           //Agregar encabezados a partir de la ultima fila escrita en la plantilla
           if (configuracion.Encabezados != null && !configuracion.Encabezados.NoEsValida())
           {
