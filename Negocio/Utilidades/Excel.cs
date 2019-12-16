@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Packaging;
 using System.Linq;
 using System.Reflection;
 using DocumentFormat.OpenXml;
@@ -21,7 +22,7 @@ namespace Negocio.Utilidades
     /// </summary>
     /// <param name="direccion">Direccion absoluta al archivo</param>
     /// <returns>Verdadero o falso</returns>
-    public static RespuestaBasica ExisteArchivo(string direccion)
+    private static RespuestaBasica ExisteArchivo(string direccion)
     {
       if (direccion.NoEsValida())
       {
@@ -110,6 +111,7 @@ namespace Negocio.Utilidades
       {
         try
         {
+          documento.CompressionOption = CompressionOption.Maximum;
           //Asociar el libro del documento si no agregar uno nuevo
           WorkbookPart libro = documento.WorkbookPart ?? documento.AddWorkbookPart();
           //Referencia al espacio de trabajo
