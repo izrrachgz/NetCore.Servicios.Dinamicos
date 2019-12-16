@@ -21,15 +21,15 @@ namespace Negocio.Extensiones
     /// <param name="stream">Flujo de datos en memoria</param>
     /// <param name="nombre">Nombre del documento adjunto</param>
     /// <returns>Respuesta web con el documento adjunto</returns>
-    private static HttpResponseMessage AgregarAdjunto(HttpResponseMessage http, Stream stream, string nombre = null)
+    private static void AgregarAdjunto(HttpResponseMessage http, Stream stream, string nombre = null)
     {
+      if (http == null || stream == null) return;
       http.Content = new StreamContent(stream);
       http.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
       http.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
       {
         FileName = nombre ?? $@"Reporte{DateTime.Now:s}.xlsx",
       };
-      return http;
     }
 
     /// <summary>
@@ -39,10 +39,9 @@ namespace Negocio.Extensiones
     /// <param name="stream">Referencia al flujo de datos</param>
     /// <param name="nombre">Nombre del archivo adjunto</param>
     /// <returns>Respuesta web con archivo adjunto</returns>
-    public static HttpResponseMessage AdjuntarArchivo(this HttpResponseMessage http, Stream stream, string nombre = null)
-    {
-      return AgregarAdjunto(http, stream, nombre);
-    }
+    public static void AdjuntarArchivo(this HttpResponseMessage http, Stream stream, string nombre = null)
+    => AgregarAdjunto(http, stream, nombre);
+
 
     /// <summary>
     /// Adjunta un documento excel a partir de una coleccion
@@ -52,12 +51,12 @@ namespace Negocio.Extensiones
     /// <param name="http">Referencia a la respuesta</param>
     /// <param name="respueta">Referencia a la respuesta coleccion</param>
     /// <returns>Respuesta web con el documento como adjunto</returns>
-    public static HttpResponseMessage AdjuntarComoExcel<T>(this HttpResponseMessage http, RespuestaColeccion<T> respueta)
+    public static void AdjuntarComoExcel<T>(this HttpResponseMessage http, RespuestaColeccion<T> respueta)
     {
-      if (!respueta.Correcto) return http;
+      if (!respueta.Correcto) return;
       RespuestaModelo<SpreadsheetDocument> resultado = respueta.Coleccion.DocumentoExcel();
-      if (!resultado.Correcto) return http;
-      return AgregarAdjunto(http, resultado.Modelo.Stream());
+      if (!resultado.Correcto) return;
+      AgregarAdjunto(http, resultado.Modelo.Stream());
     }
 
     /// <summary>
@@ -68,12 +67,12 @@ namespace Negocio.Extensiones
     /// <param name="http">Referencia a la respuesta</param>
     /// <param name="lista">Referencia a la coleccion</param>
     /// <returns>Respuesta web con el documento como adjunto</returns>
-    public static HttpResponseMessage AdjuntarComoExcel<T>(this HttpResponseMessage http, List<T> lista)
+    public static void AdjuntarComoExcel<T>(this HttpResponseMessage http, List<T> lista)
     {
-      if (lista.NoEsValida()) return http;
+      if (lista.NoEsValida()) return;
       RespuestaModelo<SpreadsheetDocument> resultado = lista.DocumentoExcel();
-      if (!resultado.Correcto) return http;
-      return AgregarAdjunto(http, resultado.Modelo.Stream());
+      if (!resultado.Correcto) return;
+      AgregarAdjunto(http, resultado.Modelo.Stream());
     }
 
     /// <summary>
@@ -82,10 +81,10 @@ namespace Negocio.Extensiones
     /// <param name="http">Referencia a la respuesta</param>
     /// <param name="documento">Referencia al documento</param>
     /// <returns>Respuesta web con el documento como adjunto</returns>
-    public static HttpResponseMessage AdjuntarExcel(this HttpResponseMessage http, SpreadsheetDocument documento)
+    public static void AdjuntarExcel(this HttpResponseMessage http, SpreadsheetDocument documento)
     {
-      if (documento.NoEsValido()) return http;
-      return AgregarAdjunto(http, documento.Stream());
+      if (documento.NoEsValido()) return;
+      AgregarAdjunto(http, documento.Stream());
     }
   }
 }
