@@ -21,7 +21,7 @@ namespace Negocio.Extensiones
     /// <param name="stream">Flujo de datos en memoria</param>
     /// <param name="nombre">Nombre del documento adjunto</param>
     /// <returns>Respuesta web con el documento adjunto</returns>
-    private static HttpResponseMessage AgregarAdjuntoStream(HttpResponseMessage http, Stream stream, string nombre = null)
+    private static HttpResponseMessage AgregarAdjunto(HttpResponseMessage http, Stream stream, string nombre = null)
     {
       http.Content = new StreamContent(stream);
       http.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
@@ -45,7 +45,7 @@ namespace Negocio.Extensiones
       if (!respueta.Correcto) return http;
       RespuestaModelo<SpreadsheetDocument> resultado = respueta.Coleccion.DocumentoExcel();
       if (!resultado.Correcto) return http;
-      return AgregarAdjuntoStream(http, resultado.Modelo.Stream());
+      return AgregarAdjunto(http, resultado.Modelo.Stream());
     }
 
     /// <summary>
@@ -61,7 +61,7 @@ namespace Negocio.Extensiones
       if (lista.NoEsValida()) return http;
       RespuestaModelo<SpreadsheetDocument> resultado = lista.DocumentoExcel();
       if (!resultado.Correcto) return http;
-      return AgregarAdjuntoStream(http, resultado.Modelo.Stream());
+      return AgregarAdjunto(http, resultado.Modelo.Stream());
     }
 
     /// <summary>
@@ -73,7 +73,7 @@ namespace Negocio.Extensiones
     public static HttpResponseMessage AdjuntarExcel(this HttpResponseMessage http, SpreadsheetDocument documento)
     {
       if (documento.NoEsValido()) return http;
-      return AgregarAdjuntoStream(http, documento.Stream());
+      return AgregarAdjunto(http, documento.Stream());
     }
   }
 }
