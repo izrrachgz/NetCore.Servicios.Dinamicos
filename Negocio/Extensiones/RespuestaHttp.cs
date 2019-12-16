@@ -33,6 +33,18 @@ namespace Negocio.Extensiones
     }
 
     /// <summary>
+    /// Adjunta un archivo a partir de un flujo de datos en memoria
+    /// </summary>
+    /// <param name="http">Referencia a la respuesta web</param>
+    /// <param name="stream">Referencia al flujo de datos</param>
+    /// <param name="nombre">Nombre del archivo adjunto</param>
+    /// <returns>Respuesta web con archivo adjunto</returns>
+    public static HttpResponseMessage AdjuntarArchivo(this HttpResponseMessage http, Stream stream, string nombre = null)
+    {
+      return AgregarAdjunto(http, stream, nombre);
+    }
+
+    /// <summary>
     /// Adjunta un documento excel a partir de una coleccion
     /// a un mensaje de respuesta
     /// </summary>
