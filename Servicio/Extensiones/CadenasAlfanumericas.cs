@@ -38,7 +38,7 @@ namespace Servicio.Extensiones
     /// <returns>Verdadero o falso</returns>
     public static bool EsNumero(this string cadena)
     {
-      return !cadena.NoEsValida() && new Regex(@"^[0-9]$").IsMatch(cadena);
+      return !cadena.NoEsValida() && new Regex(@"^\d").IsMatch(cadena);
     }
 
     /// <summary>

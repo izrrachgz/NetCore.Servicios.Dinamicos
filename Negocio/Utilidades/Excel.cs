@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Packaging;
@@ -9,6 +10,7 @@ using DocumentFormat.OpenXml.ExtendedProperties;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Negocio.Modelos;
+using Newtonsoft.Json;
 using Servicio.Extensiones;
 using Servicio.Modelos;
 
@@ -58,20 +60,12 @@ namespace Negocio.Utilidades
     /// <returns>Celda</returns>
     private static Cell InicializarCelda<T>(T e)
     {
-      CellValues tipoDeValor = CellValues.String;
-      if (e is bool) tipoDeValor = CellValues.Boolean;
-      if (e is byte) tipoDeValor = CellValues.Number;
-      if (e is short) tipoDeValor = CellValues.Number;
-      if (e is int) tipoDeValor = CellValues.Number;
-      if (e is long) tipoDeValor = CellValues.Number;
-      if (e is double) tipoDeValor = CellValues.Number;
-      if (e is decimal) tipoDeValor = CellValues.Number;
-      if (e is DateTime) tipoDeValor = CellValues.Date;
-      if (e is TimeSpan) tipoDeValor = CellValues.Date;
+      object valor = e;
+      if (e is IEnumerable<T>) valor = JsonConvert.SerializeObject(e);
       Cell celda = new Cell()
       {
-        CellValue = new CellValue($"{e}"),
-        DataType = new EnumValue<CellValues>(tipoDeValor),
+        CellValue = new CellValue($"{valor}"),
+        DataType = new EnumValue<CellValues>(CellValues.String),
       };
       return celda;
     }
