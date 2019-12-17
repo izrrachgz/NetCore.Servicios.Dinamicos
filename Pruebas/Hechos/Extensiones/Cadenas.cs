@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Servicio.Pruebas.Hechos.Extensiones
 {
-  public class CadenasAlfanumericas
+  public class Cadenas
   {
     [Fact]
     public void NoEsValida()
