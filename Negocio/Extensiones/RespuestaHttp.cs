@@ -24,7 +24,7 @@ namespace Negocio.Extensiones
     /// <returns>Respuesta web con el documento adjunto</returns>
     private static void AgregarAdjunto(HttpResponseMessage http, Stream stream, string nombre = null, string tipoDeContenido = null)
     {
-      if (http == null || stream == null || stream.Length.Equals(0)) return;
+      if (http.NoEsValida() || stream.NoEsValido()) return;
       http.Content = new StreamContent(stream);
       http.Content.Headers.ContentType = new MediaTypeHeaderValue(tipoDeContenido ?? "application/octet-stream");
       http.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
@@ -43,7 +43,7 @@ namespace Negocio.Extensiones
     /// <returns>Respuesta web con el documento adjunto</returns>
     public static void AgregarAdjunto(HttpResponseMessage http, byte[] bytes, string tipoDeContenido, string nombre = null)
     {
-      if (http == null || bytes == null || bytes.Length.Equals(0) || tipoDeContenido.NoEsValida()) return;
+      if (http.NoEsValida() || bytes.NoEsValido() || tipoDeContenido.NoEsValida()) return;
       http.Content = new ByteArrayContent(bytes);
       http.Content.Headers.ContentType = new MediaTypeHeaderValue(tipoDeContenido);
       http.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
@@ -63,7 +63,7 @@ namespace Negocio.Extensiones
     /// <returns>Respuesta web con el documento adjunto</returns>
     public static void AgregarAdjunto(HttpResponseMessage http, FileInfo info, string tipoDeContenido, string nombre = null)
     {
-      if (http == null || info == null || !info.Exists || tipoDeContenido.NoEsValida()) return;
+      if (http.NoEsValida() || info.NoEsValido() || tipoDeContenido.NoEsValida()) return;
       AgregarAdjunto(http, new FileStream(info.FullName, FileMode.Open, FileAccess.Read), nombre ?? info.Name, tipoDeContenido);
     }
 
@@ -78,9 +78,17 @@ namespace Negocio.Extensiones
     /// <returns>Respuesta web con el documento adjunto</returns>
     public static void AgregarAdjunto(HttpResponseMessage http, string direccion, string tipoDeContenido, string nombre = null)
     {
-      if (http == null || direccion.NoEsValida() || direccion.EsDireccionWeb() || tipoDeContenido.NoEsValida()) return;
-      FileInfo info = new FileInfo(direccion);
-      if (!info.Exists) return;
+      if (http.NoEsValida() || direccion.NoEsValida() || direccion.EsDireccionWeb() || tipoDeContenido.NoEsValida()) return;
+      FileInfo info;
+      try
+      {
+        info = new FileInfo(direccion);
+      }
+      catch (Exception)
+      {
+        info = null;
+      }
+      if (info.NoEsValido()) return;
       AgregarAdjunto(http, new FileStream(info.FullName, FileMode.Open, FileAccess.Read), nombre ?? info.Name, tipoDeContenido);
     }
 
