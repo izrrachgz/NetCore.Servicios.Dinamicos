@@ -20,16 +20,68 @@ namespace Negocio.Extensiones
     /// <param name="http">Referencia a la respuesta</param>
     /// <param name="stream">Flujo de datos en memoria</param>
     /// <param name="nombre">Nombre del documento adjunto</param>
+    /// <param name="tipoDeContenido">Nombre del tipo de contenido adjunto</param>
     /// <returns>Respuesta web con el documento adjunto</returns>
-    private static void AgregarAdjunto(HttpResponseMessage http, Stream stream, string nombre = null)
+    private static void AgregarAdjunto(HttpResponseMessage http, Stream stream, string nombre = null, string tipoDeContenido = null)
     {
-      if (http == null || stream == null) return;
+      if (http == null || stream == null || stream.Length.Equals(0)) return;
       http.Content = new StreamContent(stream);
-      http.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+      http.Content.Headers.ContentType = new MediaTypeHeaderValue(tipoDeContenido ?? "application/octet-stream");
       http.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
       {
-        FileName = nombre ?? $@"Reporte{DateTime.Now:s}.xlsx",
+        FileName = nombre ?? $@"{DateTime.Now:s}"
       };
+    }
+
+    /// <summary>
+    /// Agrega un arreglo de bytes a una respuesta web como adjunto
+    /// </summary>
+    /// <param name="http">Referencia a la respuesta</param>
+    /// <param name="bytes">Arreglo de bytes del archivo</param>
+    /// <param name="tipoDeContenido">Nombre del tipo mime de contenido adjunto</param>
+    /// <param name="nombre">Nombre del documento adjunto</param>
+    /// <returns>Respuesta web con el documento adjunto</returns>
+    public static void AgregarAdjunto(HttpResponseMessage http, byte[] bytes, string tipoDeContenido, string nombre = null)
+    {
+      if (http == null || bytes == null || bytes.Length.Equals(0) || tipoDeContenido.NoEsValida()) return;
+      http.Content = new ByteArrayContent(bytes);
+      http.Content.Headers.ContentType = new MediaTypeHeaderValue(tipoDeContenido);
+      http.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
+      {
+        FileName = nombre ?? $@"{DateTime.Now:s}"
+      };
+    }
+
+    /// <summary>
+    /// Agrega un stream a una respuesta web como adjunto
+    /// a partir de la informacion del archivo
+    /// </summary>
+    /// <param name="http">Referencia a la respuesta</param>
+    /// <param name="info">Informacion sobre el archivo</param>
+    /// <param name="tipoDeContenido">Nombre del tipo mime de contenido adjunto</param>
+    /// <param name="nombre">Nombre del documento adjunto</param>
+    /// <returns>Respuesta web con el documento adjunto</returns>
+    public static void AgregarAdjunto(HttpResponseMessage http, FileInfo info, string tipoDeContenido, string nombre = null)
+    {
+      if (http == null || info == null || !info.Exists || tipoDeContenido.NoEsValida()) return;
+      AgregarAdjunto(http, new FileStream(info.FullName, FileMode.Open, FileAccess.Read), nombre ?? info.Name, tipoDeContenido);
+    }
+
+    /// <summary>
+    /// Agrega un stream a una respuesta web como adjunto
+    /// a partir de una ruta absoluta a un archivo
+    /// </summary>
+    /// <param name="http">Referencia a la respuesta</param>
+    /// <param name="direccion">Informacion sobre el archivo</param>
+    /// <param name="tipoDeContenido">Nombre del tipo mime de contenido adjunto</param>
+    /// <param name="nombre">Nombre del documento adjunto</param>
+    /// <returns>Respuesta web con el documento adjunto</returns>
+    public static void AgregarAdjunto(HttpResponseMessage http, string direccion, string tipoDeContenido, string nombre = null)
+    {
+      if (http == null || direccion.NoEsValida() || direccion.EsDireccionWeb() || tipoDeContenido.NoEsValida()) return;
+      FileInfo info = new FileInfo(direccion);
+      if (!info.Exists) return;
+      AgregarAdjunto(http, new FileStream(info.FullName, FileMode.Open, FileAccess.Read), nombre ?? info.Name, tipoDeContenido);
     }
 
     /// <summary>
@@ -38,10 +90,10 @@ namespace Negocio.Extensiones
     /// <param name="http">Referencia a la respuesta web</param>
     /// <param name="stream">Referencia al flujo de datos</param>
     /// <param name="nombre">Nombre del archivo adjunto</param>
+    /// <param name="tipoDeContenido">Nombre del tipo mime de contenido adjunto</param>
     /// <returns>Respuesta web con archivo adjunto</returns>
-    public static void AdjuntarArchivo(this HttpResponseMessage http, Stream stream, string nombre = null)
-    => AgregarAdjunto(http, stream, nombre);
-
+    public static void AdjuntarArchivo(this HttpResponseMessage http, Stream stream, string nombre = null, string tipoDeContenido = null)
+    => AgregarAdjunto(http, stream, nombre, tipoDeContenido);
 
     /// <summary>
     /// Adjunta un documento excel a partir de una coleccion
@@ -56,7 +108,7 @@ namespace Negocio.Extensiones
       if (!respueta.Correcto) return;
       RespuestaModelo<SpreadsheetDocument> resultado = respueta.Coleccion.DocumentoExcel();
       if (!resultado.Correcto) return;
-      AgregarAdjunto(http, resultado.Modelo.Stream());
+      AgregarAdjunto(http, resultado.Modelo.Stream(), $@"Reporte {DateTime.Now:s}.xlsx");
     }
 
     /// <summary>
@@ -72,7 +124,7 @@ namespace Negocio.Extensiones
       if (lista.NoEsValida()) return;
       RespuestaModelo<SpreadsheetDocument> resultado = lista.DocumentoExcel();
       if (!resultado.Correcto) return;
-      AgregarAdjunto(http, resultado.Modelo.Stream());
+      AgregarAdjunto(http, resultado.Modelo.Stream(), $@"Reporte {DateTime.Now:s}.xlsx");
     }
 
     /// <summary>

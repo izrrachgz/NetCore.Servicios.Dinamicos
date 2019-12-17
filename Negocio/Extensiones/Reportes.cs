@@ -27,11 +27,8 @@ namespace Negocio.Extensiones
     /// <returns>Flujo de memoria</returns>
     public static Stream Stream(this SpreadsheetDocument documento)
     {
-      Stream stream;
-      using (stream = new MemoryStream())
-      {
-        if (!documento.NoEsValido()) documento.Clone(stream);
-      }
+      Stream stream = new MemoryStream();
+      if (!documento.NoEsValido()) documento.Clone(stream);
       return stream;
     }
 
@@ -44,15 +41,9 @@ namespace Negocio.Extensiones
     {
       byte[] bytes = new byte[0];
       if (documento.NoEsValido()) return bytes;
-      using (Stream stream = new MemoryStream())
-      {
-        documento.Clone(stream);
-        bytes = new byte[stream.Length];
-        using (MemoryStream ms = new MemoryStream(bytes))
-        {
-          stream.CopyTo(ms);
-        }
-      }
+      Stream stream = documento.Stream();
+      bytes = new byte[stream.Length];
+      using (MemoryStream ms = new MemoryStream(bytes)) stream.CopyTo(ms);
       return bytes;
     }
   }
