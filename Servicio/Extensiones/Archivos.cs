@@ -5,7 +5,7 @@ namespace Servicio.Extensiones
   /// <summary>
   /// Provee metodos de extension para archivos
   /// </summary>
-  public static class Archivos
+  public static class ExtensionesDeArchivos
   {
     /// <summary>
     /// Indica si la informacion sobre un
