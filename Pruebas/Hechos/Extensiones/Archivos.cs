@@ -9,7 +9,7 @@ namespace Servicio.Pruebas.Hechos.Extensiones
     [Fact]
     public void NoEsValido()
     {
-      FileInfo info = new FileInfo(@"");
+      FileInfo info = new FileInfo(@"c:\vicky.jpg");
       Assert.True(info.NoEsValido());
     }
   }
