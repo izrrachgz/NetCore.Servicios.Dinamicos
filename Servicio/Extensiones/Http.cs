@@ -8,7 +8,7 @@ namespace Servicio.Extensiones
   /// <summary>
   /// Provee metodos de extension para los mensajes http
   /// </summary>
-  public static class ExtensionesDeMensajesHttp
+  public static class ExtensionesHttp
   {
     /// <summary>
     /// Indica si el mensaje de respuesta http es nulo o
