@@ -26,10 +26,10 @@ namespace Servicio.Extensiones
     /// </summary>
     /// <param name="http">Referencia a la respuesta web</param>
     /// <param name="stream">Referencia al flujo de datos</param>
-    /// <param name="nombre">Nombre del archivo adjunto</param>
     /// <param name="tipoDeContenido">Nombre del tipo mime de contenido adjunto</param>
+    /// <param name="nombre">Nombre del archivo adjunto</param>
     /// <returns>Respuesta web con archivo adjunto</returns>
-    public static void AgregarAdjunto(this HttpResponseMessage http, Stream stream, string nombre = null, string tipoDeContenido = null)
+    public static void AgregarAdjunto(this HttpResponseMessage http, Stream stream, string tipoDeContenido = null, string nombre = null)
     {
       if (http.NoEsValida() || stream.NoEsValido()) return;
       http.Content = new StreamContent(stream);
@@ -71,7 +71,7 @@ namespace Servicio.Extensiones
     public static void AgregarAdjunto(this HttpResponseMessage http, FileInfo info, string tipoDeContenido, string nombre = null)
     {
       if (http.NoEsValida() || info.NoEsValido() || tipoDeContenido.NoEsValida()) return;
-      AgregarAdjunto(http, new FileStream(info.FullName, FileMode.Open, FileAccess.Read), nombre ?? info.Name, tipoDeContenido);
+      AgregarAdjunto(http, new FileStream(info.FullName, FileMode.Open, FileAccess.Read), tipoDeContenido, nombre ?? info.Name);
     }
 
     /// <summary>
@@ -96,7 +96,7 @@ namespace Servicio.Extensiones
         info = null;
       }
       if (info.NoEsValido()) return;
-      AgregarAdjunto(http, new FileStream(info.FullName, FileMode.Open, FileAccess.Read), nombre ?? info.Name, tipoDeContenido);
+      AgregarAdjunto(http, new FileStream(info.FullName, FileMode.Open, FileAccess.Read), tipoDeContenido, nombre ?? info.Name);
     }
   }
 }

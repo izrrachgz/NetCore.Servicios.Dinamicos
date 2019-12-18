@@ -22,7 +22,7 @@ namespace Servicio.Pruebas.Hechos.Extensiones
       using (FileStream fs = File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + @"ConfiguracionServicio.json"))
       {
         HttpResponseMessage http = new HttpResponseMessage(HttpStatusCode.OK);
-        http.AgregarAdjunto(fs, @"Configuracion.json", @"application/json");
+        http.AgregarAdjunto(fs, @"application/json", @"Configuracion.json");
         Assert.True(http.Content is StreamContent && http.Content.Headers != null);
       }
     }
@@ -41,7 +41,7 @@ namespace Servicio.Pruebas.Hechos.Extensiones
     {
       FileInfo info = new FileInfo(AppDomain.CurrentDomain.BaseDirectory + @"ConfiguracionServicio.json");
       HttpResponseMessage http = new HttpResponseMessage(HttpStatusCode.OK);
-      http.AgregarAdjunto(info, @"application/json", @"Configuracion.json");
+      http.AgregarAdjunto(info, @"application/json");
       Assert.True(http.Content is StreamContent && http.Content.Headers != null);
     }
 
@@ -50,7 +50,7 @@ namespace Servicio.Pruebas.Hechos.Extensiones
     {
       string direccion = AppDomain.CurrentDomain.BaseDirectory + @"ConfiguracionServicio.json";
       HttpResponseMessage http = new HttpResponseMessage(HttpStatusCode.OK);
-      http.AgregarAdjunto(direccion, @"application/json", @"Configuracion.json");
+      http.AgregarAdjunto(direccion, @"application/json");
       Assert.True(http.Content is StreamContent && http.Content.Headers != null);
     }
   }
