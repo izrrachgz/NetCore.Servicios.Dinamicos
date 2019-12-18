@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.852
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Servicio", "Servicio\Servicio.csproj", "{18550CF6-4788-48A6-A018-32D350E9EE7A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Datos", "Servicio\Datos.csproj", "{18550CF6-4788-48A6-A018-32D350E9EE7A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Servicio.Pruebas", "Servicio.Pruebas\Servicio.Pruebas.csproj", "{C3E54581-64ED-4870-936D-EB01118FA7DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Datos.Pruebas", "Servicio.Pruebas\Datos.Pruebas.csproj", "{C3E54581-64ED-4870-936D-EB01118FA7DA}"
 	ProjectSection(ProjectDependencies) = postProject
 		{18550CF6-4788-48A6-A018-32D350E9EE7A} = {18550CF6-4788-48A6-A018-32D350E9EE7A}
 	EndProjectSection
@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Negocio", "Negocio\Negocio.
 		{18550CF6-4788-48A6-A018-32D350E9EE7A} = {18550CF6-4788-48A6-A018-32D350E9EE7A}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Negocio.Pruebas", "Negocio.Pruebas\Negocio.Pruebas.csproj", "{531C6866-0F0E-40E6-8135-9008B4294DB7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Negocio.Pruebas", "Negocio.Pruebas\Negocio.Pruebas.csproj", "{531C6866-0F0E-40E6-8135-9008B4294DB7}"
 	ProjectSection(ProjectDependencies) = postProject
 		{E8F40A38-22AF-4AAA-B552-8C086E54F119} = {E8F40A38-22AF-4AAA-B552-8C086E54F119}
 	EndProjectSection
