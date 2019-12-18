@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using System;
+using System.IO;
+using System.Net;
 using System.Net.Http;
 using Servicio.Extensiones;
 using Xunit;
@@ -12,6 +14,44 @@ namespace Servicio.Pruebas.Hechos.Extensiones
     {
       HttpResponseMessage http = new HttpResponseMessage(HttpStatusCode.InternalServerError);
       Assert.True(http.NoEsValida());
+    }
+
+    [Fact]
+    public void AgregarAdjuntoStream()
+    {
+      using (FileStream fs = File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + @"ConfiguracionServicio.json"))
+      {
+        HttpResponseMessage http = new HttpResponseMessage(HttpStatusCode.OK);
+        http.AgregarAdjunto(fs, @"Configuracion.json", @"application/json");
+        Assert.True(http.Content is StreamContent && http.Content.Headers != null);
+      }
+    }
+
+    [Fact]
+    public void AgregarAdjuntoBytes()
+    {
+      byte[] bytes = File.ReadAllBytes(AppDomain.CurrentDomain.BaseDirectory + @"ConfiguracionServicio.json");
+      HttpResponseMessage http = new HttpResponseMessage(HttpStatusCode.OK);
+      http.AgregarAdjunto(bytes, @"application/json", @"Configuracion.json");
+      Assert.True(http.Content is ByteArrayContent && http.Content.Headers != null);
+    }
+
+    [Fact]
+    public void AgregarAdjuntoInfo()
+    {
+      FileInfo info = new FileInfo(AppDomain.CurrentDomain.BaseDirectory + @"ConfiguracionServicio.json");
+      HttpResponseMessage http = new HttpResponseMessage(HttpStatusCode.OK);
+      http.AgregarAdjunto(info, @"application/json", @"Configuracion.json");
+      Assert.True(http.Content is StreamContent && http.Content.Headers != null);
+    }
+
+    [Fact]
+    public void AgregarAdjuntoDireccion()
+    {
+      string direccion = AppDomain.CurrentDomain.BaseDirectory + @"ConfiguracionServicio.json";
+      HttpResponseMessage http = new HttpResponseMessage(HttpStatusCode.OK);
+      http.AgregarAdjunto(direccion, @"application/json", @"Configuracion.json");
+      Assert.True(http.Content is StreamContent && http.Content.Headers != null);
     }
   }
 }
