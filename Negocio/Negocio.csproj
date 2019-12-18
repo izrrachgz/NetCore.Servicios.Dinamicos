@@ -2,6 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <Authors>Israel Ch</Authors>
+    <Company>Izrra.Ch</Company>
+    <Copyright>Izrra.Ch@2019</Copyright>
+    <Description>Permite establecer una capa de interoperabilidad entre la interfaz del cliente y los servicios de datos mediante una definicion de reglas y directivas segun el negocio.</Description>
   </PropertyGroup>
 
   <ItemGroup>

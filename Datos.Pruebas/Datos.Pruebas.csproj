@@ -2,6 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <Authors>Israel Chavez</Authors>
+    <Company>Izrra.Ch</Company>
+    <Description>Permite efectuar pruebas de manera dinamica sobre la funcionalidad del servicio de datos</Description>
+    <Copyright>Izrra.Ch@2019</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
