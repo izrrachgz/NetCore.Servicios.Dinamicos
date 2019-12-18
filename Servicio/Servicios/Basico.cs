@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using Newtonsoft.Json;
 using Servicio.Contexto;
@@ -26,11 +27,6 @@ namespace Servicio.Servicios
     /// Nombre de la tabla asociada a la entidad
     /// </summary>
     public string Tabla { get; }
-
-    /// <summary>
-    /// Entidad asociada al servicio
-    /// </summary>
-    public T Entidad { get; }
 
     /// <summary>
     /// Tipo asociado a la entidad
@@ -77,10 +73,10 @@ namespace Servicio.Servicios
     public Servicio()
     {
       Repositorio = new Repositorio();
-      Entidad = new T();
-      Tipo = Entidad.GetType();
+      Tipo = typeof(T);
       Tabla = Tipo.Name;
-      Columnas = Tipo.GetProperties()
+      PropertyInfo[] info = Tipo.GetProperties();
+      Columnas = info
         .Where(p => p.CustomAttributes
           .Select(a => a.AttributeType)
           .All(a => a != typeof(NotMappedAttribute) && a != typeof(JsonIgnoreAttribute))
@@ -101,7 +97,7 @@ namespace Servicio.Servicios
           return n;
         })
         .ToList();
-      ColumnasBusqueda = Tipo.GetProperties()
+      ColumnasBusqueda = info
         .Where(p => p.PropertyType.Name.Equals(@"String"))
         .Where(p => p.CustomAttributes
           .Select(a => a.AttributeType)

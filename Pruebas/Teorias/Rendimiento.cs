@@ -46,8 +46,7 @@ namespace Servicio.Pruebas.Teorias
     public void ObtenerUsuarios(short estimado = 1, int cantidad = 1000)
     {
       Servicio<Usuario> servicio = new Servicio<Usuario>();
-      Paginado paginado = new Paginado();
-      paginado.Elementos = cantidad;
+      Paginado paginado = new Paginado() { Elementos = cantidad };
       Stopwatch temporizador = new Stopwatch();
       temporizador.Start();
       RespuestaColeccion<Usuario> usuarios = servicio.Obtener(paginado);
@@ -76,8 +75,7 @@ namespace Servicio.Pruebas.Teorias
     public void ObtenerUsuariosColumnas(short estimado, int cantidad = 1000)
     {
       Servicio<Usuario> servicio = new Servicio<Usuario>();
-      Paginado paginado = new Paginado();
-      paginado.Elementos = cantidad;
+      Paginado paginado = new Paginado() { Elementos = cantidad };
       string[] columnas = { "Id", "Nombre", "Correo" };
       Stopwatch temporizador = new Stopwatch();
       temporizador.Start();

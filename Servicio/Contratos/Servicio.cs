@@ -17,11 +17,6 @@ namespace Servicio.Contratos
     string Tabla { get; }
 
     /// <summary>
-    /// Entidad asociada al servicio
-    /// </summary>
-    T Entidad { get; }
-
-    /// <summary>
     /// Tipo de la Entidad asociada al servicio
     /// </summary>
     Type Tipo { get; }
