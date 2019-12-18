@@ -20,8 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Servicio">
-      <HintPath>..\Servicio\bin\Debug\netcoreapp2.1\Servicio.dll</HintPath>
+    <Reference Include="Datos">
+      <HintPath>..\Datos\bin\Debug\netcoreapp2.1\Datos.dll</HintPath>
     </Reference>
   </ItemGroup>
 
