@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using Newtonsoft.Json;
 using Servicio.Contexto;
 using Servicio.Contratos;
 using Servicio.Extensiones;
@@ -78,8 +80,49 @@ namespace Servicio.Servicios
       Entidad = new T();
       Tipo = Entidad.GetType();
       Tabla = Tipo.Name;
-      Columnas = Entidad.NombreColumnas;
-      ColumnasBusqueda = Entidad.ColumnasParaBuscar;
+      Columnas = Tipo.GetProperties()
+        .Where(p => p.CustomAttributes
+          .Select(a => a.AttributeType)
+          .All(a => a != typeof(NotMappedAttribute) && a != typeof(JsonIgnoreAttribute))
+        )
+        .Select(p =>
+        {
+          string n = p.Name;
+          if (p.CustomAttributes.Any(a => a.AttributeType == typeof(ColumnAttribute)))
+          {
+            string nombre = p.CustomAttributes
+                              .Where(a => a.AttributeType == typeof(ColumnAttribute))
+                              .Where(a => a.ConstructorArguments.Any(t => t.ArgumentType == typeof(string)))
+                              .SelectMany(a => a.ConstructorArguments)
+                              .Select(a => a.Value)
+                              .FirstOrDefault()?.ToString() ?? @"";
+            n = nombre.NoEsValida() ? n : nombre;
+          }
+          return n;
+        })
+        .ToList();
+      ColumnasBusqueda = Tipo.GetProperties()
+        .Where(p => p.PropertyType.Name.Equals(@"String"))
+        .Where(p => p.CustomAttributes
+          .Select(a => a.AttributeType)
+          .All(a => a != typeof(NotMappedAttribute) && a != typeof(JsonIgnoreAttribute))
+        )
+        .Select(p =>
+        {
+          string n = p.Name;
+          if (p.CustomAttributes.Any(a => a.AttributeType == typeof(ColumnAttribute)))
+          {
+            string nombre = p.CustomAttributes
+                              .Where(a => a.AttributeType == typeof(ColumnAttribute))
+                              .Where(a => a.ConstructorArguments.Any(t => t.ArgumentType == typeof(string)))
+                              .SelectMany(a => a.ConstructorArguments)
+                              .Select(a => a.Value)
+                              .FirstOrDefault()?.ToString() ?? @"";
+            n = nombre.NoEsValida() ? n : nombre;
+          }
+          return n;
+        })
+        .ToList();
     }
 
     #endregion

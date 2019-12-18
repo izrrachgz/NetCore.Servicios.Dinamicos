@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -34,17 +33,5 @@ namespace Servicio.Contratos
     /// </summary>
     [DefaultValue(null)]
     DateTime? Eliminado { get; set; }
-
-    /// <summary>
-    /// Nombre de las columnas en la base de datos
-    /// </summary>
-    [NotMapped]
-    List<string> NombreColumnas { get; }
-
-    /// <summary>
-    /// Nombre de las columnas en la base de datos que pueden ser buscadas acorde palabras clave
-    /// </summary>
-    [NotMapped]
-    List<string> ColumnasParaBuscar { get; }
   }
 }
