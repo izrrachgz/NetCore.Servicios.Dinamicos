@@ -25,7 +25,7 @@ namespace Negocio.Extensiones
       if (!respueta.Correcto) return;
       RespuestaModelo<SpreadsheetDocument> resultado = respueta.Coleccion.DocumentoExcel();
       if (!resultado.Correcto) return;
-      ExtensionesHttp.AgregarAdjunto(http, resultado.Modelo.Stream(), $@"Reporte {DateTime.Now:s}.xlsx");
+      http.AgregarAdjunto(resultado.Modelo.Stream(), nombre: $@"Reporte {DateTime.Now:s}.xlsx");
     }
 
     /// <summary>
@@ -41,7 +41,7 @@ namespace Negocio.Extensiones
       if (lista.NoEsValida()) return;
       RespuestaModelo<SpreadsheetDocument> resultado = lista.DocumentoExcel();
       if (!resultado.Correcto) return;
-      ExtensionesHttp.AgregarAdjunto(http, resultado.Modelo.Stream(), $@"Reporte {DateTime.Now:s}.xlsx");
+      http.AgregarAdjunto(resultado.Modelo.Stream(), nombre: $@"Reporte {DateTime.Now:s}.xlsx");
     }
 
     /// <summary>
@@ -53,7 +53,7 @@ namespace Negocio.Extensiones
     public static void AdjuntarExcel(this HttpResponseMessage http, SpreadsheetDocument documento)
     {
       if (documento.NoEsValido()) return;
-      ExtensionesHttp.AgregarAdjunto(http, documento.Stream());
+      http.AgregarAdjunto(documento.Stream());
     }
   }
 }
