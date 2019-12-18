@@ -10,8 +10,8 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Negocio.Modelos;
 using Newtonsoft.Json;
-using Servicio.Extensiones;
-using Servicio.Modelos;
+using Datos.Extensiones;
+using Datos.Modelos;
 
 namespace Negocio.Utilidades
 {

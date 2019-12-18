@@ -7,13 +7,13 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Newtonsoft.Json;
-using Servicio.Contexto;
-using Servicio.Contratos;
-using Servicio.Extensiones;
-using Servicio.Mensajes;
-using Servicio.Modelos;
+using Datos.Contexto;
+using Datos.Contratos;
+using Datos.Extensiones;
+using Datos.Mensajes;
+using Datos.Modelos;
 
-namespace Servicio.Servicios
+namespace Datos.Servicios
 {
   /// <summary>
   /// Servicio de acciones genéricas con interacción a repositorio de datos

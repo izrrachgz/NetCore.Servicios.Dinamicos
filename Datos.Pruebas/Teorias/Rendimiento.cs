@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Servicio.Entidades;
-using Servicio.Modelos;
-using Servicio.Servicios;
+using Datos.Entidades;
+using Datos.Modelos;
+using Datos.Servicios;
 using Xunit;
 
-namespace Servicio.Pruebas.Teorias
+namespace Datos.Pruebas.Teorias
 {
   public class Rendimiento
   {

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Servicio.Modelos
+namespace Datos.Modelos
 {
   /// <summary>
   /// Provee un modelo de datos utilizado para inicializar los valores de búsqueda paginada

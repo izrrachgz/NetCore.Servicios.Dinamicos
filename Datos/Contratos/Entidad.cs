@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Servicio.Contratos
+namespace Datos.Contratos
 {
   /// <summary>
   /// Contrado de Entidad

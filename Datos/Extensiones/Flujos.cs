@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Servicio.Extensiones
+namespace Datos.Extensiones
 {
   /// <summary>
   /// Provee metodos de extension para los flujos de datos

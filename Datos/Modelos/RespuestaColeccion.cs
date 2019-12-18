@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Servicio.Modelos
+namespace Datos.Modelos
 {
   /// <summary>
   /// Provee un modelo de datos para retener una colección de objetos dentro de una respuesta simple

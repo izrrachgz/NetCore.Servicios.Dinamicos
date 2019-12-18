@@ -1,5 +1,5 @@
 ﻿
-namespace Servicio.Extensiones
+namespace Datos.Extensiones
 {
   /// <summary>
   /// Provee metodos de extension para los arreglos de bytes

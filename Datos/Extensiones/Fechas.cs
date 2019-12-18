@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Servicio.Extensiones
+namespace Datos.Extensiones
 {
   /// <summary>
   /// Provee metodos de extensión para fechas

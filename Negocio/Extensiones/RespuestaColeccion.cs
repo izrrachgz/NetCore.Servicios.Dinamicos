@@ -1,6 +1,6 @@
 ﻿using DocumentFormat.OpenXml.Packaging;
 using Negocio.Modelos;
-using Servicio.Modelos;
+using Datos.Modelos;
 
 namespace Negocio.Extensiones
 {

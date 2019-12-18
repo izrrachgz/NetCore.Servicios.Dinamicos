@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Servicio.Migrations
+namespace Datos.Migrations
 {
   public partial class TablaUsuarios : Migration
   {

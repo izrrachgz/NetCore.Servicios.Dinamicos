@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using Newtonsoft.Json;
-using Servicio.Extensiones;
+using Datos.Extensiones;
 
-namespace Servicio.Modelos
+namespace Datos.Modelos
 {
   /// <summary>
   /// Provee un modelo de datos para realizar consultas paginadas

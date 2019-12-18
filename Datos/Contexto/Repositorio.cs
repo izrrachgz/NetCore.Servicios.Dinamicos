@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Servicio.Entidades;
-using Servicio.Extensiones;
-using Servicio.Utilidades;
+using Datos.Entidades;
+using Datos.Extensiones;
+using Datos.Utilidades;
 
-namespace Servicio.Contexto
+namespace Datos.Contexto
 {
   internal class Repositorio : DbContext
   {

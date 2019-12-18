@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
 
-namespace Servicio.Extensiones
+namespace Datos.Extensiones
 {
   /// <summary>
   /// Provee metodos de extensión para cadenas de caracteres

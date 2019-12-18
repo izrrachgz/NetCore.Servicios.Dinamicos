@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
 
-namespace Servicio.Extensiones
+namespace Datos.Extensiones
 {
   /// <summary>
   /// Provee metodos de extensión para conexines sql

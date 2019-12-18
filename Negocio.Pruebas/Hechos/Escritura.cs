@@ -4,7 +4,7 @@ using System.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using Negocio.Extensiones;
 using Negocio.Modelos;
-using Servicio.Modelos;
+using Datos.Modelos;
 using Xunit;
 
 namespace Negocio.Pruebas.Hechos

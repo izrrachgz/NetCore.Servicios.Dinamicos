@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Newtonsoft.Json;
-using Servicio.Extensiones;
-using Servicio.Modelos;
+using Datos.Extensiones;
+using Datos.Modelos;
 
-namespace Servicio.Utilidades
+namespace Datos.Utilidades
 {
   /// <summary>
   /// Provee la funcionalidad para obtener la informacion

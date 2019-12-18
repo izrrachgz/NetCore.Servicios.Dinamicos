@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Servicio.Modelos
+namespace Datos.Modelos
 {
   /// <summary>
   /// Provee un modelo de datos para retener un objeto dentro de una respuesta simple

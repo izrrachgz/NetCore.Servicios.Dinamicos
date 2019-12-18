@@ -1,9 +1,9 @@
-﻿using Servicio.Entidades;
-using Servicio.Servicios;
-using Servicio.Modelos;
+﻿using Datos.Entidades;
+using Datos.Servicios;
+using Datos.Modelos;
 using Xunit;
 
-namespace Servicio.Pruebas.Hechos
+namespace Datos.Pruebas.Hechos
 {
   public class Escritura
   {

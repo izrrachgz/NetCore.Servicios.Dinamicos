@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
-using Servicio.Modelos;
+using Datos.Modelos;
 
-namespace Servicio.Extensiones
+namespace Datos.Extensiones
 {
   public static class ExtensionesDeCondiciones
   {

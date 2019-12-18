@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Servicio.Contexto;
+using Datos.Contexto;
 
-namespace Servicio.Migrations
+namespace Datos.Migrations
 {
     [DbContext(typeof(Repositorio))]
     [Migration("20191017020833_ConfiguracionInicial")]

@@ -2,10 +2,10 @@
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using Servicio.Extensiones;
+using Datos.Extensiones;
 using Xunit;
 
-namespace Servicio.Pruebas.Hechos.Extensiones
+namespace Datos.Pruebas.Hechos.Extensiones
 {
   public class Http
   {

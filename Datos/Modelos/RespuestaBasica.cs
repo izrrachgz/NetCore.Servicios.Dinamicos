@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace Servicio.Modelos
+namespace Datos.Modelos
 {
   /// <summary>
   /// Provee un modelo de datos para proporcionar una respuesta simple

@@ -3,7 +3,7 @@ using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 
-namespace Servicio.Extensiones
+namespace Datos.Extensiones
 {
   /// <summary>
   /// Provee metodos de extension para los mensajes http

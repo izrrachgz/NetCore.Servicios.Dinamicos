@@ -2,9 +2,9 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Servicio.Contratos;
+using Datos.Contratos;
 
-namespace Servicio.Entidades
+namespace Datos.Entidades
 {
   public class EntidadBase : IEntidad
   {

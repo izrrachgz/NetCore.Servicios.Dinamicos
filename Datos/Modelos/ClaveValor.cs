@@ -1,4 +1,4 @@
-﻿namespace Servicio.Modelos
+﻿namespace Datos.Modelos
 {
   /// <summary>
   /// Provee un modelo de datos para representar una entidad a su nivel basico

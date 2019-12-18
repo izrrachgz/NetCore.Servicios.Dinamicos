@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Servicio.Entidades
+namespace Datos.Entidades
 {
   [Table("Usuario")]
   public class Usuario : EntidadBase

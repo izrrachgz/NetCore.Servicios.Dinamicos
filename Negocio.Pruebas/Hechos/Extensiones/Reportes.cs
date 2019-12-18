@@ -1,6 +1,6 @@
 ﻿using DocumentFormat.OpenXml.Packaging;
 using Negocio.Extensiones;
-using Servicio.Extensiones;
+using Datos.Extensiones;
 using Xunit;
 
 namespace Negocio.Pruebas.Hechos.Extensiones

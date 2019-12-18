@@ -1,4 +1,4 @@
-﻿namespace Servicio.Mensajes
+﻿namespace Datos.Mensajes
 {
   /// <summary>
   /// Provee mensajes que indican acciones y operaciones efectuadas

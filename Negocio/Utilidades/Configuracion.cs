@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Newtonsoft.Json;
-using Servicio.Modelos;
+using Datos.Modelos;
 
 namespace Negocio.Utilidades
 {

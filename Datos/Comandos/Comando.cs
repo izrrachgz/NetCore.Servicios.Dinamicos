@@ -4,11 +4,11 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
-using Servicio.Extensiones;
-using Servicio.Modelos;
-using Servicio.Utilidades;
+using Datos.Extensiones;
+using Datos.Modelos;
+using Datos.Utilidades;
 
-namespace Servicio.Comandos
+namespace Datos.Comandos
 {
   /// <summary>
   /// Provee el mecanismo para ejecutar

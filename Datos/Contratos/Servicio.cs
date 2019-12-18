@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using Servicio.Modelos;
+using Datos.Modelos;
 
-namespace Servicio.Contratos
+namespace Datos.Contratos
 {
   /// <summary>
   /// Contrato de servicio
