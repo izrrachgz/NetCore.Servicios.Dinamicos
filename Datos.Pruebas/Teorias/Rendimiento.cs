@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using Datos.Entidades;
 using Datos.Modelos;
 using Datos.Servicios;
@@ -25,13 +26,13 @@ namespace Datos.Pruebas.Teorias
     }
 
     [Theory, InlineData(1, 1000)]
-    public void GuardarUsuarios(short estimado = 1, int cantidad = 1000)
+    public async Task GuardarUsuarios(short estimado = 1, int cantidad = 1000)
     {
       Servicio<Usuario> servicio = new Servicio<Usuario>();
       List<Usuario> usuarios = Enumerable.Repeat(Usuario, cantidad).ToList();
       Stopwatch temporizador = new Stopwatch();
       temporizador.Start();
-      RespuestaColeccion<int> guardados = servicio.Guardar(usuarios);
+      RespuestaColeccion<int> guardados = await servicio.Guardar(usuarios);
       temporizador.Stop();
       Assert.True(guardados.Correcto && temporizador.Elapsed.TotalSeconds <= estimado);
       usuarios.Clear();
@@ -43,13 +44,13 @@ namespace Datos.Pruebas.Teorias
     }
 
     [Theory, InlineData(1, 1000)]
-    public void ObtenerUsuarios(short estimado = 1, int cantidad = 1000)
+    public async Task ObtenerUsuarios(short estimado = 1, int cantidad = 1000)
     {
       Servicio<Usuario> servicio = new Servicio<Usuario>();
       Paginado paginado = new Paginado() { Elementos = cantidad };
       Stopwatch temporizador = new Stopwatch();
       temporizador.Start();
-      RespuestaColeccion<Usuario> usuarios = servicio.Obtener(paginado);
+      RespuestaColeccion<Usuario> usuarios = await servicio.Obtener(paginado);
       temporizador.Stop();
       Assert.True(usuarios.Correcto && temporizador.Elapsed.TotalSeconds <= estimado);
       usuarios.Coleccion.Clear();
@@ -58,12 +59,12 @@ namespace Datos.Pruebas.Teorias
     }
 
     [Theory, InlineData(1)]
-    public void ObtenerUsuariosClaveValor(short estimado)
+    public async Task ObtenerUsuariosClaveValor(short estimado)
     {
       Servicio<Usuario> servicio = new Servicio<Usuario>();
       Stopwatch temporizador = new Stopwatch();
       temporizador.Start();
-      RespuestaColeccion<ClaveValor> usuarios = servicio.Obtener("Correo");
+      RespuestaColeccion<ClaveValor> usuarios = await servicio.Obtener("Correo");
       temporizador.Stop();
       Assert.True(usuarios.Correcto && temporizador.Elapsed.TotalSeconds <= estimado);
       usuarios.Coleccion.Clear();
@@ -72,14 +73,14 @@ namespace Datos.Pruebas.Teorias
     }
 
     [Theory, InlineData(1)]
-    public void ObtenerUsuariosColumnas(short estimado, int cantidad = 1000)
+    public async Task ObtenerUsuariosColumnas(short estimado, int cantidad = 1000)
     {
       Servicio<Usuario> servicio = new Servicio<Usuario>();
       Paginado paginado = new Paginado() { Elementos = cantidad };
       string[] columnas = { "Id", "Nombre", "Correo" };
       Stopwatch temporizador = new Stopwatch();
       temporizador.Start();
-      RespuestaColeccion<Usuario> usuarios = servicio.Obtener(columnas, paginado);
+      RespuestaColeccion<Usuario> usuarios = await servicio.Obtener(columnas, paginado);
       temporizador.Stop();
       Assert.True(usuarios.Correcto && temporizador.Elapsed.TotalSeconds <= estimado);
       usuarios.Coleccion.Clear();

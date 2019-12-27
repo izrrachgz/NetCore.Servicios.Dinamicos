@@ -19,7 +19,7 @@ namespace Datos.Pruebas.Hechos.Extensiones
     [Fact]
     public void AgregarAdjuntoStream()
     {
-      using (FileStream fs = File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + @"ConfiguracionServicio.json"))
+      using (FileStream fs = File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + @"ConfiguracionDatos.json"))
       {
         HttpResponseMessage http = new HttpResponseMessage(HttpStatusCode.OK);
         http.AgregarAdjunto(fs, @"application/json", @"Configuracion.json");
@@ -30,7 +30,7 @@ namespace Datos.Pruebas.Hechos.Extensiones
     [Fact]
     public void AgregarAdjuntoBytes()
     {
-      byte[] bytes = File.ReadAllBytes(AppDomain.CurrentDomain.BaseDirectory + @"ConfiguracionServicio.json");
+      byte[] bytes = File.ReadAllBytes(AppDomain.CurrentDomain.BaseDirectory + @"ConfiguracionDatos.json");
       HttpResponseMessage http = new HttpResponseMessage(HttpStatusCode.OK);
       http.AgregarAdjunto(bytes, @"application/json", @"Configuracion.json");
       Assert.True(http.Content is ByteArrayContent && http.Content.Headers != null);
@@ -39,7 +39,7 @@ namespace Datos.Pruebas.Hechos.Extensiones
     [Fact]
     public void AgregarAdjuntoInfo()
     {
-      FileInfo info = new FileInfo(AppDomain.CurrentDomain.BaseDirectory + @"ConfiguracionServicio.json");
+      FileInfo info = new FileInfo(AppDomain.CurrentDomain.BaseDirectory + @"ConfiguracionDatos.json");
       HttpResponseMessage http = new HttpResponseMessage(HttpStatusCode.OK);
       http.AgregarAdjunto(info, @"application/json");
       Assert.True(http.Content is StreamContent && http.Content.Headers != null);
@@ -48,7 +48,7 @@ namespace Datos.Pruebas.Hechos.Extensiones
     [Fact]
     public void AgregarAdjuntoDireccion()
     {
-      string direccion = AppDomain.CurrentDomain.BaseDirectory + @"ConfiguracionServicio.json";
+      string direccion = AppDomain.CurrentDomain.BaseDirectory + @"ConfiguracionDatos.json";
       HttpResponseMessage http = new HttpResponseMessage(HttpStatusCode.OK);
       http.AgregarAdjunto(direccion, @"application/json");
       Assert.True(http.Content is StreamContent && http.Content.Headers != null);

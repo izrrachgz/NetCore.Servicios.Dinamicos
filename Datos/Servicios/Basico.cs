@@ -6,12 +6,14 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Datos.Contexto;
 using Datos.Contratos;
 using Datos.Extensiones;
 using Datos.Mensajes;
 using Datos.Modelos;
+using Microsoft.EntityFrameworkCore;
 
 namespace Datos.Servicios
 {
@@ -204,10 +206,12 @@ namespace Datos.Servicios
     /// </summary>
     /// <param name="id">Identificador primario del modelo</param>
     /// <returns>Verdadero o Falso</returns>
-    public RespuestaBasica Eliminar(int id)
+    public async Task<RespuestaBasica> Eliminar(int id)
     {
-      if (id <= 0) return new RespuestaBasica(false, Error.IdentificadorInvalido);
-      return Eliminar(new List<int>(1) { id });
+      //Verificar identificador primario de entidad
+      if (id <= 0)
+        return new RespuestaBasica(false, Error.IdentificadorInvalido);
+      return await Eliminar(new List<int>(1) { id });
     }
 
     /// <summary>
@@ -215,15 +219,17 @@ namespace Datos.Servicios
     /// </summary>
     /// <param name="ids">Lista de Identificadores primarios de Entidades</param>
     /// <returns>Verdadero o Falso</returns>
-    public RespuestaBasica Eliminar(List<int> ids)
+    public async Task<RespuestaBasica> Eliminar(List<int> ids)
     {
-      if (ids.NoEsValida() || ids.Any(id => id <= 0)) return new RespuestaBasica(false, Error.ListaInvalida);
+      //Verificar identificador primario de entidades
+      if (ids.NoEsValida() || ids.Any(id => id <= 0))
+        return new RespuestaBasica(false, Error.ListaInvalida);
       RespuestaBasica respuesta;
       using (SqlConnection conexion = new SqlConnection(Repositorio.CadenaDeConexion))
       {
         try
         {
-          conexion.Open();
+          await conexion.OpenAsync();
           using (SqlTransaction transaccion = conexion.BeginTransaction())
           {
             try
@@ -231,10 +237,15 @@ namespace Datos.Servicios
               //Actualizar la columna de eliminado al momento actual en las entidades
               using (SqlCommand comando = new SqlCommand($@"UPDATE [dbo].[{Tabla}] SET [Eliminado] = GETDATE() WHERE ELIMINADO IS NULL AND [Id] IN ({ string.Join(",", ids) });", transaccion.Connection, transaccion))
               {
+                comando.CommandType = CommandType.Text;
                 try
                 {
-                  bool eliminados = comando.ExecuteNonQuery().Equals(ids.Count);
-                  respuesta = new RespuestaBasica(eliminados) { Mensaje = eliminados ? Correcto.SolicitudCompletada : Error.DiferenciaDeElementosAfectados };
+                  int eliminados = await comando.ExecuteNonQueryAsync();
+                  bool correcto = eliminados.Equals(ids.Count);
+                  respuesta = new RespuestaBasica(correcto)
+                  {
+                    Mensaje = correcto ? Correcto.SolicitudCompletada : Error.DiferenciaDeElementosAfectados
+                  };
                 }
                 catch (Exception ex)
                 {
@@ -274,7 +285,7 @@ namespace Datos.Servicios
     /// </summary>
     /// <param name="id">Identificador primario del modelo</param>
     /// <returns>Entidad</returns>
-    public virtual RespuestaModelo<T> Obtener(int id)
+    public virtual async Task<RespuestaModelo<T>> Obtener(int id)
     {
       //Verificar el identificador primario de la entidad
       if (id <= 0)
@@ -282,7 +293,7 @@ namespace Datos.Servicios
       RespuestaModelo<T> respuesta;
       try
       {
-        respuesta = new RespuestaModelo<T>(Repositorio.Set<T>().FirstOrDefault(e => e.Id.Equals(id)));
+        respuesta = new RespuestaModelo<T>(await Repositorio.Set<T>().FirstOrDefaultAsync(e => e.Id.Equals(id)));
       }
       catch (Exception ex)
       {
@@ -297,7 +308,7 @@ namespace Datos.Servicios
     /// <param name="paginado">Solicitud de página</param>
     /// <param name="condicion">Condiciones para obtener las entidades</param>
     /// <returns>Lista de Entidades</returns>
-    public virtual RespuestaColeccion<T> Obtener(Paginado paginado, List<Condicion> condicion = null)
+    public virtual async Task<RespuestaColeccion<T>> Obtener(Paginado paginado, List<Condicion> condicion = null)
     {
       //Verificar páginado
       if (paginado == null)
@@ -316,7 +327,7 @@ namespace Datos.Servicios
       {
         try
         {
-          conexion.Open();
+          await conexion.OpenAsync();
           using (SqlCommand comando = new SqlCommand("", conexion))
           {
             comando.CommandType = CommandType.Text;
@@ -358,11 +369,12 @@ namespace Datos.Servicios
             if (condicionesExtra != null) comando.Parameters.AddRange(condicionesExtra.Item2);
             //Contar la cantidad de registros acorde a las condiciones
             int total;
-            using (SqlDataReader lector = comando.ExecuteReader())
+            using (SqlDataReader lector = await comando.ExecuteReaderAsync())
             {
               try
               {
-                total = lector.Read() ? lector.GetInt32(0) : 0;
+                bool leido = await lector.ReadAsync();
+                total = leido ? lector.GetInt32(0) : 0;
                 lector.Close();
               }
               catch (Exception)
@@ -392,13 +404,13 @@ namespace Datos.Servicios
                 .Replace("{columnas}", $"[{string.Join("], [", Columnas)}]")
                 .Replace("{condicion}", condiciones.ToString());
               //limpia consulta de registros
-              using (SqlDataReader resultado = comando.ExecuteReader())
+              using (SqlDataReader resultado = await comando.ExecuteReaderAsync())
               {
                 try
                 {
                   //Obtener la pagína solo con las columnas seleccionadas
                   List<T> lista = new List<T>();
-                  while (resultado.Read())
+                  while (await resultado.ReadAsync())
                   {
                     T e = new T();
                     foreach (string columna in Columnas) Tipo.GetProperty(columna)?.SetValue(e, resultado[columna].Equals(DBNull.Value) ? null : resultado[columna]);
@@ -433,7 +445,7 @@ namespace Datos.Servicios
     /// </summary>
     /// <param name="columna">Nombre de la columna para seleccionar</param>
     /// <returns>Lista de clave/valor asociados a la Entidad</returns>
-    public virtual RespuestaColeccion<ClaveValor> Obtener(string columna)
+    public virtual async Task<RespuestaColeccion<ClaveValor>> Obtener(string columna)
     {
       //Verificar la columna definida
       if (columna.NoEsValida())
@@ -450,18 +462,18 @@ namespace Datos.Servicios
       {
         try
         {
-          conexion.Open();
+          await conexion.OpenAsync();
           using (SqlCommand comando = new SqlCommand(sql, conexion))
           {
             try
             {
-              using (SqlDataReader resultado = comando.ExecuteReader())
+              using (SqlDataReader resultado = await comando.ExecuteReaderAsync())
               {
                 try
                 {
                   //Obtener la pagína solo con las columnas seleccionadas
                   List<ClaveValor> lista = new List<ClaveValor>();
-                  while (resultado.Read())
+                  while (await resultado.ReadAsync())
                   {
                     lista.Add(new ClaveValor
                     {
@@ -503,7 +515,7 @@ namespace Datos.Servicios
     /// <param name="paginado">Solicitud de página</param>
     /// <param name="condicion">Condiciones para obtener las entidades</param>
     /// <returns>Lista de entidades asociadas al servicio</returns>
-    public virtual RespuestaColeccion<T> Obtener(string[] columnas, Paginado paginado, List<Condicion> condicion = null)
+    public virtual async Task<RespuestaColeccion<T>> Obtener(string[] columnas, Paginado paginado, List<Condicion> condicion = null)
     {
       //Verificar paginado y columnas
       if (paginado == null)
@@ -525,7 +537,7 @@ namespace Datos.Servicios
       {
         try
         {
-          conexion.Open();
+          await conexion.OpenAsync();
           using (SqlCommand comando = new SqlCommand("", conexion))
           {
             comando.CommandType = CommandType.Text;
@@ -567,11 +579,12 @@ namespace Datos.Servicios
             if (condicionesExtra != null) comando.Parameters.AddRange(condicionesExtra.Item2);
             //Contar la cantidad de registros acorde a las condiciones
             int total;
-            using (SqlDataReader lector = comando.ExecuteReader())
+            using (SqlDataReader lector = await comando.ExecuteReaderAsync())
             {
               try
               {
-                total = lector.Read() ? lector.GetInt32(0) : 0;
+                bool leido = await lector.ReadAsync();
+                total = leido ? lector.GetInt32(0) : 0;
                 lector.Close();
               }
               catch (Exception)
@@ -601,13 +614,13 @@ namespace Datos.Servicios
                 .Replace("{columnas}", $"[{string.Join("], [", columnas)}]")
                 .Replace("{condicion}", condiciones.ToString());
               //limpia consulta de registros
-              using (SqlDataReader resultado = comando.ExecuteReader())
+              using (SqlDataReader resultado = await comando.ExecuteReaderAsync())
               {
                 try
                 {
                   //Obtener la pagína solo con las columnas seleccionadas
                   List<T> lista = new List<T>();
-                  while (resultado.Read())
+                  while (await resultado.ReadAsync())
                   {
                     T e = new T();
                     foreach (string columna in columnas) Tipo.GetProperty(columna)?.SetValue(e, resultado[columna].Equals(DBNull.Value) ? null : resultado[columna]);
@@ -642,12 +655,12 @@ namespace Datos.Servicios
     /// </summary>
     /// <param name="modelo">Entidad</param>
     /// <returns>Verdadero o Falso</returns>
-    public virtual RespuestaBasica Guardar(T modelo)
+    public virtual async Task<RespuestaBasica> Guardar(T modelo)
     {
       //Verificar el modelo de datos de la entidad
       if (modelo == null)
         return new RespuestaBasica(false, Error.ModeloInvalido);
-      return modelo.Id.Equals(0) ? Insertar(modelo) : Actualizar(modelo);
+      return modelo.Id.Equals(0) ? await Insertar(modelo) : await Actualizar(modelo);
     }
 
     /// <summary>
@@ -655,7 +668,7 @@ namespace Datos.Servicios
     /// </summary>
     /// <param name="entidades">Lista de Entidades</param>
     /// <returns>Arreglo de identificadores primarios guardados</returns>
-    public virtual RespuestaColeccion<int> Guardar(List<T> entidades)
+    public virtual async Task<RespuestaColeccion<int>> Guardar(List<T> entidades)
     {
       //Verificar la lista de modelos de datos asociados a la entidad
       if (entidades.NoEsValida())
@@ -665,7 +678,7 @@ namespace Datos.Servicios
       {
         try
         {
-          conexion.Open();
+          await conexion.OpenAsync();
           using (SqlTransaction transaccion = conexion.BeginTransaction())
           {
             //Coleccion de ids insertados/actualizados
@@ -673,20 +686,22 @@ namespace Datos.Servicios
             //Insertar las entidades
             if (entidades.Any(e => e.Id.Equals(0)))
             {
-              RespuestaColeccion<int> insertados = Insertar(entidades.Where(e => e.Id.Equals(0)).ToList(), transaccion);
+              RespuestaColeccion<int> insertados = await Insertar(entidades.Where(e => e.Id.Equals(0)).ToList(), transaccion);
               if (insertados.Correcto) ids.AddRange(insertados.Coleccion);
             }
             //Actualizar las entidades
             if (entidades.Any(e => !e.Id.Equals(0)))
             {
-              RespuestaModelo<int> actualizados = Actualizar(entidades.Where(e => !e.Id.Equals(0)).ToList(), transaccion);
+              RespuestaModelo<int> actualizados = await Actualizar(entidades.Where(e => !e.Id.Equals(0)).ToList(), transaccion);
               if (actualizados.Correcto) ids.AddRange(entidades.Where(e => !e.Id.Equals(0)).Select(e => e.Id).ToList());
             }
             respuesta = new RespuestaColeccion<int>(ids) { Correcto = !ids.NoEsValida() && ids.All(id => id > 0) };
             try
             {
-              if (respuesta.Correcto) transaccion.Commit();
-              else transaccion.Rollback();
+              if (respuesta.Correcto)
+                transaccion.Commit();
+              else
+                transaccion.Rollback();
             }
             catch (Exception ex)
             {
@@ -711,7 +726,7 @@ namespace Datos.Servicios
     /// </summary>
     /// <param name="modelo">Entidad</param>
     /// <returns>Identificador primario insertado</returns>
-    public virtual RespuestaModelo<int> Insertar(T modelo)
+    public virtual async Task<RespuestaModelo<int>> Insertar(T modelo)
     {
       //Verificar el modelo de datos y el identificador primario del modelo asociado a la entidad
       if (modelo == null || !modelo.Id.Equals(0))
@@ -721,14 +736,16 @@ namespace Datos.Servicios
       {
         try
         {
-          conexion.Open();
+          await conexion.OpenAsync();
           using (SqlTransaction transaccion = conexion.BeginTransaction())
           {
             try
             {
-              respuesta = Insertar(modelo, transaccion);
-              if (respuesta.Correcto) transaccion.Commit();
-              else transaccion.Rollback();
+              respuesta = await Insertar(modelo, transaccion);
+              if (respuesta.Correcto)
+                transaccion.Commit();
+              else
+                transaccion.Rollback();
             }
             catch (Exception ex)
             {
@@ -754,7 +771,7 @@ namespace Datos.Servicios
     /// <param name="modelo">Entidad</param>
     /// <param name="transaccion">Transacción abierta asociada a la conexión vigente</param>
     /// <returns>Identificador primario insertado</returns>
-    public virtual RespuestaModelo<int> Insertar(T modelo, SqlTransaction transaccion)
+    public virtual async Task<RespuestaModelo<int>> Insertar(T modelo, SqlTransaction transaccion)
     {
       //Verificar el modelo de datos y el identificador primario del modelo asociado a la entidad
       if (modelo == null || !modelo.Id.Equals(0))
@@ -772,7 +789,7 @@ namespace Datos.Servicios
             comando.Parameters.Add(p);
           });
           //Id de la entidad insertada
-          int id = Convert.ToInt32(comando.ExecuteScalar());
+          int id = Convert.ToInt32(await comando.ExecuteScalarAsync());
           //Limpiar objetos utilizados
           parametros.Clear();
           parametros.TrimExcess();
@@ -793,7 +810,7 @@ namespace Datos.Servicios
     /// </summary>
     /// <param name="entidades">Lista de Entidades</param>
     /// <returns>Arreglo de identificadores primarios insertados</returns>
-    public virtual RespuestaColeccion<int> Insertar(List<T> entidades)
+    public virtual async Task<RespuestaColeccion<int>> Insertar(List<T> entidades)
     {
       //Verificar la lista de modelo de datos y el identificador primario del modelo asociado a la entidad
       if (entidades.NoEsValida() || entidades.Any(m => !m.Id.Equals(0)))
@@ -803,14 +820,16 @@ namespace Datos.Servicios
       {
         try
         {
-          conexion.Open();
+          await conexion.OpenAsync();
           using (SqlTransaction transaccion = conexion.BeginTransaction())
           {
             try
             {
-              respuesta = Insertar(entidades, transaccion);
-              if (respuesta.Correcto) transaccion.Commit();
-              else transaccion.Rollback();
+              respuesta = await Insertar(entidades, transaccion);
+              if (respuesta.Correcto)
+                transaccion.Commit();
+              else
+                transaccion.Rollback();
             }
             catch (Exception ex)
             {
@@ -836,7 +855,7 @@ namespace Datos.Servicios
     /// <param name="entidades">Lista de Entidades</param>
     /// <param name="transaccion">Transacción abierta asociada a la conexión vigente</param>
     /// <returns>Arreglo de identificadores primarios insertados</returns>
-    public virtual RespuestaColeccion<int> Insertar(List<T> entidades, SqlTransaction transaccion)
+    public virtual async Task<RespuestaColeccion<int>> Insertar(List<T> entidades, SqlTransaction transaccion)
     {
       //Verificar el modelo de datos y el identificador primario del modelo asociado a la entidad
       //y que la transacción proporcionada se encuentra activa
@@ -857,7 +876,7 @@ namespace Datos.Servicios
               valor = valor ?? DBNull.Value;
               comando.Parameters[p.ParameterName].Value = valor;
             });
-            int id = Convert.ToInt32(comando.ExecuteScalar());
+            int id = Convert.ToInt32(await comando.ExecuteScalarAsync());
             if (id <= 0) break;
             ids.Add(id);
           }
@@ -887,7 +906,7 @@ namespace Datos.Servicios
     /// </summary>
     /// <param name="modelo">Entidad</param>
     /// <returns>Cantidad de filas afectadas</returns>
-    public virtual RespuestaModelo<int> Actualizar(T modelo)
+    public virtual async Task<RespuestaModelo<int>> Actualizar(T modelo)
     {
       //Verificar el modelo de datos y el identificador primario del modelo asociado a la entidad
       if (modelo == null || modelo.Id.Equals(0))
@@ -897,14 +916,16 @@ namespace Datos.Servicios
       {
         try
         {
-          conexion.Open();
+          await conexion.OpenAsync();
           using (SqlTransaction transaccion = conexion.BeginTransaction())
           {
             try
             {
-              respuesta = Actualizar(modelo, transaccion);
-              if (respuesta.Correcto) transaccion.Commit();
-              else transaccion.Rollback();
+              respuesta = await Actualizar(modelo, transaccion);
+              if (respuesta.Correcto)
+                transaccion.Commit();
+              else
+                transaccion.Rollback();
             }
             catch (Exception ex)
             {
@@ -930,7 +951,7 @@ namespace Datos.Servicios
     /// <param name="modelo">Entidad</param>
     /// <param name="transaccion">Transacción abierta asociada a la conexión vigente</param>
     /// <returns>Cantidad de filas afectadas</returns>
-    public virtual RespuestaModelo<int> Actualizar(T modelo, SqlTransaction transaccion)
+    public virtual async Task<RespuestaModelo<int>> Actualizar(T modelo, SqlTransaction transaccion)
     {
       //Verificar el modelo de datos y el identificador primario del modelo asociado a la entidad
       if (modelo == null || modelo.Id.Equals(0))
@@ -947,7 +968,7 @@ namespace Datos.Servicios
             comando.Parameters.Add(p);
           });
           //El número de afectados debe ser al menos 1
-          int afectados = comando.ExecuteNonQuery();
+          int afectados = await comando.ExecuteNonQueryAsync();
           //Limpiar objetos utilizados
           parametros.Clear();
           parametros.TrimExcess();
@@ -968,7 +989,7 @@ namespace Datos.Servicios
     /// </summary>
     /// <param name="entidades">Lista de Entidades</param>
     /// <returns>Cantidad de filas afectadas</returns>
-    public virtual RespuestaModelo<int> Actualizar(List<T> entidades)
+    public virtual async Task<RespuestaModelo<int>> Actualizar(List<T> entidades)
     {
       //Verificar el modelo de datos y el identificador primario del modelo asociado a la entidad
       if (entidades.NoEsValida() || entidades.Any(m => m.Id.Equals(0)))
@@ -978,14 +999,16 @@ namespace Datos.Servicios
       {
         try
         {
-          conexion.Open();
+          await conexion.OpenAsync();
           using (SqlTransaction transaccion = conexion.BeginTransaction())
           {
             try
             {
-              respuesta = Actualizar(entidades, transaccion);
-              if (respuesta.Correcto) transaccion.Commit();
-              else transaccion.Rollback();
+              respuesta = await Actualizar(entidades, transaccion);
+              if (respuesta.Correcto)
+                transaccion.Commit();
+              else
+                transaccion.Rollback();
             }
             catch (Exception ex)
             {
@@ -1011,7 +1034,7 @@ namespace Datos.Servicios
     /// <param name="entidades">Lista de Entidades</param>
     /// <param name="transaccion">Transacción abierta asociada a la conexión vigente</param>
     /// <returns>Cantidad de filas afectadas</returns>
-    public virtual RespuestaModelo<int> Actualizar(List<T> entidades, SqlTransaction transaccion)
+    public virtual async Task<RespuestaModelo<int>> Actualizar(List<T> entidades, SqlTransaction transaccion)
     {
       //Verificar el modelo de datos y el identificador primario del modelo asociado a la entidad
       //y que la transacción proporcionada se encuentra activa
@@ -1032,7 +1055,7 @@ namespace Datos.Servicios
               valor = valor ?? DBNull.Value;
               comando.Parameters[p.ParameterName].Value = valor;
             });
-            afectadas += comando.ExecuteNonQuery();
+            afectadas += await comando.ExecuteNonQueryAsync();
           }
           //La cantidad de filas afectadas debe ser igual a la cantidad total de elementos contenidos en la lista de entidades
           respuesta = new RespuestaModelo<int>(afectadas) { Correcto = afectadas.Equals(entidades.Count) };

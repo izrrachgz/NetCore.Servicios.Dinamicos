@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 using Datos.Modelos;
 
 namespace Datos.Contratos
@@ -42,7 +43,7 @@ namespace Datos.Contratos
     /// </summary>
     /// <param name="id">Identificador primario de la entidad</param>
     /// <returns>Entidad</returns>
-    RespuestaModelo<T> Obtener(int id);
+    Task<RespuestaModelo<T>> Obtener(int id);
 
     /// <summary>
     /// Deberá regresar una entidades de entidades dentro de un modelo de datos paginado
@@ -50,14 +51,14 @@ namespace Datos.Contratos
     /// <param name="paginado">Solicitud de página</param>
     /// <param name="condicion">Condiciones para obtener las entidades</param>
     /// <returns>Lista de Entidades</returns>
-    RespuestaColeccion<T> Obtener(Paginado paginado, List<Condicion> condicion = null);
+    Task<RespuestaColeccion<T>> Obtener(Paginado paginado, List<Condicion> condicion = null);
 
     /// <summary>
     /// Deberá regresar una lista de clave/valor asociadas a la entidad
     /// </summary>
     /// <param name="columna">Nombre de la columna para seleccionar</param>
     /// <returns>Lista de clave/valor asociados a la Entidad</returns>
-    RespuestaColeccion<ClaveValor> Obtener(string columna);
+    Task<RespuestaColeccion<ClaveValor>> Obtener(string columna);
 
     /// <summary>
     /// Deberá regresar una lista de entidades asociadas al servicio conteniendo
@@ -67,42 +68,42 @@ namespace Datos.Contratos
     /// <param name="paginado">Solicitud de página</param>
     /// <param name="condicion">Condiciones para obtener las entidades</param>
     /// <returns>Lista de entidades asociadas al servicio</returns>
-    RespuestaColeccion<T> Obtener(string[] columnas, Paginado paginado, List<Condicion> condicion = null);
+    Task<RespuestaColeccion<T>> Obtener(string[] columnas, Paginado paginado, List<Condicion> condicion = null);
 
     /// <summary>
     /// Deberá Insertar o actualizar el modelo en el contexto de datos
     /// </summary>
     /// <param name="modelo">Entidad para guardar o actualizar</param>
     /// <returns>Verdadero o falso</returns>
-    RespuestaBasica Guardar(T modelo);
+    Task<RespuestaBasica> Guardar(T modelo);
 
     /// <summary>
     /// Deberá Insertar o actualizar los modelos en el contexto de datos
     /// </summary>
     /// <param name="entidades">Entidades para guardar o actualizar</param>
     /// <returns>Verdadero o falso</returns>
-    RespuestaColeccion<int> Guardar(List<T> entidades);
+    Task<RespuestaColeccion<int>> Guardar(List<T> entidades);
 
     /// <summary>
     /// Deberá actualizar la fecha de eliminado en el modelo encontrado
     /// </summary>
     /// <param name="id">Identificador primario de modelo</param>
     /// <returns>Verdadero o falso</returns>
-    RespuestaBasica Eliminar(int id);
+    Task<RespuestaBasica> Eliminar(int id);
 
     /// <summary>
     /// Deberá actualizar la fecha de eliminado en los modelos encontrados
     /// </summary>
     /// <param name="ids">Identificador primario de modelo</param>
     /// <returns>Verdadero o falso</returns>
-    RespuestaBasica Eliminar(List<int> ids);
+    Task<RespuestaBasica> Eliminar(List<int> ids);
 
     /// <summary>
     /// Deberá insertar el elemento en el contexto de datos y devolver su identificador primario
     /// </summary>
     /// <param name="modelo">Elemento a insertar</param>
     /// <returns>Identificador primario</returns>
-    RespuestaModelo<int> Insertar(T modelo);
+    Task<RespuestaModelo<int>> Insertar(T modelo);
 
     /// <summary>
     /// Deberá insertar el elemento en el contexto de datos y devolver su identificador primario
@@ -110,14 +111,14 @@ namespace Datos.Contratos
     /// <param name="modelo">Elemento a insertar</param>
     /// <param name="transaccion">Transacción abierta asociada a la conexión vigente</param>
     /// <returns>Identificador primario</returns>
-    RespuestaModelo<int> Insertar(T modelo, SqlTransaction transaccion);
+    Task<RespuestaModelo<int>> Insertar(T modelo, SqlTransaction transaccion);
 
     /// <summary>
     /// Deberá insertar todos los elementos en el Contexto de datos y devolver sus identificadores primarios
     /// </summary>
     /// <param name="entidades">Elementos a insertar</param>
     /// <returns>Arreglo de itentificadores primarios de modelo</returns>
-    RespuestaColeccion<int> Insertar(List<T> entidades);
+    Task<RespuestaColeccion<int>> Insertar(List<T> entidades);
 
     /// <summary>
     /// Deberá Insertar todos los elementos en el Contexto de datos y devolver sus identificadores primarios
@@ -125,14 +126,14 @@ namespace Datos.Contratos
     /// <param name="entidades">Elementos a insertar</param>
     /// <param name="transaccion">Transacción abierta asociada a la conexión vigente</param>
     /// <returns>Arreglo de identificadores primarios de modelo</returns>
-    RespuestaColeccion<int> Insertar(List<T> entidades, SqlTransaction transaccion);
+    Task<RespuestaColeccion<int>> Insertar(List<T> entidades, SqlTransaction transaccion);
 
     /// <summary>
     /// Deberá actualizar el elemento en el contexto de datos y devolver la cantidad de registros afectados
     /// </summary>
     /// <param name="modelo">Elemento a actualizar</param>
     /// <returns>Cantidad de filas afectadas</returns>
-    RespuestaModelo<int> Actualizar(T modelo);
+    Task<RespuestaModelo<int>> Actualizar(T modelo);
 
     /// <summary>
     /// Deberá actualizar el elemento en el contexto de datos y devolver la cantidad de registros afectados
@@ -140,14 +141,14 @@ namespace Datos.Contratos
     /// <param name="modelo">Elemento a actualizar</param>
     /// <param name="transaccion">Transacción abierta asociada a la conexión vigente</param>
     /// <returns>Cantidad de filas afectadas</returns>
-    RespuestaModelo<int> Actualizar(T modelo, SqlTransaction transaccion);
+    Task<RespuestaModelo<int>> Actualizar(T modelo, SqlTransaction transaccion);
 
     /// <summary>
     /// Deberá actualizar todos los elementos en el Contexto de datos y devolver la cantidad de registros afectados
     /// </summary>
     /// <param name="entidades">Elementos a actualizar</param>
     /// <returns>Cantidad de filas afectadas</returns>
-    RespuestaModelo<int> Actualizar(List<T> entidades);
+    Task<RespuestaModelo<int>> Actualizar(List<T> entidades);
 
     /// <summary>
     /// Deberá actualizar todos los elementos en el Contexto de datos y devolver la cantidad de registros afectados
@@ -155,6 +156,6 @@ namespace Datos.Contratos
     /// <param name="entidades">Elementos a actualizar</param>
     /// <param name="transaccion">Transacción abierta asociada a la conexión vigente</param>
     /// <returns>Cantidad de filas afectadas</returns>
-    RespuestaModelo<int> Actualizar(List<T> entidades, SqlTransaction transaccion);
+    Task<RespuestaModelo<int>> Actualizar(List<T> entidades, SqlTransaction transaccion);
   }
 }

@@ -1,4 +1,5 @@
-﻿using Datos.Entidades;
+﻿using System.Threading.Tasks;
+using Datos.Entidades;
 using Datos.Servicios;
 using Datos.Modelos;
 using Xunit;
@@ -22,10 +23,10 @@ namespace Datos.Pruebas.Hechos
     }
 
     [Fact]
-    public void GuardarUsuario()
+    public async Task GuardarUsuario()
     {
       Servicio<Usuario> servicio = new Servicio<Usuario>();
-      RespuestaBasica guardado = servicio.Guardar(Usuario);
+      RespuestaBasica guardado = await servicio.Guardar(Usuario);
       Assert.True(guardado.Correcto);
     }
   }
