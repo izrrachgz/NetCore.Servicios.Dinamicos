@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Datos.Entidades;
-using Datos.Extensiones;
 using Datos.Utilidades;
 
 namespace Datos.Contexto
