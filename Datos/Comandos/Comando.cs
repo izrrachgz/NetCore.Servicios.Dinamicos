@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Datos.Enumerados;
 using Datos.Extensiones;
 using Datos.Modelos;
 using Datos.Utilidades;
