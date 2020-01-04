@@ -85,7 +85,7 @@ namespace Datos.Modelos
     {
       Indice = indice;
       Columna = columna;
-      Valor = valor;
+      Valor = valor == DBNull.Value ? null : valor;
     }
   }
 }

@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Datos.Extensiones;
 using Datos.Modelos;
 using Datos.Utilidades;
@@ -27,42 +28,65 @@ namespace Datos.Comandos
     }
 
     /// <summary>
-    /// Ejecuta un comando sql de tipo texto plano
+    /// Ejecuta una instruccion Sql
     /// </summary>
-    /// <param name="sql">Texto plano en formato sql para ejecutar</param>
+    /// <param name="sql">Instruccion de consulta : sql plano, nombre de procedimiento almacenado</param>
     /// <param name="parametros">Parametros para agregar al comando</param>
-    /// <returns>Objeto devuelto tras ejecutar la consulta</returns>
-    public RespuestaModelo<object> Consulta(string sql, SqlParameter[] parametros = null)
+    /// <param name="tipo">Tipo de instruccion</param>
+    /// <returns>Listado de resultado de filas</returns>
+    private async Task<RespuestaColeccion<FilaUnida>> Sql(string sql, SqlParameter[] parametros = null, CommandType tipo = CommandType.Text)
     {
       //Verificar consulta
       if (sql.NoEsValida())
-        return new RespuestaModelo<object>() { Correcto = false, Mensaje = @"la consulta no es valida." };
-      RespuestaModelo<object> respuesta;
+        return new RespuestaColeccion<FilaUnida>() { Correcto = false, Mensaje = @"la consulta no es valida." };
+      RespuestaColeccion<FilaUnida> respuesta;
       using (SqlConnection conexion = new SqlConnection(CadenaDeConexion))
       {
         try
         {
-          conexion.Open();
+          //Establecer la conexion con el repositorio de datos
+          await conexion.OpenAsync();
           using (SqlCommand comando = new SqlCommand(sql, conexion))
           {
-            comando.CommandType = CommandType.Text;
+            //Establecer el tipo de comando que ejecutaremos
+            comando.CommandType = tipo;
+            //Agregar los parametros proporcionados
             if (parametros != null && parametros.Length > 0)
               comando.Parameters.AddRange(parametros);
-            try
+            //Leer los resultados
+            using (SqlDataReader lector = await comando.ExecuteReaderAsync())
             {
-              respuesta = new RespuestaModelo<object>(comando.ExecuteScalar());
-            }
-            catch (Exception ex)
-            {
-              respuesta = new RespuestaModelo<object>(ex);
+              //Si hay al menos 1 resultado agregarlo a la lista de respuesta
+              if (lector.HasRows)
+              {
+                List<FilaUnida> lista = new List<FilaUnida>();
+                while (await lector.ReadAsync())
+                {
+                  //Agregar cada valor de columna a la fila
+                  for (int c = 0; c < lector.FieldCount; c++)
+                    lista.Add(new FilaUnida(c, lector.GetName(c), lector.GetValue(c)));
+                }
+                respuesta = new RespuestaColeccion<FilaUnida>(lista);
+              }
+              else
+              {
+                //Falso positivo, el servidor ha completado la tarea correctamente pero no ha devuelto ningun resultado
+                respuesta = new RespuestaColeccion<FilaUnida>()
+                {
+                  Correcto = false,
+                  Mensaje = @"La ejecucion del comando no ha devuelto ningun resultado."
+                };
+              }
+              lector.Dispose();
             }
             comando.Dispose();
           }
+          //Cerrar la conexion establecida
           if (conexion.State.Equals(ConnectionState.Open)) conexion.Close();
         }
         catch (Exception ex)
         {
-          respuesta = new RespuestaModelo<object>(ex);
+          respuesta = new RespuestaColeccion<FilaUnida>(ex);
         }
         conexion.Dispose();
       }
@@ -70,46 +94,22 @@ namespace Datos.Comandos
     }
 
     /// <summary>
+    /// Ejecuta un comando sql de tipo texto plano
+    /// </summary>
+    /// <param name="sql">Texto plano en formato sql para ejecutar</param>
+    /// <param name="parametros">Parametros para agregar al comando</param>
+    /// <returns>Listado de resultado de filas</returns>
+    public async Task<RespuestaColeccion<FilaUnida>> Consulta(string sql, SqlParameter[] parametros = null)
+      => await Sql(sql, parametros);
+
+    /// <summary>
     /// Ejecuta un procedimiento almacenado
     /// </summary>
     /// <param name="procedimiento">Nombre del procedimiento</param>
     /// <param name="parametros">Parametros para agregar al comando</param>
-    /// <returns>Objeto devuelto tras ejecutar la consulta</returns>
-    public RespuestaModelo<object> Procedimiento(string procedimiento, SqlParameter[] parametros = null)
-    {
-      if (procedimiento.NoEsValida())
-        return new RespuestaModelo<object>() { Correcto = false, Mensaje = @"El procedimiento no es válido." };
-      RespuestaModelo<object> respuesta;
-      using (SqlConnection conexion = new SqlConnection(CadenaDeConexion))
-      {
-        try
-        {
-          conexion.Open();
-          using (SqlCommand comando = new SqlCommand(procedimiento, conexion))
-          {
-            comando.CommandType = CommandType.StoredProcedure;
-            if (parametros != null && parametros.Length > 0)
-              comando.Parameters.AddRange(parametros);
-            try
-            {
-              respuesta = new RespuestaModelo<object>(comando.ExecuteScalar());
-            }
-            catch (Exception ex)
-            {
-              respuesta = new RespuestaModelo<object>(ex);
-            }
-            comando.Dispose();
-          }
-          if (conexion.State.Equals(ConnectionState.Open)) conexion.Close();
-        }
-        catch (Exception ex)
-        {
-          respuesta = new RespuestaModelo<object>(ex);
-        }
-        conexion.Dispose();
-      }
-      return respuesta;
-    }
+    /// <returns>Listado de resultado de filas</returns>
+    public async Task<RespuestaColeccion<FilaUnida>> Procedimiento(string procedimiento, SqlParameter[] parametros = null)
+      => await Sql(procedimiento, parametros, CommandType.StoredProcedure);
 
     /// <summary>
     /// Consulta la unión de dos entidades
