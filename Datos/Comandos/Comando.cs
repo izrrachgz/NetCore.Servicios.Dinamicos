@@ -34,12 +34,12 @@ namespace Datos.Comandos
     /// <param name="parametros">Parametros para agregar al comando</param>
     /// <param name="tipo">Tipo de instruccion</param>
     /// <returns>Listado de resultado de filas</returns>
-    private async Task<RespuestaColeccion<FilaUnida>> Sql(string sql, SqlParameter[] parametros = null, CommandType tipo = CommandType.Text)
+    private async Task<RespuestaColeccion<FilaDeTabla>> Sql(string sql, SqlParameter[] parametros = null, CommandType tipo = CommandType.Text)
     {
       //Verificar consulta
       if (sql.NoEsValida())
-        return new RespuestaColeccion<FilaUnida>() { Correcto = false, Mensaje = @"la consulta no es valida." };
-      RespuestaColeccion<FilaUnida> respuesta;
+        return new RespuestaColeccion<FilaDeTabla>() { Correcto = false, Mensaje = @"La instruccion sql no es valida." };
+      RespuestaColeccion<FilaDeTabla> respuesta;
       using (SqlConnection conexion = new SqlConnection(CadenaDeConexion))
       {
         try
@@ -59,19 +59,23 @@ namespace Datos.Comandos
               //Si hay al menos 1 resultado agregarlo a la lista de respuesta
               if (lector.HasRows)
               {
-                List<FilaUnida> lista = new List<FilaUnida>();
+                List<FilaDeTabla> lista = new List<FilaDeTabla>();
+                int indice = 0;
                 while (await lector.ReadAsync())
                 {
+                  List<ColumnaDeTabla> columnas = new List<ColumnaDeTabla>(lector.FieldCount);
                   //Agregar cada valor de columna a la fila
                   for (int c = 0; c < lector.FieldCount; c++)
-                    lista.Add(new FilaUnida(c, lector.GetName(c), lector.GetValue(c)));
+                    columnas.Add(new ColumnaDeTabla(c, lector.GetName(c), lector.GetValue(c)));
+                  lista.Add(new FilaDeTabla(indice, columnas));
+                  indice++;
                 }
-                respuesta = new RespuestaColeccion<FilaUnida>(lista);
+                respuesta = new RespuestaColeccion<FilaDeTabla>(lista);
               }
               else
               {
                 //Falso positivo, el servidor ha completado la tarea correctamente pero no ha devuelto ningun resultado
-                respuesta = new RespuestaColeccion<FilaUnida>()
+                respuesta = new RespuestaColeccion<FilaDeTabla>()
                 {
                   Correcto = false,
                   Mensaje = @"La ejecucion del comando no ha devuelto ningun resultado."
@@ -86,7 +90,7 @@ namespace Datos.Comandos
         }
         catch (Exception ex)
         {
-          respuesta = new RespuestaColeccion<FilaUnida>(ex);
+          respuesta = new RespuestaColeccion<FilaDeTabla>(ex);
         }
         conexion.Dispose();
       }
@@ -99,7 +103,7 @@ namespace Datos.Comandos
     /// <param name="sql">Texto plano en formato sql para ejecutar</param>
     /// <param name="parametros">Parametros para agregar al comando</param>
     /// <returns>Listado de resultado de filas</returns>
-    public async Task<RespuestaColeccion<FilaUnida>> Consulta(string sql, SqlParameter[] parametros = null)
+    public async Task<RespuestaColeccion<FilaDeTabla>> Consulta(string sql, SqlParameter[] parametros = null)
       => await Sql(sql, parametros);
 
     /// <summary>
@@ -108,7 +112,7 @@ namespace Datos.Comandos
     /// <param name="procedimiento">Nombre del procedimiento</param>
     /// <param name="parametros">Parametros para agregar al comando</param>
     /// <returns>Listado de resultado de filas</returns>
-    public async Task<RespuestaColeccion<FilaUnida>> Procedimiento(string procedimiento, SqlParameter[] parametros = null)
+    public async Task<RespuestaColeccion<FilaDeTabla>> Procedimiento(string procedimiento, SqlParameter[] parametros = null)
       => await Sql(procedimiento, parametros, CommandType.StoredProcedure);
 
     /// <summary>
@@ -117,17 +121,17 @@ namespace Datos.Comandos
     /// <param name="union">Solicitud de unión</param>
     /// <param name="paginado">Página solicitada</param>
     /// <returns>Colección de filas resultado de la unión</returns>
-    public RespuestaColeccion<FilaUnida> Union(Union union, Paginado paginado)
+    public async Task<RespuestaColeccion<FilaDeTabla>> Union(Union union, Paginado paginado)
     {
       //Verificar valor de tablas
       if (union.Tablas.Item1.NoEsValida() || union.Tablas.Item2.NoEsValida())
-        return new RespuestaColeccion<FilaUnida>() { Correcto = false, Mensaje = @"La estructura de unión no es válida." };
+        return new RespuestaColeccion<FilaDeTabla>() { Correcto = false, Mensaje = @"La estructura de unión no es válida." };
       //Verificar que no sea la misma
       if (union.Tablas.Item1.Equals(union.Tablas.Item2))
-        return new RespuestaColeccion<FilaUnida>() { Correcto = false, Mensaje = @"No debes unir la tabla asi misma." };
+        return new RespuestaColeccion<FilaDeTabla>() { Correcto = false, Mensaje = @"No debes unir la tabla asi misma." };
       //Verificar valor de uniones
       if (union.Uniones.Item1.NoEsValida() || union.Uniones.Item2.NoEsValida() || !union.Uniones.Item1.Count.Equals(union.Uniones.Item2.Count))
-        return new RespuestaColeccion<FilaUnida>() { Correcto = false, Mensaje = @"Las columnas de unión no son válidas." };
+        return new RespuestaColeccion<FilaDeTabla>() { Correcto = false, Mensaje = @"Las columnas de unión no son válidas." };
       //Consulta para seleccionar registros unidos
       StringBuilder consulta = new StringBuilder("SELECT ");
       if (union.Seleccion == null)
@@ -204,12 +208,12 @@ namespace Datos.Comandos
           condiciones.Append($" AND ([{string.Join($"] LIKE N'%@Busqueda%' OR [dbo].[{union.Tablas.Item2}].[", union.Seleccion.Item2)}] LIKE N'%@Busqueda%')");
       }
       //Consultar registros acorde a las condiciones dadas
-      RespuestaColeccion<FilaUnida> respuesta;
+      RespuestaColeccion<FilaDeTabla> respuesta;
       using (SqlConnection conexion = new SqlConnection(CadenaDeConexion))
       {
         try
         {
-          conexion.Open();
+          await conexion.OpenAsync();
           using (SqlCommand comando = new SqlCommand("", conexion))
           {
             StringBuilder conteo = new StringBuilder($"SELECT COUNT(*) FROM [dbo].[{union.Tablas.Item1}], [dbo].[{union.Tablas.Item2}]");
@@ -230,11 +234,11 @@ namespace Datos.Comandos
             if (parametros.Any(p => p != null)) comando.Parameters.AddRange(parametros.Where(p => p != null).ToArray());
             //Contar la cantida de registros acorde a las condiciones
             int total;
-            using (SqlDataReader lector = comando.ExecuteReader())
+            using (SqlDataReader lector = await comando.ExecuteReaderAsync())
             {
               try
               {
-                total = lector.Read() ? lector.GetInt32(0) : 0;
+                total = await lector.ReadAsync() ? lector.GetInt32(0) : 0;
                 lector.Close();
               }
               catch (Exception)
@@ -248,7 +252,7 @@ namespace Datos.Comandos
             //No hay registros
             if (total.Equals(0))
             {
-              respuesta = new RespuestaColeccion<FilaUnida>()
+              respuesta = new RespuestaColeccion<FilaDeTabla>()
               {
                 Correcto = false,
                 Coleccion = null,
@@ -264,21 +268,30 @@ namespace Datos.Comandos
               consulta.Clear();
               condiciones.Clear();
               comando.ResetCommandTimeout();
-              using (SqlDataReader lector = comando.ExecuteReader())
+              using (SqlDataReader lector = await comando.ExecuteReaderAsync())
               {
                 try
                 {
-                  List<FilaUnida> lista = new List<FilaUnida>();
-                  //Agregar los valores de fila
-                  while (lector.Read())
-                    for (int x = 0; x < lector.FieldCount; x++)
-                      lista.Add(new FilaUnida(x, lector.GetName(x), lector.GetValue(x)));
+                  List<FilaDeTabla> lista = new List<FilaDeTabla>();
+                  if (lector.HasRows)
+                  {
+                    int indice = 0;
+                    while (await lector.ReadAsync())
+                    {
+                      List<ColumnaDeTabla> columnas = new List<ColumnaDeTabla>(lector.FieldCount);
+                      //Agregar cada valor de columna a la fila
+                      for (int c = 0; c < lector.FieldCount; c++)
+                        columnas.Add(new ColumnaDeTabla(c, lector.GetName(c), lector.GetValue(c)));
+                      lista.Add(new FilaDeTabla(indice, columnas));
+                      indice++;
+                    }
+                  }
+                  respuesta = new RespuestaColeccion<FilaDeTabla>(lista);
                   lector.Close();
-                  respuesta = new RespuestaColeccion<FilaUnida>(lista);
                 }
                 catch (Exception ex)
                 {
-                  respuesta = new RespuestaColeccion<FilaUnida>(ex);
+                  respuesta = new RespuestaColeccion<FilaDeTabla>(ex);
                 }
                 lector.Dispose();
               }
@@ -289,7 +302,7 @@ namespace Datos.Comandos
         }
         catch (Exception ex)
         {
-          respuesta = new RespuestaColeccion<FilaUnida>(ex);
+          respuesta = new RespuestaColeccion<FilaDeTabla>(ex);
         }
       }
       return respuesta;
