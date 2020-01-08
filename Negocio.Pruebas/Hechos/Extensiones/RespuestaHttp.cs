@@ -30,6 +30,24 @@ namespace Negocio.Pruebas.Hechos.Extensiones
     }
 
     [Fact]
+    public void AdjuntarComoJson()
+    {
+      List<Usuario> usuarios = new List<Usuario>(1)
+      {
+        new Usuario(){
+          Nombre = @"Pruebas",
+          ApellidoPaterno = @"Pruebas",
+          ApellidoMaterno = @"Pruebas",
+          Correo = @"Pruebas@CSharp.com",
+          NumeroContacto = @"6623559566"
+        },
+      };
+      HttpResponseMessage http = new HttpResponseMessage(HttpStatusCode.OK);
+      http.AdjuntarComoJson(usuarios);
+      Assert.True(http.Content is StringContent && http.Content.Headers != null);
+    }
+
+    [Fact]
     public void AdjuntarExcel()
     {
       List<Usuario> usuarios = new List<Usuario>(1)

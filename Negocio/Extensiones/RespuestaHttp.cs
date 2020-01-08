@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text;
 using DocumentFormat.OpenXml.Packaging;
 using Datos.Extensiones;
 using Datos.Modelos;
+using Newtonsoft.Json;
 
 namespace Negocio.Extensiones
 {
@@ -54,6 +56,19 @@ namespace Negocio.Extensiones
     {
       if (documento.NoEsValido()) return;
       http.AgregarAdjunto(documento.Stream());
+    }
+
+    /// <summary>
+    /// Adjunta un objeto a un mensaje de respuesta
+    /// en notacion de objetos de javascript
+    /// </summary>
+    /// <param name="http">Referencia a la respuesta</param>
+    /// <param name="objeto">Referencia al objeto</param>
+    /// <returns>Respuesta web con el objeto como contenido json</returns>
+    public static void AdjuntarComoJson(this HttpResponseMessage http, object objeto)
+    {
+      if (http.NoEsValida() || objeto == null) return;
+      http.Content = new StringContent(JsonConvert.SerializeObject(objeto), Encoding.UTF8, @"application/json");
     }
   }
 }
