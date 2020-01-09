@@ -71,7 +71,7 @@ namespace Servicio.Contexto
 ### Crea una instancia de tu nueva entidad
 
 ```sh
-Servicio<Usuario> servicio = new Servicio<Usuario>();
+ProveedorDeDatos<Usuario> servicio = new ProveedorDeDatos<Usuario>();
 
 servicio.Obtener(1);
 servicio.Obtener(new Paginado());
