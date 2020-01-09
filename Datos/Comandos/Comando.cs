@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Datos.Enumerados;
 using Datos.Extensiones;
 using Datos.Modelos;
-using Datos.Utilidades;
+using Datos.Configuraciones;
 
 namespace Datos.Comandos
 {
@@ -25,7 +25,7 @@ namespace Datos.Comandos
 
     public Comando()
     {
-      CadenaDeConexion = Configuracion.Instancia.CadenaDeConexion;
+      CadenaDeConexion = Configuracion<ConfiguracionDatos>.Instancia.CadenaDeConexion;
     }
 
     /// <summary>

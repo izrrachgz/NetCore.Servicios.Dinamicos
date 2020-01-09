@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Datos.Configuraciones;
+using Microsoft.EntityFrameworkCore;
 using Datos.Entidades;
-using Datos.Utilidades;
 
 namespace Datos.Contexto
 {
@@ -25,7 +25,7 @@ namespace Datos.Contexto
 
     public Repositorio()
     {
-      CadenaDeConexion = Configuracion.Instancia.CadenaDeConexion;
+      CadenaDeConexion = Configuracion<ConfiguracionDatos>.Instancia.CadenaDeConexion;
     }
 
     #region Configuraciones
