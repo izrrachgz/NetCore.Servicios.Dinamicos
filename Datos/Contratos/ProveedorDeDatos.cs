@@ -10,7 +10,7 @@ namespace Datos.Contratos
   /// Contrato de servicio
   /// </summary>
   /// <typeparam name="T">Entidad de Servicio</typeparam>
-  public interface IServicio<T> where T : new()
+  public interface IProveedorDeDatos<T> where T : new()
   {
     /// <summary>
     /// Deberá indicar el nombre de la tabla asociada a la entidad su inicialización deberá ser a través del constructor

@@ -15,13 +15,13 @@ using Datos.Mensajes;
 using Datos.Modelos;
 using Microsoft.EntityFrameworkCore;
 
-namespace Datos.Servicios
+namespace Datos.ProveedoresDeDatos
 {
   /// <summary>
   /// Servicio de acciones genéricas con interacción a repositorio de datos
   /// </summary>
   /// <typeparam name="T">Entidad</typeparam>
-  public class Servicio<T> : IServicio<T> where T : class, IEntidad, new()
+  public class ProveedorDeDatos<T> : IProveedorDeDatos<T> where T : class, IEntidad, new()
   {
     #region Propiedades
 
@@ -72,7 +72,7 @@ namespace Datos.Servicios
     /// <summary>
     /// Construye un servicio de entidad utilizando una instancia nueva de repositorio
     /// </summary>
-    public Servicio()
+    public ProveedorDeDatos()
     {
       Repositorio = new Repositorio();
       Tipo = typeof(T);

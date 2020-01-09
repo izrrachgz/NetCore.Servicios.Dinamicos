@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Datos.Entidades;
 using Datos.Modelos;
-using Datos.Servicios;
+using Datos.ProveedoresDeDatos;
 using Xunit;
 
 namespace Datos.Pruebas.Teorias
@@ -28,7 +28,7 @@ namespace Datos.Pruebas.Teorias
     [Theory, InlineData(1, 1000)]
     public async Task GuardarUsuarios(short estimado = 1, int cantidad = 1000)
     {
-      Servicio<Usuario> servicio = new Servicio<Usuario>();
+      ProveedorDeDatos<Usuario> servicio = new ProveedorDeDatos<Usuario>();
       List<Usuario> usuarios = Enumerable.Repeat(Usuario, cantidad).ToList();
       Stopwatch temporizador = new Stopwatch();
       temporizador.Start();
@@ -46,7 +46,7 @@ namespace Datos.Pruebas.Teorias
     [Theory, InlineData(1, 1000)]
     public async Task ObtenerUsuarios(short estimado = 1, int cantidad = 1000)
     {
-      Servicio<Usuario> servicio = new Servicio<Usuario>();
+      ProveedorDeDatos<Usuario> servicio = new ProveedorDeDatos<Usuario>();
       Paginado paginado = new Paginado() { Elementos = cantidad };
       Stopwatch temporizador = new Stopwatch();
       temporizador.Start();
@@ -61,7 +61,7 @@ namespace Datos.Pruebas.Teorias
     [Theory, InlineData(1)]
     public async Task ObtenerUsuariosClaveValor(short estimado)
     {
-      Servicio<Usuario> servicio = new Servicio<Usuario>();
+      ProveedorDeDatos<Usuario> servicio = new ProveedorDeDatos<Usuario>();
       Stopwatch temporizador = new Stopwatch();
       temporizador.Start();
       RespuestaColeccion<ClaveValor> usuarios = await servicio.Obtener("Correo");
@@ -75,7 +75,7 @@ namespace Datos.Pruebas.Teorias
     [Theory, InlineData(1)]
     public async Task ObtenerUsuariosColumnas(short estimado, int cantidad = 1000)
     {
-      Servicio<Usuario> servicio = new Servicio<Usuario>();
+      ProveedorDeDatos<Usuario> servicio = new ProveedorDeDatos<Usuario>();
       Paginado paginado = new Paginado() { Elementos = cantidad };
       string[] columnas = { "Id", "Nombre", "Correo" };
       Stopwatch temporizador = new Stopwatch();
