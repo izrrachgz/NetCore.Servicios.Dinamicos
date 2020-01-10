@@ -4,8 +4,15 @@ using Xunit;
 
 namespace Datos.Pruebas.Hechos.Extensiones
 {
+  /// <summary>
+  /// Pruebas positivas de listas
+  /// </summary>
   public class Listas
   {
+    /// <summary>
+    /// Comprueba que la lista no es valida
+    /// para su uso
+    /// </summary>
     [Fact]
     public void NoEsValida()
     {

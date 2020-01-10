@@ -4,8 +4,15 @@ using Xunit;
 
 namespace Datos.Pruebas.Hechos.Extensiones
 {
+  /// <summary>
+  /// Pruebas positivas de conexiones sql
+  /// </summary>
   public class ConexionesSql
   {
+    /// <summary>
+    /// Comprueba que la conexion sql
+    /// no es valida para su uso
+    /// </summary>
     [Fact]
     public void NoEsValida()
     {

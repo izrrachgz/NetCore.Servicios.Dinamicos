@@ -4,8 +4,14 @@ using Xunit;
 
 namespace Datos.Pruebas.Hechos.Extensiones
 {
+  /// <summary>
+  /// Pruebas positivas de archivos
+  /// </summary>
   public class Archivos
   {
+    /// <summary>
+    /// Comprueba que el archivo en la direccion no existe
+    /// </summary>
     [Fact]
     public void NoEsValido()
     {

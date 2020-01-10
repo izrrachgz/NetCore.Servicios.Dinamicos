@@ -9,6 +9,10 @@ using Xunit;
 
 namespace Datos.Pruebas.Teorias
 {
+  /// <summary>
+  /// Pruebas teoricas de rendimiento en proveedores
+  /// de datos
+  /// </summary>
   public class Rendimiento
   {
     private Usuario Usuario { get; }
@@ -25,6 +29,15 @@ namespace Datos.Pruebas.Teorias
       };
     }
 
+    /// <summary>
+    /// Evalua la posibilidad de guardar n
+    /// usuarios antes de que termine el
+    /// intervalo de tiempo en segundos
+    /// estimado
+    /// </summary>
+    /// <param name="estimado">Segundos dados para terminar la tarea</param>
+    /// <param name="cantidad">Cantidad de entidades para guardar</param>
+    /// <returns>Tarea indicando el estado</returns>
     [Theory, InlineData(1, 1000)]
     public async Task GuardarUsuarios(short estimado = 1, int cantidad = 1000)
     {
@@ -43,6 +56,15 @@ namespace Datos.Pruebas.Teorias
       guardados.Coleccion = null;
     }
 
+    /// <summary>
+    /// Evalua la posibilidad de obtener n
+    /// usuarios antes de que termine el
+    /// intervalo de tiempo en segundos
+    /// estimado
+    /// </summary>
+    /// <param name="estimado">Segundos dados para terminar la tarea</param>
+    /// <param name="cantidad">Cantidad de entidades para obtener</param>
+    /// <returns>Tarea indicando el estado</returns>
     [Theory, InlineData(1, 1000)]
     public async Task ObtenerUsuarios(short estimado = 1, int cantidad = 1000)
     {
@@ -58,6 +80,14 @@ namespace Datos.Pruebas.Teorias
       usuarios.Coleccion = null;
     }
 
+    /// <summary>
+    /// Evalua la posibilidad de obtener
+    /// todos losusuarios antes de que
+    /// termine el intervalo de tiempo
+    /// en segundos estimado
+    /// </summary>
+    /// <param name="estimado">Segundos dados para terminar la tarea</param>
+    /// <returns>Tarea indicando el estado</returns>
     [Theory, InlineData(1)]
     public async Task ObtenerUsuariosClaveValor(short estimado)
     {
@@ -72,6 +102,16 @@ namespace Datos.Pruebas.Teorias
       usuarios.Coleccion = null;
     }
 
+    /// <summary>
+    /// Evalua la posibilidad de obtener
+    /// todos los usuarios con columnas
+    /// especificas antes de que termine el
+    /// intervalo de tiempo en segundos
+    /// estimado
+    /// </summary>
+    /// <param name="estimado">Segundos dados para terminar la tarea</param>
+    /// <param name="cantidad">Cantidad de entidades para obtener</param>
+    /// <returns>Tarea indicando el estado</returns>
     [Theory, InlineData(1)]
     public async Task ObtenerUsuariosColumnas(short estimado, int cantidad = 1000)
     {

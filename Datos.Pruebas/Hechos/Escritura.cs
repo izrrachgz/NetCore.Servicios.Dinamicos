@@ -6,6 +6,9 @@ using Xunit;
 
 namespace Datos.Pruebas.Hechos
 {
+  /// <summary>
+  /// Pruebas positivas de escritura de datos
+  /// </summary>
   public class Escritura
   {
     public Usuario Usuario { get; }
@@ -22,6 +25,12 @@ namespace Datos.Pruebas.Hechos
       };
     }
 
+    /// <summary>
+    /// Comprueba que se guarde un usuario
+    /// en el repositorio de datos utilizando
+    /// el proveedor de datos
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task GuardarUsuario()
     {

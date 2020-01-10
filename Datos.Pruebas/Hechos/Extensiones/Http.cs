@@ -7,15 +7,27 @@ using Xunit;
 
 namespace Datos.Pruebas.Hechos.Extensiones
 {
+  /// <summary>
+  /// Pruebas positivas de mensajes http
+  /// </summary>
   public class Http
   {
+    /// <summary>
+    /// Comprueba que el mensaje http
+    /// no es valido para su uso
+    /// </summary>
     [Fact]
     public void NoEsValida()
     {
       HttpResponseMessage http = new HttpResponseMessage(HttpStatusCode.InternalServerError);
       Assert.True(http.NoEsValida());
     }
-
+    
+    /// <summary>
+    /// Comprueba que al mensaje http
+    /// se le agrega el contenido adjunto
+    /// utilizando un flujo de datos
+    /// </summary>
     [Fact]
     public void AgregarAdjuntoStream()
     {
@@ -27,6 +39,11 @@ namespace Datos.Pruebas.Hechos.Extensiones
       }
     }
 
+    /// <summary>
+    /// Comprueba que al mensaje http
+    /// se le agrega el contenido adjunto
+    /// utilizando un objeto de bytes
+    /// </summary>
     [Fact]
     public void AgregarAdjuntoBytes()
     {
@@ -36,6 +53,12 @@ namespace Datos.Pruebas.Hechos.Extensiones
       Assert.True(http.Content is ByteArrayContent && http.Content.Headers != null);
     }
 
+    /// <summary>
+    /// Comprueba que al mensaje http
+    /// se le agrega el contenido adjunto
+    /// utilizando un objeto de informacion
+    /// de archivo
+    /// </summary>
     [Fact]
     public void AgregarAdjuntoInfo()
     {
@@ -45,6 +68,11 @@ namespace Datos.Pruebas.Hechos.Extensiones
       Assert.True(http.Content is StreamContent && http.Content.Headers != null);
     }
 
+    /// <summary>
+    /// Comprueba que al mensaje http
+    /// se le agrega el contenido adjunto
+    /// utilizando una cadena con formato de direccion
+    /// </summary>
     [Fact]
     public void AgregarAdjuntoDireccion()
     {
