@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using Datos.Modelos;
 
 namespace Datos.Extensiones
@@ -45,6 +47,22 @@ namespace Datos.Extensiones
     public static RespuestaColeccion<T> Convertir<T>(this List<T> lista)
     {
       return new RespuestaColeccion<T>(lista);
+    }
+
+    /// <summary>
+    /// Convierte una lista en un arreglo
+    /// de bytes
+    /// </summary>
+    /// <typeparam name="T">Tipo de elemento contenido en la coleccion</typeparam>
+    /// <param name="lista">Coleccion de elementos</param>
+    /// <returns>Arreglo de bytes</returns>
+    public static byte[] ObtenerBytes<T>(this List<T> lista)
+    {
+      if (lista.NoEsValida()) return new byte[0] { };
+      BinaryFormatter bf = new BinaryFormatter();
+      MemoryStream ms = new MemoryStream();
+      bf.Serialize(ms, lista);
+      return ms.ToArray();
     }
   }
 }

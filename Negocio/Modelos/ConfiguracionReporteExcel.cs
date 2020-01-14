@@ -4,7 +4,7 @@
   /// Provee un modelo de datos para representar
   /// la configuracion aplicable a un documento de excel
   /// </summary>
-  public class ConfiguracionReporteExcel
+  public class ConfiguracionReporteExcel : ConfiguracionArchivo
   {
     /// <summary>
     /// Nombre de la hoja
@@ -15,12 +15,6 @@
     /// Encabezados del contenido
     /// </summary>
     public string[] Encabezados { get; set; }
-
-    /// <summary>
-    /// Direccion absoluta donde se guardara
-    /// el documento
-    /// </summary>
-    public string DirectorioDeSalida { get; set; }
 
     /// <summary>
     /// Clave de proteccion
