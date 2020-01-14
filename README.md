@@ -1,5 +1,6 @@
 # Proveedores de Datos Dinamicos
-	Permite crear servicios genéricos de manera dinámica
+	Permite crear proveedores de datos genéricos de manera dinámica
+	de las entidades registradas
 
 ### Agrega tu entidad dentro del nombre de espacio de "Entidades"
 	
