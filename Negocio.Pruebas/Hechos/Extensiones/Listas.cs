@@ -7,8 +7,16 @@ using Xunit;
 
 namespace Negocio.Pruebas.Hechos.Extensiones
 {
+  /// <summary>
+  /// Pruebas positivas de extensiones de lista
+  /// </summary>
   public class Listas
   {
+    /// <summary>
+    /// Comprueba que el listado de nombres
+    /// puede ser interpretado por un documento
+    /// excel
+    /// </summary>
     [Fact]
     public void DocumentoExcel()
     {

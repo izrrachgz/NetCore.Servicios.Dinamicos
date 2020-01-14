@@ -11,6 +11,9 @@ using Xunit;
 
 namespace Negocio.Pruebas.Teorias
 {
+  /// <summary>
+  /// Pruebas teoricas de rendimiento
+  /// </summary>
   public class Rendimiento
   {
     private Usuario Modelo { get; }
@@ -27,6 +30,14 @@ namespace Negocio.Pruebas.Teorias
       };
     }
 
+    /// <summary>
+    /// Verifica la posibilidad de que la coleccion
+    /// de objetos se guarde en un archivo de reporte
+    /// excel en disco antes de que se agote el tiempo
+    /// estimado
+    /// </summary>
+    /// <param name="estimado">Tiempo estimado en segundos para concluir la tarea</param>
+    /// <param name="cantidad">Cantidad de elementos que conformaran el listado</param>
     [Theory, InlineData(1, 1000)]
     public void GuardarListaEnExcel(short estimado = 1, int cantidad = 1000)
     {

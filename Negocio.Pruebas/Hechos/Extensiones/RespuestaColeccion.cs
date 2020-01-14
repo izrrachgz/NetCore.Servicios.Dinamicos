@@ -7,8 +7,16 @@ using Xunit;
 
 namespace Negocio.Pruebas.Hechos.Extensiones
 {
+  /// <summary>
+  /// Pruebas positivas de extensiones de RespuestaColeccion
+  /// </summary>
   public class RespuestaColeccion
   {
+    /// <summary>
+    /// Comprueba que el objeto de respuesta
+    /// se puede interpretar como un documento
+    /// de excel
+    /// </summary>
     [Fact]
     public void ReporteExcel()
     {

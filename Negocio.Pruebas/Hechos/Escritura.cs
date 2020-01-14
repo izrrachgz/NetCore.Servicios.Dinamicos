@@ -9,8 +9,16 @@ using Xunit;
 
 namespace Negocio.Pruebas.Hechos
 {
+  /// <summary>
+  /// Pruebas positivas de extensiones de escritura
+  /// </summary>
   public class Escritura
   {
+    /// <summary>
+    /// Comprueba que la coleccion de datos
+    /// se puede guardar como un archivo
+    /// excel en disco
+    /// </summary>
     [Fact]
     public void GuardarArchivoExcel()
     {

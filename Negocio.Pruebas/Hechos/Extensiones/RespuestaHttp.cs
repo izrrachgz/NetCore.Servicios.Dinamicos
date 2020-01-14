@@ -8,8 +8,17 @@ using Xunit;
 
 namespace Negocio.Pruebas.Hechos.Extensiones
 {
+  /// <summary>
+  /// Pruebas positivas de extensiones http
+  /// </summary>
   public class RespuestaHttp
   {
+    /// <summary>
+    /// Comprueba que al mensaje http
+    /// se le puede adjuntar un documento
+    /// interpretado como excel a partir
+    /// de una respuesta de coleccion
+    /// </summary>
     [Fact]
     public void AdjuntarComoExcel()
     {
@@ -29,6 +38,11 @@ namespace Negocio.Pruebas.Hechos.Extensiones
       Assert.True(http.Content is StreamContent && http.Content.Headers != null);
     }
 
+    /// <summary>
+    /// Comprueba que al mensaje http
+    /// se le puede adjuntar un documento
+    /// json
+    /// </summary>
     [Fact]
     public void AdjuntarComoJson()
     {
@@ -47,6 +61,12 @@ namespace Negocio.Pruebas.Hechos.Extensiones
       Assert.True(http.Content is StringContent && http.Content.Headers != null);
     }
 
+    /// <summary>
+    /// Comprueba que al mensaje http
+    /// se le puede adjuntar un documento
+    /// interpretado como excel a partir
+    /// de una coleccion de datos
+    /// </summary>
     [Fact]
     public void AdjuntarExcel()
     {
