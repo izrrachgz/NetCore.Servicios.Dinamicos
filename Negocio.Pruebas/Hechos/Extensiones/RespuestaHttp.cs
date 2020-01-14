@@ -20,7 +20,7 @@ namespace Negocio.Pruebas.Hechos.Extensiones
     /// de una respuesta de coleccion
     /// </summary>
     [Fact]
-    public void AdjuntarComoExcel()
+    public void AdjuntarRespuestaColeccionComoExcel()
     {
       List<Usuario> usuarios = new List<Usuario>(1)
       {
@@ -35,6 +35,30 @@ namespace Negocio.Pruebas.Hechos.Extensiones
       RespuestaColeccion<Usuario> respuesta = new RespuestaColeccion<Usuario>(usuarios);
       HttpResponseMessage http = new HttpResponseMessage(HttpStatusCode.OK);
       http.AdjuntarComoExcel(respuesta);
+      Assert.True(http.Content is StreamContent && http.Content.Headers != null);
+    }
+
+    /// <summary>
+    /// Comprueba que al mensaje http
+    /// se le puede adjuntar un documento
+    /// interpretado como excel a partir
+    /// de una coleccion de datos
+    /// </summary>
+    [Fact]
+    public void AdjuntarListaComoExcel()
+    {
+      List<Usuario> usuarios = new List<Usuario>(1)
+      {
+        new Usuario(){
+          Nombre = @"Pruebas",
+          ApellidoPaterno = @"Pruebas",
+          ApellidoMaterno = @"Pruebas",
+          Correo = @"Pruebas@CSharp.com",
+          NumeroContacto = @"6623559566"
+        },
+      };
+      HttpResponseMessage http = new HttpResponseMessage(HttpStatusCode.OK);
+      http.AdjuntarComoExcel(usuarios);
       Assert.True(http.Content is StreamContent && http.Content.Headers != null);
     }
 
