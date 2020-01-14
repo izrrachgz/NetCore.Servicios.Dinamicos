@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using Datos.Configuraciones;
 using Datos.Extensiones;
+using Datos.Modelos;
 using Xunit;
 
 namespace Datos.Pruebas.Hechos.Extensiones
 {
   /// <summary>
-  /// Pruebas positivas de listas
+  /// Pruebas positivas de extensiones de listas
   /// </summary>
   public class Listas
   {
@@ -18,6 +21,49 @@ namespace Datos.Pruebas.Hechos.Extensiones
     {
       List<string> lista = new List<string>(0);
       Assert.True(lista.NoEsValida());
+    }
+
+    /// <summary>
+    /// Comprueba que de un listado de configuracion
+    /// puede obtenerse un elemento de configuracion
+    /// interpretado siempre y cuando exista
+    /// </summary>
+    [Fact]
+    public void ObenerElementoDeConfiguracion()
+    {
+      List<ElementoConfiguracion> configuraciones = new List<ElementoConfiguracion>(1)
+      {
+        new ElementoConfiguracion()
+        {
+          Clave = @"Nombre",
+          Valor = @"Israel Ch"
+        }
+      };
+      Assert.True(!configuraciones.Obtener<string>(@"Nombre").NoEsValida());
+    }
+
+    /// <summary>
+    /// Comprueba que una lista de elementos
+    /// puede convertirse en una respuesta
+    /// de coleccion
+    /// </summary>
+    [Fact]
+    public void ConvertirEnRespuestaColeccion()
+    {
+      List<string> nombres = Enumerable.Repeat(@"Israel Ch", 10).ToList();
+      Assert.True(nombres.Convertir().Correcto);
+    }
+
+    /// <summary>
+    /// Comprueba que se puede obtener
+    /// el contenido en buffer de una lista
+    /// de elementos
+    /// </summary>
+    [Fact]
+    public void ObtenerBytes()
+    {
+      List<string> nombres = Enumerable.Repeat(@"Israel Ch", 10).ToList();
+      Assert.True(!nombres.ObtenerBytes().NoEsValido());
     }
   }
 }
