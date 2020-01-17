@@ -15,7 +15,7 @@ namespace Datos.Extensiones
     /// <returns>Verdadero o falso</returns>
     public static bool NoEsValido(this Stream stream)
     {
-      return stream == null || stream.Length.Equals(0) || stream.Position.Equals(0);
+      return stream == null || stream.Length.Equals(0) || !stream.Position.Equals(0);
     }
   }
 }
