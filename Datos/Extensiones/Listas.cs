@@ -62,6 +62,7 @@ namespace Datos.Extensiones
       BinaryFormatter bf = new BinaryFormatter();
       MemoryStream ms = new MemoryStream();
       bf.Serialize(ms, lista);
+      ms.Position = 0;
       return ms.ToArray();
     }
   }
