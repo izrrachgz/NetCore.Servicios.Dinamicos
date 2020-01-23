@@ -29,6 +29,7 @@ namespace Negocio.Extensiones
     {
       Stream stream = new MemoryStream();
       if (!documento.NoEsValido()) documento.Clone(stream);
+      stream.Position = 0;
       return stream;
     }
 

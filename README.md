@@ -1,5 +1,6 @@
-# NetCore Servicios-Dinamicos
-	Permite crear servicios genéricos de manera dinámica
+# Proveedores de Datos Dinamicos
+	Permite crear proveedores de datos genéricos de manera dinámica
+	de las entidades registradas
 
 ### Agrega tu entidad dentro del nombre de espacio de "Entidades"
 	
@@ -35,17 +36,33 @@ namespace Servicio.Entidades
 ### Agrega tu referencia dentro del nombre de espacio "Contexto"
 
 ```sh
-namespace Servicio.Contexto
+namespace Datos.Contexto
 {
   internal class Repositorio : DbContext
   {
-    public const string CadenaDeConexion = @"Data Source =.\SQLEXPRESS;Initial Catalog = Servicios.Dinamicos;Integrated Security = true;";
+    #region Propiedades
+
+    /// <summary>
+    /// Cadena de conexion al repositorio de datos
+    /// </summary>
+    public string CadenaDeConexion { get; }
+
+    #endregion
+
+    #region Entidades
 
     public DbSet<Usuario> Usuarios { get; set; }
 
     //Agrega tus colecciones aquí
 
-    public Repositorio() { }
+    #endregion
+
+    public Repositorio()
+    {
+      CadenaDeConexion = Configuracion<ConfiguracionDatos>.Instancia.CadenaDeConexion;
+    }
+
+    #region Configuraciones
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
@@ -58,6 +75,8 @@ namespace Servicio.Contexto
       base.OnModelCreating(modelBuilder);
       //Agrega tus configuraciones aquí
     }
+
+    #endregion
   }
 }
 ```
@@ -68,18 +87,35 @@ namespace Servicio.Contexto
 ### Actualiza la Base de datos desde la consola administradora de paquetes
 	EntityFrameworkCore\Update-Database
 
-### Crea una instancia de tu nueva entidad
+### Crea una instancia de proveedor de datos asociado a la entidad
 
 ```sh
-ProveedorDeDatos<Usuario> servicio = new ProveedorDeDatos<Usuario>();
+//Crear una referencia al proveedor de datos asociado a la entidad de Usuario
+ProveedorDeDatos<Usuario> datosUsuario = new ProveedorDeDatos<Usuario>();
 
-servicio.Obtener(1);
-servicio.Obtener(new Paginado());
-servicio.Guardar(new Usuario());
-servicio.Guardar(new List<Usuario>());
-servicio.Insertar(new List<Usuario>());
-servicio.Actualizar(new List<Usuario>());
-servicio.Eliminar(1);
-servicio.Eliminar(new List<int>());
+//Obtener un usuario por llave primaria
+datosUsuario.Obtener(1);
+
+//Obtener una coleccion de usuarios utilizando una indice de paginado
+datosUsuario.Obtener(new Paginado());
+
+//Guardar un usuario (nuevo o edicion)
+datosUsuario.Guardar(new Usuario());
+
+//Guardar una coleccion de usuarios (nuevos y/o editados)
+datosUsuario.Guardar(new List<Usuario>());
+
+//Insertar una coleccion de usuarios nuevos
+datosUsuario.Insertar(new List<Usuario>());
+
+//Actualizar una coleccion de usuarios
+datosUsuario.Actualizar(new List<Usuario>());
+
+//Eliminar de manera logica un usuario por su llave primaria
+datosUsuario.Eliminar(1);
+
+//Eliminar una coleccion de usuarios utilizando un listado de llaves primarias
+datosUsuario.Eliminar(new List<int>());
+
 ```
   
