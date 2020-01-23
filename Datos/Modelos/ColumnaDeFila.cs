@@ -5,7 +5,7 @@ namespace Datos.Modelos
   /// <summary>
   /// Provee un modelo de datos para representar una celda de una tabla
   /// </summary>
-  public class ColumnaDeTabla
+  public class ColumnaDeFila
   {
     /// <summary>
     /// Indice de la columna
@@ -22,9 +22,9 @@ namespace Datos.Modelos
     /// </summary>
     public object Celda { get; }
 
-    public ColumnaDeTabla() { }
+    public ColumnaDeFila() { }
 
-    public ColumnaDeTabla(int indice, string nombre, object valor)
+    public ColumnaDeFila(int indice, string nombre, object valor)
     {
       Indice = indice;
       Nombre = nombre;

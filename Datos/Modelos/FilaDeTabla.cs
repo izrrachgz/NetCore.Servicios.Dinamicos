@@ -15,11 +15,11 @@ namespace Datos.Modelos
     /// <summary>
     /// Columnas de la fila
     /// </summary>
-    public List<ColumnaDeTabla> Columnas { get; set; }
+    public List<ColumnaDeFila> Columnas { get; set; }
 
     public FilaDeTabla() { }
 
-    public FilaDeTabla(int indice, List<ColumnaDeTabla> columnas)
+    public FilaDeTabla(int indice, List<ColumnaDeFila> columnas)
     {
       Indice = indice;
       Columnas = columnas;

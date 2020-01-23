@@ -64,10 +64,10 @@ namespace Datos.Comandos
                 int indice = 0;
                 while (await lector.ReadAsync())
                 {
-                  List<ColumnaDeTabla> columnas = new List<ColumnaDeTabla>(lector.FieldCount);
+                  List<ColumnaDeFila> columnas = new List<ColumnaDeFila>(lector.FieldCount);
                   //Agregar cada valor de columna a la fila
                   for (int c = 0; c < lector.FieldCount; c++)
-                    columnas.Add(new ColumnaDeTabla(c, lector.GetName(c), lector.GetValue(c)));
+                    columnas.Add(new ColumnaDeFila(c, lector.GetName(c), lector.GetValue(c)));
                   lista.Add(new FilaDeTabla(indice, columnas));
                   indice++;
                 }
@@ -279,10 +279,10 @@ namespace Datos.Comandos
                     int indice = 0;
                     while (await lector.ReadAsync())
                     {
-                      List<ColumnaDeTabla> columnas = new List<ColumnaDeTabla>(lector.FieldCount);
+                      List<ColumnaDeFila> columnas = new List<ColumnaDeFila>(lector.FieldCount);
                       //Agregar cada valor de columna a la fila
                       for (int c = 0; c < lector.FieldCount; c++)
-                        columnas.Add(new ColumnaDeTabla(c, lector.GetName(c), lector.GetValue(c)));
+                        columnas.Add(new ColumnaDeFila(c, lector.GetName(c), lector.GetValue(c)));
                       lista.Add(new FilaDeTabla(indice, columnas));
                       indice++;
                     }
