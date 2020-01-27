@@ -34,8 +34,9 @@ namespace Datos.Comandos
     /// <param name="sql">Instruccion de consulta : sql plano, nombre de procedimiento almacenado</param>
     /// <param name="parametros">Parametros para agregar al comando</param>
     /// <param name="tipo">Tipo de instruccion</param>
+    /// <param name="tiempoDeEspera">Tiempo para esperar el termino de ejecucion</param>
     /// <returns>Listado de resultado de filas</returns>
-    private async Task<RespuestaColeccion<FilaDeTabla>> Sql(string sql, SqlParameter[] parametros = null, CommandType tipo = CommandType.Text)
+    private async Task<RespuestaColeccion<FilaDeTabla>> Sql(string sql, SqlParameter[] parametros = null, CommandType tipo = CommandType.Text, short tiempoDeEspera = 30)
     {
       //Verificar consulta
       if (sql.NoEsValida())
@@ -51,6 +52,8 @@ namespace Datos.Comandos
           {
             //Establecer el tipo de comando que ejecutaremos
             comando.CommandType = tipo;
+            //Establecer el tiempo de espera de la terminacion del comando
+            comando.CommandTimeout = tiempoDeEspera;
             //Agregar los parametros proporcionados
             if (parametros != null && parametros.Length > 0)
               comando.Parameters.AddRange(parametros);
@@ -103,18 +106,20 @@ namespace Datos.Comandos
     /// </summary>
     /// <param name="sql">Texto plano en formato sql para ejecutar</param>
     /// <param name="parametros">Parametros para agregar al comando</param>
+    /// <param name="tiempoDeEspera">Tiempo para esperar el termino de ejecucion</param>
     /// <returns>Listado de resultado de filas</returns>
-    public async Task<RespuestaColeccion<FilaDeTabla>> Consulta(string sql, SqlParameter[] parametros = null)
-      => await Sql(sql, parametros);
+    public async Task<RespuestaColeccion<FilaDeTabla>> Consulta(string sql, SqlParameter[] parametros = null, short tiempoDeEspera = 30)
+      => await Sql(sql, parametros, CommandType.Text, tiempoDeEspera);
 
     /// <summary>
     /// Ejecuta un procedimiento almacenado
     /// </summary>
     /// <param name="procedimiento">Nombre del procedimiento</param>
     /// <param name="parametros">Parametros para agregar al comando</param>
+    /// <param name="tiempoDeEspera">Tiempo para esperar el termino de ejecucion</param>
     /// <returns>Listado de resultado de filas</returns>
-    public async Task<RespuestaColeccion<FilaDeTabla>> Procedimiento(string procedimiento, SqlParameter[] parametros = null)
-      => await Sql(procedimiento, parametros, CommandType.StoredProcedure);
+    public async Task<RespuestaColeccion<FilaDeTabla>> Procedimiento(string procedimiento, SqlParameter[] parametros = null, short tiempoDeEspera = 30)
+      => await Sql(procedimiento, parametros, CommandType.StoredProcedure, tiempoDeEspera);
 
     /// <summary>
     /// Consulta la unión de dos entidades
