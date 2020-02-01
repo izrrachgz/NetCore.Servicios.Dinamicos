@@ -31,11 +31,10 @@ namespace Negocio.Utilidades
     /// Permite realizar una solicitud POST utilizando como parametros
     /// un objeto serializado en notacion JSON
     /// </summary>
-    /// <typeparam name="T">Tipo de respuesta esperado</typeparam>
     /// <param name="urlBase">Direccion principal del recurso</param>
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="parametros">Objeto a incluir en la solicitud</param>
-    /// <returns>Modelo de datos</returns>
+        /// <returns>Mensaje de la solicitud</returns>
     public async Task<HttpResponseMessage> Post(string urlBase, string metodo, string parametros)
     {
       if (urlBase.NoEsValida() || metodo.NoEsValida() || parametros.NoEsValida())
@@ -73,11 +72,10 @@ namespace Negocio.Utilidades
     /// Permite realizar una solicitud POST utilizando como parametros
     /// un arreglo de bytes
     /// </summary>
-    /// <typeparam name="T">Tipo de respuesta esperado</typeparam>
     /// <param name="urlBase">Direccion principal del recurso</param>
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="parametros">Objeto a incluir en la solicitud</param>
-    /// <returns>Modelo de datos</returns>
+        /// <returns>Mensaje de la solicitud</returns>
     public async Task<HttpResponseMessage> Post(string urlBase, string metodo, byte[] parametros)
     {
       if (urlBase.NoEsValida() || metodo.NoEsValida() || parametros.NoEsValido())
@@ -115,11 +113,10 @@ namespace Negocio.Utilidades
     /// Permite realizar una solicitud POST utilizando como parametros
     /// un diccionario de claves
     /// </summary>
-    /// <typeparam name="T">Tipo de respuesta esperado</typeparam>
     /// <param name="urlBase">Direccion principal del recurso</param>
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="parametros">Objeto a incluir en la solicitud</param>
-    /// <returns>Modelo de datos</returns>
+        /// <returns>Mensaje de la solicitud</returns>
     public async Task<HttpResponseMessage> Post(string urlBase, string metodo, Dictionary<string, string> parametros)
     {
       if (urlBase.NoEsValida() || metodo.NoEsValida())
@@ -157,11 +154,10 @@ namespace Negocio.Utilidades
     /// Permite realizar una solicitud POST utilizando como parametros
     /// un flujo de datos
     /// </summary>
-    /// <typeparam name="T">Tipo de respuesta esperado</typeparam>
     /// <param name="urlBase">Direccion principal del recurso</param>
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="parametros">Objeto a incluir en la solicitud</param>
-    /// <returns>Modelo de datos</returns>
+        /// <returns>Mensaje de la solicitud</returns>
     public async Task<HttpResponseMessage> Post(string urlBase, string metodo, Stream parametros)
     {
 
@@ -204,11 +200,10 @@ namespace Negocio.Utilidades
     /// Permite realizar una solicitud GET utilizando como parametros
     /// una cadena alfanumerica codificada como url
     /// </summary>
-    /// <typeparam name="T">Tipo de respuesta esperado</typeparam>
     /// <param name="urlBase">Direccion principal del recurso</param>
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="parametros">Objeto a incluir en la solicitud</param>
-    /// <returns>Modelo de datos</returns>
+        /// <returns>Mensaje de la solicitud</returns>
     public async Task<HttpResponseMessage> Get(string urlBase, string metodo, string parametros)
     {
       if (urlBase.NoEsValida() || metodo.NoEsValida() || parametros.NoEsValida())
@@ -243,11 +238,10 @@ namespace Negocio.Utilidades
     /// Permite realizar una solicitud GET utilizando como parametros
     /// un modelo de clave/valor
     /// </summary>
-    /// <typeparam name="T">Tipo de respuesta esperado</typeparam>
     /// <param name="urlBase">Direccion principal del recurso</param>
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="parametros">Objeto a incluir en la solicitud</param>
-    /// <returns>Modelo de datos</returns>
+        /// <returns>Mensaje de la solicitud</returns>
     public async Task<HttpResponseMessage> Get(string urlBase, string metodo, KeyValuePair<string, string> parametros)
       => await Get(urlBase, metodo, $@"{parametros.Key}={parametros.Value}");
 
@@ -255,11 +249,10 @@ namespace Negocio.Utilidades
     /// Permite realizar una solicitud GET utilizando como parametros
     /// un diccionario asociativo de claves y valores
     /// </summary>
-    /// <typeparam name="T">Tipo de respuesta esperado</typeparam>
     /// <param name="urlBase">Direccion principal del recurso</param>
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="parametros">Objeto a incluir en la solicitud</param>
-    /// <returns>Modelo de datos</returns>
+        /// <returns>Mensaje de la solicitud</returns>
     public async Task<HttpResponseMessage> Get(string urlBase, string metodo, Dictionary<string, dynamic> parametros)
       => await Get(urlBase, metodo, string.Join(@"&", parametros.Select(p => $@"{p.Key}={p.Value}")));
 
@@ -267,11 +260,10 @@ namespace Negocio.Utilidades
     /// Permite realizar una solicitud GET utilizando como parametros
     /// una lista de modelos de clave/valor
     /// </summary>
-    /// <typeparam name="T">Tipo de respuesta esperado</typeparam>
     /// <param name="urlBase">Direccion principal del recurso</param>
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="parametros">Objeto a incluir en la solicitud</param>
-    /// <returns>Modelo de datos</returns>
+        /// <returns>Mensaje de la solicitud</returns>
     public async Task<HttpResponseMessage> Get(string urlBase, string metodo, List<KeyValuePair<string, string>> parametros)
       => await Get(urlBase, metodo, string.Join(@"&", parametros.Select(p => $@"{p.Key}={p.Value}")));
 
@@ -283,11 +275,10 @@ namespace Negocio.Utilidades
     /// Permite realizar una solicitud PUT utilizando como parametros
     /// un objeto serializado en notacion JSON
     /// </summary>
-    /// <typeparam name="T">Tipo de respuesta esperado</typeparam>
     /// <param name="urlBase">Direccion principal del recurso</param>
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="parametros">Objeto a incluir en la solicitud</param>
-    /// <returns>Modelo de datos</returns>
+        /// <returns>Mensaje de la solicitud</returns>
     public async Task<HttpResponseMessage> Put(string urlBase, string metodo, string parametros)
     {
       if (urlBase.NoEsValida() || metodo.NoEsValida() || parametros.NoEsValida())
@@ -325,11 +316,10 @@ namespace Negocio.Utilidades
     /// Permite realizar una solicitud PUT utilizando como parametros
     /// un arreglo de bytes
     /// </summary>
-    /// <typeparam name="T">Tipo de respuesta esperado</typeparam>
     /// <param name="urlBase">Direccion principal del recurso</param>
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="parametros">Objeto a incluir en la solicitud</param>
-    /// <returns>Modelo de datos</returns>
+        /// <returns>Mensaje de la solicitud</returns>
     public async Task<HttpResponseMessage> Put(string urlBase, string metodo, byte[] parametros)
     {
       if (urlBase.NoEsValida() || metodo.NoEsValida() || parametros.NoEsValido())
@@ -367,11 +357,10 @@ namespace Negocio.Utilidades
     /// Permite realizar una solicitud PUT utilizando como parametros
     /// un diccionario de claves
     /// </summary>
-    /// <typeparam name="T">Tipo de respuesta esperado</typeparam>
     /// <param name="urlBase">Direccion principal del recurso</param>
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="parametros">Objeto a incluir en la solicitud</param>
-    /// <returns>Modelo de datos</returns>
+        /// <returns>Mensaje de la solicitud</returns>
     public async Task<HttpResponseMessage> Put(string urlBase, string metodo, Dictionary<string, string> parametros)
     {
       if (urlBase.NoEsValida() || metodo.NoEsValida())
@@ -409,11 +398,10 @@ namespace Negocio.Utilidades
     /// Permite realizar una solicitud PUT utilizando como parametros
     /// un flujo de datos
     /// </summary>
-    /// <typeparam name="T">Tipo de respuesta esperado</typeparam>
     /// <param name="urlBase">Direccion principal del recurso</param>
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="parametros">Objeto a incluir en la solicitud</param>
-    /// <returns>Modelo de datos</returns>
+        /// <returns>Mensaje de la solicitud</returns>
     public async Task<HttpResponseMessage> Put(string urlBase, string metodo, Stream parametros)
     {
       if (urlBase.NoEsValida() || metodo.NoEsValida())
@@ -455,11 +443,10 @@ namespace Negocio.Utilidades
     /// Permite realizar una solicitud DELETE utilizando como parametros
     /// una cadena alfanumerica codificada como url
     /// </summary>
-    /// <typeparam name="T">Tipo de respuesta esperado</typeparam>
     /// <param name="urlBase">Direccion principal del recurso</param>
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="parametros">Objeto a incluir en la solicitud</param>
-    /// <returns>Modelo de datos</returns>
+        /// <returns>Mensaje de la solicitud</returns>
     public async Task<HttpResponseMessage> Delete(string urlBase, string metodo, string parametros)
     {
       if (urlBase.NoEsValida() || metodo.NoEsValida() || parametros.NoEsValida())
@@ -494,11 +481,10 @@ namespace Negocio.Utilidades
     /// Permite realizar una solicitud DELETE utilizando como parametros
     /// un modelo de clave/valor
     /// </summary>
-    /// <typeparam name="T">Tipo de respuesta esperado</typeparam>
     /// <param name="urlBase">Direccion principal del recurso</param>
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="parametros">Objeto a incluir en la solicitud</param>
-    /// <returns>Modelo de datos</returns>
+        /// <returns>Mensaje de la solicitud</returns>
     public async Task<HttpResponseMessage> Delete(string urlBase, string metodo, KeyValuePair<string, string> parametros)
       => await Delete(urlBase, metodo, $@"{parametros.Key}={parametros.Value}");
 
@@ -506,11 +492,10 @@ namespace Negocio.Utilidades
     /// Permite realizar una solicitud DELETE utilizando como parametros
     /// un diccionario asociativo de claves y valores
     /// </summary>
-    /// <typeparam name="T">Tipo de respuesta esperado</typeparam>
     /// <param name="urlBase">Direccion principal del recurso</param>
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="parametros">Objeto a incluir en la solicitud</param>
-    /// <returns>Modelo de datos</returns>
+        /// <returns>Mensaje de la solicitud</returns>
     public async Task<HttpResponseMessage> Delete(string urlBase, string metodo, Dictionary<string, dynamic> parametros)
       => await Delete(urlBase, metodo, string.Join(@"&", parametros.Select(p => $@"{p.Key}={p.Value}")));
 
@@ -518,11 +503,10 @@ namespace Negocio.Utilidades
     /// Permite realizar una solicitud DELETE utilizando como parametros
     /// una lista de modelos de clave/valor
     /// </summary>
-    /// <typeparam name="T">Tipo de respuesta esperado</typeparam>
     /// <param name="urlBase">Direccion principal del recurso</param>
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="parametros">Objeto a incluir en la solicitud</param>
-    /// <returns>Modelo de datos</returns>
+        /// <returns>Mensaje de la solicitud</returns>
     public async Task<HttpResponseMessage> Delete(string urlBase, string metodo, List<KeyValuePair<string, string>> parametros)
       => await Delete(urlBase, metodo, string.Join(@"&", parametros.Select(p => $@"{p.Key}={p.Value}")));
 
@@ -536,7 +520,7 @@ namespace Negocio.Utilidades
     /// </summary>
     /// <param name="urlBase">Direccion principal del recurso</param>
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
-    /// <returns></returns>
+    /// <returns>Modelo de datos en bytes</returns>
     public async Task<RespuestaModelo<byte[]>> Descargar(string urlBase, string metodo)
     {
       if (urlBase.NoEsValida() || metodo.NoEsValida())
@@ -565,7 +549,7 @@ namespace Negocio.Utilidades
     /// <param name="urlBase">Direccion principal del recurso</param>
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="directorio">Direccion destino del archivo</param>
-    /// <returns></returns>
+    /// <returns>Respuesta basica que indica el estado de la tarea</returns>
     public async Task<RespuestaBasica> DescargarEnDirectorio(string urlBase, string metodo, string directorio)
     {
       if (urlBase.NoEsValida() || metodo.NoEsValida())
