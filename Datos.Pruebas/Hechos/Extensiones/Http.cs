@@ -2,7 +2,10 @@
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using Datos.Entidades;
 using Datos.Extensiones;
+using Datos.Modelos;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace Datos.Pruebas.Hechos.Extensiones
@@ -22,7 +25,7 @@ namespace Datos.Pruebas.Hechos.Extensiones
       HttpResponseMessage http = new HttpResponseMessage(HttpStatusCode.InternalServerError);
       Assert.True(http.NoEsValida());
     }
-    
+
     /// <summary>
     /// Comprueba que al mensaje http
     /// se le agrega el contenido adjunto
@@ -80,6 +83,15 @@ namespace Datos.Pruebas.Hechos.Extensiones
       HttpResponseMessage http = new HttpResponseMessage(HttpStatusCode.OK);
       http.AgregarAdjunto(direccion, @"application/json");
       Assert.True(http.Content is StreamContent && http.Content.Headers != null);
+    }
+
+    [Fact]
+    public async void ObtenerDeContenidoJson()
+    {
+      HttpResponseMessage http = new HttpResponseMessage(HttpStatusCode.OK);
+      http.Content = new StringContent(JsonConvert.SerializeObject(new Usuario()));
+      RespuestaModelo<Usuario> respuesta = await http.ObtenerDeContenidoJson<Usuario>();
+      Assert.True(respuesta.Correcto);
     }
   }
 }

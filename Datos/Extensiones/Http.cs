@@ -2,6 +2,9 @@
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using Datos.Modelos;
+using Newtonsoft.Json;
 
 namespace Datos.Extensiones
 {
@@ -97,6 +100,30 @@ namespace Datos.Extensiones
       }
       if (info.NoEsValido()) return;
       AgregarAdjunto(http, new FileStream(info.FullName, FileMode.Open, FileAccess.Read), tipoDeContenido, nombre ?? info.Name);
+    }
+
+    /// <summary>
+    /// Interpreta el contenido de la solicitud como una cadena json
+    /// y lo deserializa hacia la instancia del tipo de objeto indicado
+    /// </summary>
+    /// <typeparam name="T">Tipo de objeto a deserializar</typeparam>
+    /// <param name="http">Referencia de la solicitud</param>
+    /// <returns>Respuesta modelo que contiene una instancia del tipo indicado</returns>
+    public static async Task<RespuestaModelo<T>> ObtenerDeContenidoJson<T>(this HttpResponseMessage http)
+    {
+      if (http.NoEsValida() || !(http.Content is StringContent))
+        return new RespuestaModelo<T>() { Correcto = false, Mensaje = @"El contenido de la solicitud no es valido." };
+      RespuestaModelo<T> respuesta;
+      try
+      {
+        T modelo = JsonConvert.DeserializeObject<T>(await http.Content.ReadAsStringAsync());
+        respuesta = new RespuestaModelo<T>(modelo);
+      }
+      catch (Exception ex)
+      {
+        respuesta = new RespuestaModelo<T>(ex);
+      }
+      return respuesta;
     }
   }
 }
