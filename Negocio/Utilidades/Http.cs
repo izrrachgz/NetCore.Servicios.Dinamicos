@@ -36,11 +36,11 @@ namespace Negocio.Utilidades
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="parametros">Objeto a incluir en la solicitud</param>
     /// <returns>Modelo de datos</returns>
-    public async Task<RespuestaModelo<T>> Post<T>(string urlBase, string metodo, string parametros)
+    public async Task<HttpResponseMessage> Post(string urlBase, string metodo, string parametros)
     {
       if (urlBase.NoEsValida() || metodo.NoEsValida() || parametros.NoEsValida())
-        return new RespuestaModelo<T>() { Correcto = false, Mensaje = @"Los datos para realizar la solicitud no son validos." };
-      RespuestaModelo<T> respuesta;
+        return new HttpResponseMessage(HttpStatusCode.BadRequest);
+      HttpResponseMessage respuesta;
       try
       {
         using (HttpClient cliente = new HttpClient())
@@ -53,12 +53,7 @@ namespace Negocio.Utilidades
           }
           using (HttpContent contenido = new StringContent(parametros, Encoding.UTF8, @"application/json"))
           {
-            using (HttpResponseMessage mensaje = await cliente.PostAsync(metodo, contenido))
-            {
-              T modelo = JsonConvert.DeserializeObject<T>(await mensaje.Content.ReadAsStringAsync());
-              respuesta = new RespuestaModelo<T>(modelo);
-              mensaje.Dispose();
-            }
+            respuesta = await cliente.PostAsync(metodo, contenido);
             contenido.Dispose();
           }
           cliente.Dispose();
@@ -66,7 +61,10 @@ namespace Negocio.Utilidades
       }
       catch (Exception ex)
       {
-        respuesta = new RespuestaModelo<T>(ex);
+        respuesta = new HttpResponseMessage(HttpStatusCode.InternalServerError)
+        {
+          Content = new StringContent(JsonConvert.SerializeObject(ex))
+        };
       }
       return respuesta;
     }
@@ -80,11 +78,11 @@ namespace Negocio.Utilidades
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="parametros">Objeto a incluir en la solicitud</param>
     /// <returns>Modelo de datos</returns>
-    public async Task<RespuestaModelo<T>> Post<T>(string urlBase, string metodo, byte[] parametros)
+    public async Task<HttpResponseMessage> Post(string urlBase, string metodo, byte[] parametros)
     {
       if (urlBase.NoEsValida() || metodo.NoEsValida() || parametros.NoEsValido())
-        return new RespuestaModelo<T>() { Correcto = false, Mensaje = @"Los datos para realizar la solicitud no son validos." };
-      RespuestaModelo<T> respuesta;
+        return new HttpResponseMessage(HttpStatusCode.BadRequest);
+      HttpResponseMessage respuesta;
       try
       {
         using (HttpClient cliente = new HttpClient())
@@ -97,12 +95,7 @@ namespace Negocio.Utilidades
           }
           using (HttpContent contenido = new ByteArrayContent(parametros))
           {
-            using (HttpResponseMessage mensaje = await cliente.PostAsync(metodo, contenido))
-            {
-              T modelo = JsonConvert.DeserializeObject<T>(await mensaje.Content.ReadAsStringAsync());
-              respuesta = new RespuestaModelo<T>(modelo);
-              mensaje.Dispose();
-            }
+            respuesta = await cliente.PostAsync(metodo, contenido);
             contenido.Dispose();
           }
           cliente.Dispose();
@@ -110,7 +103,10 @@ namespace Negocio.Utilidades
       }
       catch (Exception ex)
       {
-        respuesta = new RespuestaModelo<T>(ex);
+        respuesta = new HttpResponseMessage(HttpStatusCode.InternalServerError)
+        {
+          Content = new StringContent(JsonConvert.SerializeObject(ex))
+        };
       }
       return respuesta;
     }
@@ -124,11 +120,11 @@ namespace Negocio.Utilidades
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="parametros">Objeto a incluir en la solicitud</param>
     /// <returns>Modelo de datos</returns>
-    public async Task<RespuestaModelo<T>> Post<T>(string urlBase, string metodo, Dictionary<string, string> parametros)
+    public async Task<HttpResponseMessage> Post(string urlBase, string metodo, Dictionary<string, string> parametros)
     {
       if (urlBase.NoEsValida() || metodo.NoEsValida())
-        return new RespuestaModelo<T>() { Correcto = false, Mensaje = @"Los datos para realizar la solicitud no son validos." };
-      RespuestaModelo<T> respuesta;
+        return new HttpResponseMessage(HttpStatusCode.BadRequest);
+      HttpResponseMessage respuesta;
       try
       {
         using (HttpClient cliente = new HttpClient())
@@ -141,12 +137,7 @@ namespace Negocio.Utilidades
           }
           using (HttpContent contenido = new FormUrlEncodedContent(parametros))
           {
-            using (HttpResponseMessage mensaje = await cliente.PostAsync(metodo, contenido))
-            {
-              T modelo = JsonConvert.DeserializeObject<T>(await mensaje.Content.ReadAsStringAsync());
-              respuesta = new RespuestaModelo<T>(modelo);
-              mensaje.Dispose();
-            }
+            respuesta = await cliente.PostAsync(metodo, contenido);
             contenido.Dispose();
           }
           cliente.Dispose();
@@ -154,7 +145,10 @@ namespace Negocio.Utilidades
       }
       catch (Exception ex)
       {
-        respuesta = new RespuestaModelo<T>(ex);
+        respuesta = new HttpResponseMessage(HttpStatusCode.InternalServerError)
+        {
+          Content = new StringContent(JsonConvert.SerializeObject(ex))
+        };
       }
       return respuesta;
     }
@@ -168,12 +162,12 @@ namespace Negocio.Utilidades
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="parametros">Objeto a incluir en la solicitud</param>
     /// <returns>Modelo de datos</returns>
-    public async Task<RespuestaModelo<T>> Post<T>(string urlBase, string metodo, Stream parametros)
+    public async Task<HttpResponseMessage> Post(string urlBase, string metodo, Stream parametros)
     {
 
       if (urlBase.NoEsValida() || metodo.NoEsValida())
-        return new RespuestaModelo<T>() { Correcto = false, Mensaje = @"Los datos para realizar la solicitud no son validos." };
-      RespuestaModelo<T> respuesta;
+        return new HttpResponseMessage(HttpStatusCode.BadRequest);
+      HttpResponseMessage respuesta;
       try
       {
         using (HttpClient cliente = new HttpClient())
@@ -186,12 +180,7 @@ namespace Negocio.Utilidades
           }
           using (HttpContent contenido = new StreamContent(parametros))
           {
-            using (HttpResponseMessage mensaje = await cliente.PostAsync(metodo, contenido))
-            {
-              T modelo = JsonConvert.DeserializeObject<T>(await mensaje.Content.ReadAsStringAsync());
-              respuesta = new RespuestaModelo<T>(modelo);
-              mensaje.Dispose();
-            }
+            respuesta = await cliente.PostAsync(metodo, contenido);
             contenido.Dispose();
           }
           cliente.Dispose();
@@ -199,7 +188,10 @@ namespace Negocio.Utilidades
       }
       catch (Exception ex)
       {
-        respuesta = new RespuestaModelo<T>(ex);
+        respuesta = new HttpResponseMessage(HttpStatusCode.InternalServerError)
+        {
+          Content = new StringContent(JsonConvert.SerializeObject(ex))
+        };
       }
       return respuesta;
     }
@@ -217,11 +209,11 @@ namespace Negocio.Utilidades
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="parametros">Objeto a incluir en la solicitud</param>
     /// <returns>Modelo de datos</returns>
-    public async Task<RespuestaModelo<T>> Get<T>(string urlBase, string metodo, string parametros)
+    public async Task<HttpResponseMessage> Get(string urlBase, string metodo, string parametros)
     {
       if (urlBase.NoEsValida() || metodo.NoEsValida() || parametros.NoEsValida())
-        return new RespuestaModelo<T>() { Correcto = false, Mensaje = @"Los datos para realizar la solicitud no son validos." };
-      RespuestaModelo<T> respuesta;
+        return new HttpResponseMessage(HttpStatusCode.BadRequest);
+      HttpResponseMessage respuesta;
       try
       {
         using (HttpClient cliente = new HttpClient())
@@ -233,18 +225,16 @@ namespace Negocio.Utilidades
             Encabezados.ForEach(h => cliente.DefaultRequestHeaders.Add(h.Nombre, h.Valor));
           }
           parametros = parametros.StartsWith(@"?") ? parametros : @"?" + parametros;
-          using (HttpResponseMessage mensaje = await cliente.GetAsync(metodo + parametros))
-          {
-            T modelo = JsonConvert.DeserializeObject<T>(await mensaje.Content.ReadAsStringAsync());
-            respuesta = new RespuestaModelo<T>(modelo);
-            mensaje.Dispose();
-          }
+          respuesta = await cliente.GetAsync(metodo + parametros);
           cliente.Dispose();
         }
       }
       catch (Exception ex)
       {
-        respuesta = new RespuestaModelo<T>(ex);
+        respuesta = new HttpResponseMessage(HttpStatusCode.InternalServerError)
+        {
+          Content = new StringContent(JsonConvert.SerializeObject(ex))
+        };
       }
       return respuesta;
     }
@@ -258,8 +248,8 @@ namespace Negocio.Utilidades
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="parametros">Objeto a incluir en la solicitud</param>
     /// <returns>Modelo de datos</returns>
-    public async Task<RespuestaModelo<T>> Get<T>(string urlBase, string metodo, KeyValuePair<string, string> parametros)
-      => await Get<T>(urlBase, metodo, $@"{parametros.Key}={parametros.Value}");
+    public async Task<HttpResponseMessage> Get(string urlBase, string metodo, KeyValuePair<string, string> parametros)
+      => await Get(urlBase, metodo, $@"{parametros.Key}={parametros.Value}");
 
     /// <summary>
     /// Permite realizar una solicitud GET utilizando como parametros
@@ -270,8 +260,8 @@ namespace Negocio.Utilidades
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="parametros">Objeto a incluir en la solicitud</param>
     /// <returns>Modelo de datos</returns>
-    public async Task<RespuestaModelo<T>> Get<T>(string urlBase, string metodo, Dictionary<string, dynamic> parametros)
-      => await Get<T>(urlBase, metodo, string.Join(@"&", parametros.Select(p => $@"{p.Key}={p.Value}")));
+    public async Task<HttpResponseMessage> Get(string urlBase, string metodo, Dictionary<string, dynamic> parametros)
+      => await Get(urlBase, metodo, string.Join(@"&", parametros.Select(p => $@"{p.Key}={p.Value}")));
 
     /// <summary>
     /// Permite realizar una solicitud GET utilizando como parametros
@@ -282,8 +272,8 @@ namespace Negocio.Utilidades
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="parametros">Objeto a incluir en la solicitud</param>
     /// <returns>Modelo de datos</returns>
-    public async Task<RespuestaModelo<T>> Get<T>(string urlBase, string metodo, List<KeyValuePair<string, string>> parametros)
-      => await Get<T>(urlBase, metodo, string.Join(@"&", parametros.Select(p => $@"{p.Key}={p.Value}")));
+    public async Task<HttpResponseMessage> Get(string urlBase, string metodo, List<KeyValuePair<string, string>> parametros)
+      => await Get(urlBase, metodo, string.Join(@"&", parametros.Select(p => $@"{p.Key}={p.Value}")));
 
     #endregion
 
@@ -298,11 +288,11 @@ namespace Negocio.Utilidades
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="parametros">Objeto a incluir en la solicitud</param>
     /// <returns>Modelo de datos</returns>
-    public async Task<RespuestaModelo<T>> Put<T>(string urlBase, string metodo, string parametros)
+    public async Task<HttpResponseMessage> Put(string urlBase, string metodo, string parametros)
     {
       if (urlBase.NoEsValida() || metodo.NoEsValida() || parametros.NoEsValida())
-        return new RespuestaModelo<T>() { Correcto = false, Mensaje = @"Los datos para realizar la solicitud no son validos." };
-      RespuestaModelo<T> respuesta;
+        return new HttpResponseMessage(HttpStatusCode.BadRequest);
+      HttpResponseMessage respuesta;
       try
       {
         using (HttpClient cliente = new HttpClient())
@@ -315,12 +305,7 @@ namespace Negocio.Utilidades
           }
           using (HttpContent contenido = new StringContent(parametros, Encoding.UTF8, @"application/json"))
           {
-            using (HttpResponseMessage mensaje = await cliente.PutAsync(metodo, contenido))
-            {
-              T modelo = JsonConvert.DeserializeObject<T>(await mensaje.Content.ReadAsStringAsync());
-              respuesta = new RespuestaModelo<T>(modelo);
-              mensaje.Dispose();
-            }
+            respuesta = await cliente.PutAsync(metodo, contenido);
             contenido.Dispose();
           }
           cliente.Dispose();
@@ -328,7 +313,10 @@ namespace Negocio.Utilidades
       }
       catch (Exception ex)
       {
-        respuesta = new RespuestaModelo<T>(ex);
+        respuesta = new HttpResponseMessage(HttpStatusCode.InternalServerError)
+        {
+          Content = new StringContent(JsonConvert.SerializeObject(ex))
+        };
       }
       return respuesta;
     }
@@ -342,11 +330,11 @@ namespace Negocio.Utilidades
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="parametros">Objeto a incluir en la solicitud</param>
     /// <returns>Modelo de datos</returns>
-    public async Task<RespuestaModelo<T>> Put<T>(string urlBase, string metodo, byte[] parametros)
+    public async Task<HttpResponseMessage> Put(string urlBase, string metodo, byte[] parametros)
     {
       if (urlBase.NoEsValida() || metodo.NoEsValida() || parametros.NoEsValido())
-        return new RespuestaModelo<T>() { Correcto = false, Mensaje = @"Los datos para realizar la solicitud no son validos." };
-      RespuestaModelo<T> respuesta;
+        return new HttpResponseMessage(HttpStatusCode.BadRequest);
+      HttpResponseMessage respuesta;
       try
       {
         using (HttpClient cliente = new HttpClient())
@@ -359,12 +347,7 @@ namespace Negocio.Utilidades
           }
           using (HttpContent contenido = new ByteArrayContent(parametros))
           {
-            using (HttpResponseMessage mensaje = await cliente.PutAsync(metodo, contenido))
-            {
-              T modelo = JsonConvert.DeserializeObject<T>(await mensaje.Content.ReadAsStringAsync());
-              respuesta = new RespuestaModelo<T>(modelo);
-              mensaje.Dispose();
-            }
+            respuesta = await cliente.PutAsync(metodo, contenido);
             contenido.Dispose();
           }
           cliente.Dispose();
@@ -372,7 +355,10 @@ namespace Negocio.Utilidades
       }
       catch (Exception ex)
       {
-        respuesta = new RespuestaModelo<T>(ex);
+        respuesta = new HttpResponseMessage(HttpStatusCode.InternalServerError)
+        {
+          Content = new StringContent(JsonConvert.SerializeObject(ex))
+        };
       }
       return respuesta;
     }
@@ -386,11 +372,11 @@ namespace Negocio.Utilidades
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="parametros">Objeto a incluir en la solicitud</param>
     /// <returns>Modelo de datos</returns>
-    public async Task<RespuestaModelo<T>> Put<T>(string urlBase, string metodo, Dictionary<string, string> parametros)
+    public async Task<HttpResponseMessage> Put(string urlBase, string metodo, Dictionary<string, string> parametros)
     {
       if (urlBase.NoEsValida() || metodo.NoEsValida())
-        return new RespuestaModelo<T>() { Correcto = false, Mensaje = @"Los datos para realizar la solicitud no son validos." };
-      RespuestaModelo<T> respuesta;
+        return new HttpResponseMessage(HttpStatusCode.BadRequest);
+      HttpResponseMessage respuesta;
       try
       {
         using (HttpClient cliente = new HttpClient())
@@ -403,12 +389,7 @@ namespace Negocio.Utilidades
           }
           using (HttpContent contenido = new FormUrlEncodedContent(parametros))
           {
-            using (HttpResponseMessage mensaje = await cliente.PutAsync(metodo, contenido))
-            {
-              T modelo = JsonConvert.DeserializeObject<T>(await mensaje.Content.ReadAsStringAsync());
-              respuesta = new RespuestaModelo<T>(modelo);
-              mensaje.Dispose();
-            }
+            respuesta = await cliente.PutAsync(metodo, contenido);
             contenido.Dispose();
           }
           cliente.Dispose();
@@ -416,7 +397,10 @@ namespace Negocio.Utilidades
       }
       catch (Exception ex)
       {
-        respuesta = new RespuestaModelo<T>(ex);
+        respuesta = new HttpResponseMessage(HttpStatusCode.InternalServerError)
+        {
+          Content = new StringContent(JsonConvert.SerializeObject(ex))
+        };
       }
       return respuesta;
     }
@@ -430,12 +414,11 @@ namespace Negocio.Utilidades
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="parametros">Objeto a incluir en la solicitud</param>
     /// <returns>Modelo de datos</returns>
-    public async Task<RespuestaModelo<T>> Put<T>(string urlBase, string metodo, Stream parametros)
+    public async Task<HttpResponseMessage> Put(string urlBase, string metodo, Stream parametros)
     {
-
       if (urlBase.NoEsValida() || metodo.NoEsValida())
-        return new RespuestaModelo<T>() { Correcto = false, Mensaje = @"Los datos para realizar la solicitud no son validos." };
-      RespuestaModelo<T> respuesta;
+        return new HttpResponseMessage(HttpStatusCode.BadRequest);
+      HttpResponseMessage respuesta;
       try
       {
         using (HttpClient cliente = new HttpClient())
@@ -448,12 +431,7 @@ namespace Negocio.Utilidades
           }
           using (HttpContent contenido = new StreamContent(parametros))
           {
-            using (HttpResponseMessage mensaje = await cliente.PutAsync(metodo, contenido))
-            {
-              T modelo = JsonConvert.DeserializeObject<T>(await mensaje.Content.ReadAsStringAsync());
-              respuesta = new RespuestaModelo<T>(modelo);
-              mensaje.Dispose();
-            }
+            respuesta = await cliente.PutAsync(metodo, contenido);
             contenido.Dispose();
           }
           cliente.Dispose();
@@ -461,7 +439,10 @@ namespace Negocio.Utilidades
       }
       catch (Exception ex)
       {
-        respuesta = new RespuestaModelo<T>(ex);
+        respuesta = new HttpResponseMessage(HttpStatusCode.InternalServerError)
+        {
+          Content = new StringContent(JsonConvert.SerializeObject(ex))
+        };
       }
       return respuesta;
     }
@@ -479,11 +460,11 @@ namespace Negocio.Utilidades
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="parametros">Objeto a incluir en la solicitud</param>
     /// <returns>Modelo de datos</returns>
-    public async Task<RespuestaModelo<T>> Delete<T>(string urlBase, string metodo, string parametros)
+    public async Task<HttpResponseMessage> Delete(string urlBase, string metodo, string parametros)
     {
       if (urlBase.NoEsValida() || metodo.NoEsValida() || parametros.NoEsValida())
-        return new RespuestaModelo<T>() { Correcto = false, Mensaje = @"Los datos para realizar la solicitud no son validos." };
-      RespuestaModelo<T> respuesta;
+        return new HttpResponseMessage(HttpStatusCode.BadRequest);
+      HttpResponseMessage respuesta;
       try
       {
         using (HttpClient cliente = new HttpClient())
@@ -495,18 +476,16 @@ namespace Negocio.Utilidades
             Encabezados.ForEach(h => cliente.DefaultRequestHeaders.Add(h.Nombre, h.Valor));
           }
           parametros = parametros.StartsWith(@"?") ? parametros : @"?" + parametros;
-          using (HttpResponseMessage mensaje = await cliente.DeleteAsync(metodo + parametros))
-          {
-            T modelo = JsonConvert.DeserializeObject<T>(await mensaje.Content.ReadAsStringAsync());
-            respuesta = new RespuestaModelo<T>(modelo);
-            mensaje.Dispose();
-          }
+          respuesta = await cliente.DeleteAsync(metodo + parametros);
           cliente.Dispose();
         }
       }
       catch (Exception ex)
       {
-        respuesta = new RespuestaModelo<T>(ex);
+        respuesta = new HttpResponseMessage(HttpStatusCode.InternalServerError)
+        {
+          Content = new StringContent(JsonConvert.SerializeObject(ex))
+        };
       }
       return respuesta;
     }
@@ -520,8 +499,8 @@ namespace Negocio.Utilidades
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="parametros">Objeto a incluir en la solicitud</param>
     /// <returns>Modelo de datos</returns>
-    public async Task<RespuestaModelo<T>> Delete<T>(string urlBase, string metodo, KeyValuePair<string, string> parametros)
-      => await Delete<T>(urlBase, metodo, $@"{parametros.Key}={parametros.Value}");
+    public async Task<HttpResponseMessage> Delete(string urlBase, string metodo, KeyValuePair<string, string> parametros)
+      => await Delete(urlBase, metodo, $@"{parametros.Key}={parametros.Value}");
 
     /// <summary>
     /// Permite realizar una solicitud DELETE utilizando como parametros
@@ -532,8 +511,8 @@ namespace Negocio.Utilidades
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="parametros">Objeto a incluir en la solicitud</param>
     /// <returns>Modelo de datos</returns>
-    public async Task<RespuestaModelo<T>> Delete<T>(string urlBase, string metodo, Dictionary<string, dynamic> parametros)
-      => await Delete<T>(urlBase, metodo, string.Join(@"&", parametros.Select(p => $@"{p.Key}={p.Value}")));
+    public async Task<HttpResponseMessage> Delete(string urlBase, string metodo, Dictionary<string, dynamic> parametros)
+      => await Delete(urlBase, metodo, string.Join(@"&", parametros.Select(p => $@"{p.Key}={p.Value}")));
 
     /// <summary>
     /// Permite realizar una solicitud DELETE utilizando como parametros
@@ -544,8 +523,8 @@ namespace Negocio.Utilidades
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="parametros">Objeto a incluir en la solicitud</param>
     /// <returns>Modelo de datos</returns>
-    public async Task<RespuestaModelo<T>> Delete<T>(string urlBase, string metodo, List<KeyValuePair<string, string>> parametros)
-      => await Delete<T>(urlBase, metodo, string.Join(@"&", parametros.Select(p => $@"{p.Key}={p.Value}")));
+    public async Task<HttpResponseMessage> Delete(string urlBase, string metodo, List<KeyValuePair<string, string>> parametros)
+      => await Delete(urlBase, metodo, string.Join(@"&", parametros.Select(p => $@"{p.Key}={p.Value}")));
 
     #endregion
 
