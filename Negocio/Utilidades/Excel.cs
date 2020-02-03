@@ -15,7 +15,7 @@ using Datos.Modelos;
 
 namespace Negocio.Utilidades
 {
-  internal static class Excel
+  public static class Excel
   {
     /// <summary>
     /// Verifica si existe un archivo

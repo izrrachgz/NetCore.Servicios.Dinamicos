@@ -216,10 +216,12 @@ namespace Negocio.Utilidades
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="parametros">Objeto a incluir en la solicitud</param>
     /// <returns>Mensaje de la solicitud</returns>
-    public async Task<HttpResponseMessage> Get(string urlBase, string metodo, string parametros)
+    public async Task<HttpResponseMessage> Get(string urlBase, string metodo, string parametros = null)
     {
       //Verificar la validez de la solicitud
-      if (!urlBase.EsDireccionWeb() || metodo.NoEsValida() || parametros.NoEsValida())
+      if (!urlBase.EsDireccionWeb() || metodo.NoEsValida())
+        return new HttpResponseMessage(HttpStatusCode.BadRequest);
+      if (parametros != null && parametros.NoEsValida())
         return new HttpResponseMessage(HttpStatusCode.BadRequest);
       HttpResponseMessage respuesta;
       try
@@ -228,7 +230,7 @@ namespace Negocio.Utilidades
         {
           cliente.BaseAddress = new Uri(urlBase);
           AgregarEncabezados(cliente);
-          parametros = parametros.StartsWith(@"?") ? parametros : @"?" + parametros;
+          parametros = parametros == null ? @"" : parametros.StartsWith(@"?") ? parametros : @"?" + parametros;
           respuesta = await cliente.GetAsync(metodo + parametros);
           cliente.Dispose();
         }
@@ -444,10 +446,12 @@ namespace Negocio.Utilidades
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="parametros">Objeto a incluir en la solicitud</param>
     /// <returns>Mensaje de la solicitud</returns>
-    public async Task<HttpResponseMessage> Delete(string urlBase, string metodo, string parametros)
+    public async Task<HttpResponseMessage> Delete(string urlBase, string metodo, string parametros = null)
     {
       //Verificar la validez de la solicitud
       if (!urlBase.EsDireccionWeb() || metodo.NoEsValida() || parametros.NoEsValida())
+        return new HttpResponseMessage(HttpStatusCode.BadRequest);
+      if (parametros != null && parametros.NoEsValida())
         return new HttpResponseMessage(HttpStatusCode.BadRequest);
       HttpResponseMessage respuesta;
       try
@@ -456,7 +460,7 @@ namespace Negocio.Utilidades
         {
           cliente.BaseAddress = new Uri(urlBase);
           AgregarEncabezados(cliente);
-          parametros = parametros.StartsWith(@"?") ? parametros : @"?" + parametros;
+          parametros = parametros == null ? @"" : parametros.StartsWith(@"?") ? parametros : @"?" + parametros;
           respuesta = await cliente.DeleteAsync(metodo + parametros);
           cliente.Dispose();
         }
