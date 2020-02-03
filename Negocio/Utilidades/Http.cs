@@ -59,7 +59,7 @@ namespace Negocio.Utilidades
     public async Task<HttpResponseMessage> Post(string urlBase, string metodo, string parametros)
     {
       //Verificar la validez de la solicitud
-      if (urlBase.NoEsValida() || metodo.NoEsValida() || parametros.NoEsValida())
+      if (!urlBase.EsDireccionWeb() || metodo.NoEsValida() || parametros.NoEsValida())
         return new HttpResponseMessage(HttpStatusCode.BadRequest);
       HttpResponseMessage respuesta;
       try
@@ -97,7 +97,7 @@ namespace Negocio.Utilidades
     public async Task<HttpResponseMessage> Post(string urlBase, string metodo, byte[] parametros)
     {
       //Verificar la validez de la solicitud
-      if (urlBase.NoEsValida() || metodo.NoEsValida() || parametros.NoEsValido())
+      if (!urlBase.EsDireccionWeb() || metodo.NoEsValida() || parametros.NoEsValido())
         return new HttpResponseMessage(HttpStatusCode.BadRequest);
       HttpResponseMessage respuesta;
       try
@@ -135,7 +135,7 @@ namespace Negocio.Utilidades
     public async Task<HttpResponseMessage> Post(string urlBase, string metodo, Dictionary<string, string> parametros)
     {
       //Verificar la validez de la solicitud
-      if (urlBase.NoEsValida() || metodo.NoEsValida() || parametros.Count.Equals(0))
+      if (!urlBase.EsDireccionWeb() || metodo.NoEsValida() || parametros.NoEsValido())
         return new HttpResponseMessage(HttpStatusCode.BadRequest);
       HttpResponseMessage respuesta;
       try
@@ -173,7 +173,7 @@ namespace Negocio.Utilidades
     public async Task<HttpResponseMessage> Post(string urlBase, string metodo, Stream parametros)
     {
       //Verificar la validez de la solicitud
-      if (urlBase.NoEsValida() || metodo.NoEsValida() || parametros.NoEsValido())
+      if (!urlBase.EsDireccionWeb() || metodo.NoEsValida() || parametros.NoEsValido())
         return new HttpResponseMessage(HttpStatusCode.BadRequest);
       HttpResponseMessage respuesta;
       try
@@ -219,7 +219,7 @@ namespace Negocio.Utilidades
     public async Task<HttpResponseMessage> Get(string urlBase, string metodo, string parametros)
     {
       //Verificar la validez de la solicitud
-      if (urlBase.NoEsValida() || metodo.NoEsValida() || parametros.NoEsValida())
+      if (!urlBase.EsDireccionWeb() || metodo.NoEsValida() || parametros.NoEsValida())
         return new HttpResponseMessage(HttpStatusCode.BadRequest);
       HttpResponseMessage respuesta;
       try
@@ -291,7 +291,7 @@ namespace Negocio.Utilidades
     public async Task<HttpResponseMessage> Put(string urlBase, string metodo, string parametros)
     {
       //Verificar la validez de la solicitud
-      if (urlBase.NoEsValida() || metodo.NoEsValida() || parametros.NoEsValida())
+      if (!urlBase.EsDireccionWeb() || metodo.NoEsValida() || parametros.NoEsValida())
         return new HttpResponseMessage(HttpStatusCode.BadRequest);
       HttpResponseMessage respuesta;
       try
@@ -329,7 +329,7 @@ namespace Negocio.Utilidades
     public async Task<HttpResponseMessage> Put(string urlBase, string metodo, byte[] parametros)
     {
       //Verificar la validez de la solicitud
-      if (urlBase.NoEsValida() || metodo.NoEsValida() || parametros.NoEsValido())
+      if (!urlBase.EsDireccionWeb() || metodo.NoEsValida() || parametros.NoEsValido())
         return new HttpResponseMessage(HttpStatusCode.BadRequest);
       HttpResponseMessage respuesta;
       try
@@ -367,7 +367,7 @@ namespace Negocio.Utilidades
     public async Task<HttpResponseMessage> Put(string urlBase, string metodo, Dictionary<string, string> parametros)
     {
       //Verificar la validez de la solicitud
-      if (urlBase.NoEsValida() || metodo.NoEsValida() || parametros.Count.Equals(0))
+      if (!urlBase.EsDireccionWeb() || metodo.NoEsValida() || parametros.NoEsValido())
         return new HttpResponseMessage(HttpStatusCode.BadRequest);
       HttpResponseMessage respuesta;
       try
@@ -405,7 +405,7 @@ namespace Negocio.Utilidades
     public async Task<HttpResponseMessage> Put(string urlBase, string metodo, Stream parametros)
     {
       //Verificar la validez de la solicitud
-      if (urlBase.NoEsValida() || metodo.NoEsValida() || parametros.NoEsValido())
+      if (!urlBase.EsDireccionWeb() || metodo.NoEsValida() || parametros.NoEsValido())
         return new HttpResponseMessage(HttpStatusCode.BadRequest);
       HttpResponseMessage respuesta;
       try
@@ -447,7 +447,7 @@ namespace Negocio.Utilidades
     public async Task<HttpResponseMessage> Delete(string urlBase, string metodo, string parametros)
     {
       //Verificar la validez de la solicitud
-      if (urlBase.NoEsValida() || metodo.NoEsValida() || parametros.NoEsValida())
+      if (!urlBase.EsDireccionWeb() || metodo.NoEsValida() || parametros.NoEsValida())
         return new HttpResponseMessage(HttpStatusCode.BadRequest);
       HttpResponseMessage respuesta;
       try
@@ -518,7 +518,7 @@ namespace Negocio.Utilidades
     public async Task<RespuestaModelo<byte[]>> Descargar(string urlBase, string metodo)
     {
       //Verificar la validez de la solicitud
-      if (urlBase.NoEsValida() || metodo.NoEsValida())
+      if (!urlBase.EsDireccionWeb() || metodo.NoEsValida())
         return new RespuestaModelo<byte[]>() { Correcto = false, Mensaje = @"Los datos para realizar la solicitud no son validos." };
       RespuestaModelo<byte[]> respuesta;
       try
@@ -548,7 +548,7 @@ namespace Negocio.Utilidades
     public async Task<RespuestaBasica> DescargarEnDirectorio(string urlBase, string metodo, string directorio)
     {
       //Verificar la validez de la solicitud
-      if (urlBase.NoEsValida() || metodo.NoEsValida())
+      if (!urlBase.EsDireccionWeb() || metodo.NoEsValida())
         return new RespuestaModelo<byte[]>() { Correcto = false, Mensaje = @"Los datos para realizar la solicitud no son validos." };
       RespuestaBasica respuesta;
       try
