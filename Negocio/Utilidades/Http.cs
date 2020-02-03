@@ -449,7 +449,7 @@ namespace Negocio.Utilidades
     public async Task<HttpResponseMessage> Delete(string urlBase, string metodo, string parametros = null)
     {
       //Verificar la validez de la solicitud
-      if (!urlBase.EsDireccionWeb() || metodo.NoEsValida() || parametros.NoEsValida())
+      if (!urlBase.EsDireccionWeb() || metodo.NoEsValida())
         return new HttpResponseMessage(HttpStatusCode.BadRequest);
       if (parametros != null && parametros.NoEsValida())
         return new HttpResponseMessage(HttpStatusCode.BadRequest);
