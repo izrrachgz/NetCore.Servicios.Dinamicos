@@ -11,6 +11,7 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using Negocio.Modelos;
 using Newtonsoft.Json;
 using Datos.Extensiones;
+using Datos.Mensajes;
 using Datos.Modelos;
 
 namespace Negocio.Utilidades
@@ -27,13 +28,13 @@ namespace Negocio.Utilidades
     {
       if (direccion.NoEsValida())
       {
-        return new RespuestaBasica(false, @"La direccion proporcionada no es valida.");
+        return new RespuestaBasica(false, Error.DireccionInvalida);
       }
       FileInfo info = new FileInfo(direccion);
       return new RespuestaBasica()
       {
         Correcto = info.Exists,
-        Mensaje = info.Exists ? @"Archivo encontrado" : @"No se ha encontrado la plantilla para generar el reporte."
+        Mensaje = info.Exists ? @"Archivo encontrado" : Error.RecursoNoEncontrado
       };
     }
 
@@ -96,7 +97,7 @@ namespace Negocio.Utilidades
         return new RespuestaModelo<SpreadsheetDocument>()
         {
           Correcto = false,
-          Mensaje = @"La lista de contenido no es valida."
+          Mensaje = Error.ListaInvalida
         };
       }
       RespuestaModelo<SpreadsheetDocument> respuesta;

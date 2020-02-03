@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Datos.Extensiones;
+using Datos.Mensajes;
 using Datos.Modelos;
 using Negocio.Modelos;
 using Newtonsoft.Json;
@@ -523,7 +524,7 @@ namespace Negocio.Utilidades
     {
       //Verificar la validez de la solicitud
       if (!urlBase.EsDireccionWeb() || metodo.NoEsValida())
-        return new RespuestaModelo<byte[]>() { Correcto = false, Mensaje = @"Los datos para realizar la solicitud no son validos." };
+        return new RespuestaModelo<byte[]>() { Correcto = false, Mensaje = Error.SolicitudInvalida };
       RespuestaModelo<byte[]> respuesta;
       try
       {
@@ -548,19 +549,24 @@ namespace Negocio.Utilidades
     /// <param name="urlBase">Direccion principal del recurso</param>
     /// <param name="metodo">Direccion del metodo para acceder al recurso</param>
     /// <param name="directorio">Direccion destino del archivo</param>
+    /// <param name="nombre">Nombre destino del archivo</param>
+    /// <param name="extension">Extension destino del archivo</param>
     /// <returns>Respuesta basica que indica el estado de la tarea</returns>
-    public async Task<RespuestaBasica> DescargarEnDirectorio(string urlBase, string metodo, string directorio)
+    public async Task<RespuestaBasica> DescargarEnDirectorio(string urlBase, string metodo, string directorio = null, string nombre = null, string extension = null)
     {
       //Verificar la validez de la solicitud
       if (!urlBase.EsDireccionWeb() || metodo.NoEsValida())
-        return new RespuestaModelo<byte[]>() { Correcto = false, Mensaje = @"Los datos para realizar la solicitud no son validos." };
+        return new RespuestaModelo<byte[]>() { Correcto = false, Mensaje = Error.SolicitudInvalida };
       RespuestaBasica respuesta;
       try
       {
         using (WebClient cliente = new WebClient())
         {
           Uri url = new Uri(urlBase + metodo);
-          await cliente.DownloadFileTaskAsync(url, directorio);
+          directorio = directorio ?? AppDomain.CurrentDomain.BaseDirectory;
+          nombre = nombre ?? Guid.NewGuid().ToString(@"N");
+          extension = extension ?? @"dat";
+          await cliente.DownloadFileTaskAsync(url, $"{directorio}{nombre}.{extension}");
           respuesta = new RespuestaBasica(new FileInfo(directorio).Exists);
           cliente.Dispose();
         }

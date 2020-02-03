@@ -33,7 +33,7 @@ namespace Negocio.Extensiones
         return new RespuestaModelo<SpreadsheetDocument>()
         {
           Correcto = false,
-          Mensaje = @"La lista de contenido no es valida."
+          Mensaje = Error.ListaInvalida
         };
       }
       return Excel.GuardarContenidoDeLista(lista, configuracion);

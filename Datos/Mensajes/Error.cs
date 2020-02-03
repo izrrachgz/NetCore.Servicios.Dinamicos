@@ -41,5 +41,18 @@
     /// no son iguales a la esperada
     /// </summary>
     public const string DiferenciaDeElementosAfectados = @"El número de elementos esperado no coincide con el devuelto, se han revertido los cambios.";
+
+    /// <summary>
+    /// Usado cuando la direccion del recurso no cumple con los requerimientos
+    /// minimos de uso
+    /// </summary>
+    public const string DireccionInvalida = @"La direccion proporcionada no es valida.";
+
+    /// <summary>
+    /// Usado cuando el recurso en cuestion no se ha encontrado
+    /// </summary>
+    public const string RecursoNoEncontrado = @"No se ha encontrado el recurso.";
+
+    public const string SolicitudInvalida = @"Los datos para realizar la solicitud no son valido.";
   }
 }
