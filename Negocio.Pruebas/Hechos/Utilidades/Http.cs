@@ -33,6 +33,7 @@ namespace Negocio.Pruebas.Hechos.Utilidades
     /// <summary>
     /// Comprueba que el metodo POST de la utilidad http
     /// puede enviar informacion al recurso especificado
+    /// codificada en un objeto json
     /// </summary>
     /// <returns></returns>
     [Fact]
@@ -91,6 +92,7 @@ namespace Negocio.Pruebas.Hechos.Utilidades
     /// <summary>
     /// Comprueba que el metodo PUT de la utilidad http
     /// puede enviar informacion al recurso especificado
+    /// codificado en un objeto json
     /// </summary>
     /// <returns></returns>
     [Fact]
@@ -161,7 +163,8 @@ namespace Negocio.Pruebas.Hechos.Utilidades
 
     /// <summary>
     /// Comprueba que el metodo GET de la utilidad http
-    /// puede acceder al recurso especificado
+    /// puede acceder al recurso especificado utilizando
+    /// condiciones via url
     /// </summary>
     /// <returns></returns>
     [Fact]
@@ -175,7 +178,8 @@ namespace Negocio.Pruebas.Hechos.Utilidades
 
     /// <summary>
     /// Comprueba que el metodo GET de la utilidad http
-    /// puede acceder al recurso especificado
+    /// puede acceder al recurso especificado utilizando
+    /// condiciones via url
     /// </summary>
     /// <returns></returns>
     [Fact]
@@ -189,7 +193,8 @@ namespace Negocio.Pruebas.Hechos.Utilidades
 
     /// <summary>
     /// Comprueba que el metodo GET de la utilidad http
-    /// puede acceder al recurso especificado
+    /// puede acceder al recurso especificado utilizando
+    /// condiciones via url
     /// </summary>
     /// <returns></returns>
     [Fact]
@@ -206,7 +211,8 @@ namespace Negocio.Pruebas.Hechos.Utilidades
 
     /// <summary>
     /// Comprueba que el metodo GET de la utilidad http
-    /// puede acceder al recurso especificado
+    /// puede acceder al recurso especificado utilizando
+    /// condiciones via url
     /// </summary>
     /// <returns></returns>
     [Fact]
@@ -223,7 +229,7 @@ namespace Negocio.Pruebas.Hechos.Utilidades
 
     /// <summary>
     /// Comprueba que el metodo DELETE de la utilidad http
-    /// puede acceder al recurso especificado
+    /// puede acceder al recurso especificado y eliminarlo
     /// </summary>
     /// <returns></returns>
     [Fact]
@@ -236,7 +242,8 @@ namespace Negocio.Pruebas.Hechos.Utilidades
 
     /// <summary>
     /// Comprueba que el metodo DELETE de la utilidad http
-    /// puede acceder al recurso especificado
+    /// puede acceder al recurso especificado y eliminarlo
+    /// utilizando condiciones via url
     /// </summary>
     /// <returns></returns>
     [Fact]
@@ -250,7 +257,8 @@ namespace Negocio.Pruebas.Hechos.Utilidades
 
     /// <summary>
     /// Comprueba que el metodo DELETE de la utilidad http
-    /// puede acceder al recurso especificado
+    /// puede acceder al recurso especificado y eliminarlo
+    /// utilizando condiciones via url
     /// </summary>
     /// <returns></returns>
     [Fact]
@@ -264,7 +272,8 @@ namespace Negocio.Pruebas.Hechos.Utilidades
 
     /// <summary>
     /// Comprueba que el metodo DELETE de la utilidad http
-    /// puede acceder al recurso especificado
+    /// puede acceder al recurso especificado y eliminarlo
+    /// utilizando condiciones via url
     /// </summary>
     /// <returns></returns>
     [Fact]
@@ -281,7 +290,8 @@ namespace Negocio.Pruebas.Hechos.Utilidades
 
     /// <summary>
     /// Comprueba que el metodo DELETE de la utilidad http
-    /// puede acceder al recurso especificado
+    /// puede acceder al recurso especificado y eliminarlo
+    /// utilizando condiciones via url
     /// </summary>
     /// <returns></returns>
     [Fact]
@@ -298,7 +308,8 @@ namespace Negocio.Pruebas.Hechos.Utilidades
 
     /// <summary>
     /// Comprueba que el metodo Descargar de la utilidad http
-    /// puede descargar un archivo dada una direccion
+    /// puede descargar un archivo codificado en un buffer
+    /// dada una direccion de recurso
     /// </summary>
     /// <returns></returns>
     [Fact]
@@ -312,7 +323,7 @@ namespace Negocio.Pruebas.Hechos.Utilidades
     }
 
     /// <summary>
-    /// Comprueba que el metodo Descargar de la utilidad http
+    /// Comprueba que el metodo Descargar en directorio de la utilidad http
     /// puede descargar un archivo y guardarlos en una direccion indicada
     /// </summary>
     /// <returns></returns>
