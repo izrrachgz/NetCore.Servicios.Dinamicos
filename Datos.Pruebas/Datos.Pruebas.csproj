@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <Authors>Israel Chavez</Authors>
     <Company>Izrra.Ch</Company>
     <Description>Permite efectuar pruebas de manera dinamica sobre la funcionalidad de los proveedores de datos</Description>

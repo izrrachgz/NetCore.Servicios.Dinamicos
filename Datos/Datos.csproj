@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <Copyright>Izrra.Ch@2019</Copyright>
     <Company>Izrra.Ch</Company>
     <Authors>Israel Chavez</Authors>
