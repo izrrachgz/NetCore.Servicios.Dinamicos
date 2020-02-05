@@ -27,4 +27,14 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="ConfiguracionApi.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="copy &quot;$(SolutionDir)\Datos\ConfiguracionDatos.json&quot; &quot;$(TargetDir)\ConfiguracionDatos.json&quot;&#xD;&#xA;copy &quot;$(SolutionDir)\Negocio\ConfiguracionNegocio.json&quot; &quot;$(TargetDir)\ConfiguracionNegocio.json&quot;" />
+  </Target>
+
 </Project>

@@ -15,10 +15,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ConfiguracionNegocio.json" />
     <None Remove="Plantillas\Reportes\RespuestaColeccion.xlsx" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="ConfiguracionNegocio.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Plantillas\Reportes\RespuestaColeccion.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -37,12 +41,6 @@
     <Reference Include="System.Data.SqlClient">
       <HintPath>..\..\..\Users\Israel\.nuget\packages\system.data.sqlclient\4.6.1\ref\netcoreapp2.1\System.Data.SqlClient.dll</HintPath>
     </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="ConfiguracionNegocio.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>
