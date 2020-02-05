@@ -17,11 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Hechos\" />
-    <Folder Include="Teorias\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="Consola">
       <HintPath>..\Consola\bin\Debug\netcoreapp2.2\Consola.dll</HintPath>
     </Reference>
