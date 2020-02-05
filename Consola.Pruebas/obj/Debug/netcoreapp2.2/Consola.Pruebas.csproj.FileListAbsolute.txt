@@ -7,8 +7,10 @@ C:\NetCore\Servicio\Consola.Pruebas\bin\Debug\netcoreapp2.2\Consola.Pruebas.runt
 C:\NetCore\Servicio\Consola.Pruebas\bin\Debug\netcoreapp2.2\Consola.Pruebas.dll
 C:\NetCore\Servicio\Consola.Pruebas\bin\Debug\netcoreapp2.2\Consola.Pruebas.pdb
 C:\NetCore\Servicio\Consola.Pruebas\bin\Debug\netcoreapp2.2\Consola.dll
+C:\NetCore\Servicio\Consola.Pruebas\bin\Debug\netcoreapp2.2\Datos.dll
 C:\NetCore\Servicio\Consola.Pruebas\bin\Debug\netcoreapp2.2\Negocio.dll
 C:\NetCore\Servicio\Consola.Pruebas\bin\Debug\netcoreapp2.2\Consola.pdb
+C:\NetCore\Servicio\Consola.Pruebas\bin\Debug\netcoreapp2.2\Datos.pdb
 C:\NetCore\Servicio\Consola.Pruebas\bin\Debug\netcoreapp2.2\Negocio.pdb
 C:\NetCore\Servicio\Consola.Pruebas\obj\Debug\netcoreapp2.2\Consola.Pruebas.csprojAssemblyReference.cache
 C:\NetCore\Servicio\Consola.Pruebas\obj\Debug\netcoreapp2.2\Consola.Pruebas.csproj.CoreCompileInputs.cache
@@ -17,5 +19,3 @@ C:\NetCore\Servicio\Consola.Pruebas\obj\Debug\netcoreapp2.2\Consola.Pruebas.Asse
 C:\NetCore\Servicio\Consola.Pruebas\obj\Debug\netcoreapp2.2\Consola.Pruebas.csproj.CopyComplete
 C:\NetCore\Servicio\Consola.Pruebas\obj\Debug\netcoreapp2.2\Consola.Pruebas.dll
 C:\NetCore\Servicio\Consola.Pruebas\obj\Debug\netcoreapp2.2\Consola.Pruebas.pdb
-C:\NetCore\Servicio\Consola.Pruebas\bin\Debug\netcoreapp2.2\Datos.dll
-C:\NetCore\Servicio\Consola.Pruebas\bin\Debug\netcoreapp2.2\Datos.pdb

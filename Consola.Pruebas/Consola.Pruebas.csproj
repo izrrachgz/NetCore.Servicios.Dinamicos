@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy &quot;$(SolutionDir)\Datos\ConfiguracionDatos.json&quot; &quot;$(TargetDir)\ConfiguracionDatos.json&quot;&#xD;&#xA;copy &quot;$(SolutionDir)\Negocio\ConfiguracionNegocio.json&quot; &quot;$(TargetDir)\ConfiguracionNegocio.json&quot;&#xD;&#xA;copy &quot;$(SolutionDir)\Consola\ConfiguracionConsola.json&quot; &quot;$(TargetDir)\ConfiguracionConsola.json&quot;" />
+    <Exec Command="copy &quot;$(SolutionDir)\Datos\ConfiguracionDatos.json&quot; &quot;$(TargetDir)\ConfiguracionDatos.json&quot;&#xD;&#xA;echo &quot;Copiado archivo de configuracion de Datos al proyecto de Consola.Pruebas&quot;&#xD;&#xA;copy &quot;$(SolutionDir)\Negocio\ConfiguracionNegocio.json&quot; &quot;$(TargetDir)\ConfiguracionNegocio.json&quot;&#xD;&#xA;echo &quot;Copiado archivo de configuracion de Negocio al proyecto de Consola.Pruebas&quot;&#xD;&#xA;copy &quot;$(SolutionDir)\Consola\ConfiguracionConsola.json&quot; &quot;$(TargetDir)\ConfiguracionConsola.json&quot;&#xD;&#xA;echo &quot;Copiado archivo de configuracion de Consola al proyecto de Consola.Pruebas&quot;" />
   </Target>
 
 </Project>
