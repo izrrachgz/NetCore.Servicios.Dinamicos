@@ -29,12 +29,10 @@
     </Reference>
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="ConfiguracionDatos.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
   <ProjectExtensions><VisualStudio><UserProperties Configuracion_1json__JSONSchema="http://json.schemastore.org/appsettings" /></VisualStudio></ProjectExtensions>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="copy &quot;$(SolutionDir)\Datos\ConfiguracionDatos.json&quot; &quot;$(TargetDir)\ConfiguracionDatos.json&quot;" />
+  </Target>
 
 </Project>
