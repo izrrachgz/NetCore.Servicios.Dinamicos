@@ -40,13 +40,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Consola", "Consola\Consola.
 		{18550CF6-4788-48A6-A018-32D350E9EE7A} = {18550CF6-4788-48A6-A018-32D350E9EE7A}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Consola.Pruebas", "Consola.Pruebas\Consola.Pruebas.csproj", "{598320D4-EE34-4668-BAC7-A3E10F6FBB01}"
-	ProjectSection(ProjectDependencies) = postProject
-		{E8F40A38-22AF-4AAA-B552-8C086E54F119} = {E8F40A38-22AF-4AAA-B552-8C086E54F119}
-		{AA819746-507A-4AC0-A1A6-0FC9AB6E86D9} = {AA819746-507A-4AC0-A1A6-0FC9AB6E86D9}
-		{18550CF6-4788-48A6-A018-32D350E9EE7A} = {18550CF6-4788-48A6-A018-32D350E9EE7A}
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,10 +74,6 @@ Global
 		{AA819746-507A-4AC0-A1A6-0FC9AB6E86D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA819746-507A-4AC0-A1A6-0FC9AB6E86D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA819746-507A-4AC0-A1A6-0FC9AB6E86D9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{598320D4-EE34-4668-BAC7-A3E10F6FBB01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{598320D4-EE34-4668-BAC7-A3E10F6FBB01}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{598320D4-EE34-4668-BAC7-A3E10F6FBB01}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{598320D4-EE34-4668-BAC7-A3E10F6FBB01}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
