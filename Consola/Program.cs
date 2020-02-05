@@ -18,19 +18,19 @@ namespace Consola
     {
       try
       {
-        Console.Write(@"Inicio del proceso");
+        Console.WriteLine(@"Inicio del proceso");
         //Esperar a que termine el proceso
         EjecutarTareaPrincipal()
           .Wait();
         //Confirmar la salida si lo indica la configuracion
         if (Configuracion<ConfiguracionConsola>.Instancia.SolicitarConfirmacionDeSalida)
         {
-          Console.Write(@"Ha concluido el proceso, presiona cualquier tecla para cerrar esta ventana.");
+          Console.WriteLine(@"Ha concluido el proceso, presiona cualquier tecla para cerrar esta ventana.");
           Console.ReadKey();
         }
         else
         {
-          Console.Write(@"Termina el proceso");
+          Console.WriteLine(@"Termina el proceso");
         }
       }
       catch (Exception ex)
