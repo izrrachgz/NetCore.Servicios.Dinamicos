@@ -41,6 +41,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Consola", "Consola\Consola.
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Consola.Pruebas", "Consola.Pruebas\Consola.Pruebas.csproj", "{BA208B96-C770-4E02-8E09-6462E9AA5922}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E8F40A38-22AF-4AAA-B552-8C086E54F119} = {E8F40A38-22AF-4AAA-B552-8C086E54F119}
+		{AA819746-507A-4AC0-A1A6-0FC9AB6E86D9} = {AA819746-507A-4AC0-A1A6-0FC9AB6E86D9}
+		{18550CF6-4788-48A6-A018-32D350E9EE7A} = {18550CF6-4788-48A6-A018-32D350E9EE7A}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
