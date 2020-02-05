@@ -8,20 +8,19 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="xunit" Version="2.4.0" />
-    <PackageReference Include="xunit.runner.console" Version="2.4.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Hechos\" />
+    <Folder Include="Teorias\" />
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="Consola">
+      <HintPath>..\Consola\bin\Debug\netcoreapp2.2\Consola.dll</HintPath>
+    </Reference>
     <Reference Include="Datos">
       <HintPath>..\Datos\bin\Debug\netcoreapp2.2\Datos.dll</HintPath>
     </Reference>
@@ -31,7 +30,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy &quot;$(SolutionDir)\Datos\ConfiguracionDatos.json&quot; &quot;$(TargetDir)\ConfiguracionDatos.json&quot;&#xD;&#xA;copy &quot;$(SolutionDir)\Negocio\ConfiguracionNegocio.json&quot; &quot;$(TargetDir)\ConfiguracionNegocio.json&quot;&#xD;&#xA;copy &quot;$(SolutionDir)\Api\ConfiguracionApi.json&quot; &quot;$(TargetDir)\ConfiguracionApi.json&quot;" />
+    <Exec Command="copy &quot;$(SolutionDir)\Datos\ConfiguracionDatos.json&quot; &quot;$(TargetDir)\ConfiguracionDatos.json&quot;&#xD;&#xA;copy &quot;$(SolutionDir)\Negocio\ConfiguracionNegocio.json&quot; &quot;$(TargetDir)\ConfiguracionNegocio.json&quot;&#xD;&#xA;copy &quot;$(SolutionDir)\Consola\ConfiguracionConsola.json&quot; &quot;$(TargetDir)\ConfiguracionConsola.json&quot;" />
   </Target>
 
 </Project>

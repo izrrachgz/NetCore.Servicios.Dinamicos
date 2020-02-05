@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Modelos\" />
+    <Folder Include="Utilidades\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Datos">
+      <HintPath>..\Datos\bin\Debug\netcoreapp2.2\Datos.dll</HintPath>
+    </Reference>
+    <Reference Include="Negocio">
+      <HintPath>..\Negocio\bin\Debug\netcoreapp2.2\Negocio.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="copy &quot;$(SolutionDir)\Datos\ConfiguracionDatos.json&quot; &quot;$(TargetDir)\ConfiguracionDatos.json&quot;&#xD;&#xA;copy &quot;$(SolutionDir)\Negocio\ConfiguracionNegocio.json&quot; &quot;$(TargetDir)\ConfiguracionNegocio.json&quot;" />
+  </Target>
+
+</Project>

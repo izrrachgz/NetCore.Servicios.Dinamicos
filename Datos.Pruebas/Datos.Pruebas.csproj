@@ -25,7 +25,7 @@
 
   <ItemGroup>
     <Reference Include="Datos">
-      <HintPath>..\Datos\bin\Debug\netcoreapp2.1\Datos.dll</HintPath>
+      <HintPath>..\Datos\bin\Debug\netcoreapp2.2\Datos.dll</HintPath>
     </Reference>
   </ItemGroup>
 

@@ -36,11 +36,15 @@
 
   <ItemGroup>
     <Reference Include="Datos">
-      <HintPath>..\Datos\bin\Debug\netcoreapp2.1\Datos.dll</HintPath>
+      <HintPath>..\Datos\bin\Debug\netcoreapp2.2\Datos.dll</HintPath>
     </Reference>
     <Reference Include="System.Data.SqlClient">
       <HintPath>..\..\..\Users\Israel\.nuget\packages\system.data.sqlclient\4.6.1\ref\netcoreapp2.1\System.Data.SqlClient.dll</HintPath>
     </Reference>
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="copy &quot;$(SolutionDir)\Datos\ConfiguracionDatos.json&quot; &quot;$(TargetDir)\ConfiguracionDatos.json&quot;" />
+  </Target>
 
 </Project>

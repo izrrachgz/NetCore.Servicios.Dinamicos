@@ -1,4 +1,5 @@
 {
+  "SolicitarConfirmacionDeSalida": true,
   "Configuraciones": [
     {
       "Clave": "UtilizarLog",
