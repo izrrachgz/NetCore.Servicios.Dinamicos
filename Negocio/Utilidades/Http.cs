@@ -566,8 +566,9 @@ namespace Negocio.Utilidades
           directorio = directorio ?? AppDomain.CurrentDomain.BaseDirectory;
           nombre = nombre ?? Guid.NewGuid().ToString(@"N");
           extension = extension ?? @"dat";
-          await cliente.DownloadFileTaskAsync(url, $"{directorio}{nombre}.{extension}");
-          respuesta = new RespuestaBasica(new FileInfo(directorio).Exists);
+          string ruta = $"{directorio}{nombre}.{extension}";
+          await cliente.DownloadFileTaskAsync(url, ruta);
+          respuesta = new RespuestaBasica(new FileInfo(ruta).Exists);
           cliente.Dispose();
         }
       }

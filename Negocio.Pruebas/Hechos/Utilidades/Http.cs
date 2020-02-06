@@ -333,7 +333,7 @@ namespace Negocio.Pruebas.Hechos.Utilidades
       string url = @"https://www.google.com";
       string metodo = @"/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png";
       SolicitudHttp http = new SolicitudHttp();
-      RespuestaBasica contenido = await http.DescargarEnDirectorio(url, metodo, AppDomain.CurrentDomain.BaseDirectory + @"LogoGoogle.png");
+      RespuestaBasica contenido = await http.DescargarEnDirectorio(url, metodo, AppDomain.CurrentDomain.BaseDirectory, @"LogoGoogle",@"png");
       Assert.True(contenido.Correcto);
     }
   }
