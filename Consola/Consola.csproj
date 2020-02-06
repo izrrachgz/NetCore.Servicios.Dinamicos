@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <Folder Include="Modelos\" />
-    <Folder Include="Utilidades\" />
   </ItemGroup>
 
   <ItemGroup>

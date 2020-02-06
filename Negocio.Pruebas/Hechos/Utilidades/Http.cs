@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Datos.Configuraciones;
 using Datos.Modelos;
+using Negocio.Pruebas.Configuraciones;
 using Negocio.Utilidades;
 using Xunit;
 
@@ -26,8 +28,8 @@ namespace Negocio.Pruebas.Hechos.Utilidades
 
     public UtilidadHttp()
     {
-      UrlBaseBin = @"http://requestbin.net/";
-      MetodoBin = @"r/ukxpn7uk";
+      UrlBaseBin = Configuracion<ConfiguracionNegocioPruebas>.Instancia.UrlBaseBin;
+      MetodoBin = Configuracion<ConfiguracionNegocioPruebas>.Instancia.MetodoBin;
     }
 
     /// <summary>
@@ -333,7 +335,7 @@ namespace Negocio.Pruebas.Hechos.Utilidades
       string url = @"https://www.google.com";
       string metodo = @"/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png";
       SolicitudHttp http = new SolicitudHttp();
-      RespuestaBasica contenido = await http.DescargarEnDirectorio(url, metodo, AppDomain.CurrentDomain.BaseDirectory, @"LogoGoogle",@"png");
+      RespuestaBasica contenido = await http.DescargarEnDirectorio(url, metodo, AppDomain.CurrentDomain.BaseDirectory, @"LogoGoogle", @"png");
       Assert.True(contenido.Correcto);
     }
   }
