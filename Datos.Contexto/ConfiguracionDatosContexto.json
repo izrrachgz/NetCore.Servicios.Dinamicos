@@ -1,0 +1,9 @@
+{
+  "CadenaDeConexion": "Data Source =.\\SQLEXPRESS;Initial Catalog =Datos.Contexto;Integrated Security = true;",
+  "Configuraciones": [
+    {
+      "Clave": "UtilizarLog",
+      "Valor": false
+    }
+  ]
+}
