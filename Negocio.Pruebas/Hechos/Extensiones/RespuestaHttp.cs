@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using Contexto.Entidades;
 using Negocio.Extensiones;
-using Datos.Entidades;
 using Datos.Modelos;
 using Xunit;
 

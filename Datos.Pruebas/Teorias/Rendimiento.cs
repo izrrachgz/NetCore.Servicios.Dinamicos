@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Datos.Entidades;
+using Contexto.Entidades;
 using Datos.Modelos;
 using Datos.ProveedoresDeDatos;
 using Xunit;

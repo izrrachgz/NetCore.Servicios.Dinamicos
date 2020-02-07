@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Contexto.Entidades;
 using DocumentFormat.OpenXml.Packaging;
 using Negocio.Extensiones;
 using Negocio.Modelos;
-using Datos.Entidades;
 using Datos.Modelos;
 using Xunit;
 

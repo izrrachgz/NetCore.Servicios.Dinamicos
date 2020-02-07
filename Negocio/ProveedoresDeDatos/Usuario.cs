@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Datos.Entidades;
+using Contexto.Entidades;
+using Contexto.ProveedoresDeDatos;
 using Datos.Enumerados;
 using Datos.Modelos;
 
 namespace Negocio.ProveedoresDeDatos
 {
-  public class ProveedorUsuario : ProveedorBasico<Usuario>
+  public class ProveedorUsuario : ProveedorDeDatosBase<Usuario>
   {
     /// <summary>
     /// 

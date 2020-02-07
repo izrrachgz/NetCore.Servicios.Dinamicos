@@ -31,7 +31,7 @@ namespace Contexto.Repositorio
 
     public Repositorio()
     {
-      CadenaDeConexion = Configuracion<ConfiguracionDatosContexto>.Instancia.CadenaDeConexion;
+      CadenaDeConexion = Configuracion<ConfiguracionContexto>.Instancia.CadenaDeConexion;
     }
 
     #region Configuraciones

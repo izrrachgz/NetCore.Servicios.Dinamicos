@@ -35,6 +35,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="Contexto">
+      <HintPath>..\Contexto\bin\Debug\netcoreapp2.2\Contexto.dll</HintPath>
+    </Reference>
     <Reference Include="Datos">
       <HintPath>..\Datos\bin\Debug\netcoreapp2.2\Datos.dll</HintPath>
     </Reference>

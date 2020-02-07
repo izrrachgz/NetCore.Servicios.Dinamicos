@@ -8,7 +8,7 @@ namespace Contexto.Configuraciones
   /// la configuracion que se asocia al contexto
   /// de datos
   /// </summary>
-  internal sealed class ConfiguracionDatosContexto : ConfiguracionBase
+  internal sealed class ConfiguracionContexto : ConfiguracionBase
   {
     /// <summary>
     /// Cadena de conexion al repositorio de datos

@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Datos.Entidades;
+using Contexto.Entidades;
 using Datos.Modelos;
 using Microsoft.AspNetCore.Mvc;
 using Negocio.ProveedoresDeDatos;
