@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Contexto.Migrations
 {
-    [DbContext(typeof(Repositorio.Repositorio))]
+    [DbContext(typeof(Esquema.Repositorio))]
     partial class RepositorioModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

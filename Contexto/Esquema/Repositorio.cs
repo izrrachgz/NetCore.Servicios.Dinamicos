@@ -17,7 +17,7 @@ namespace Contexto.Esquema
     /// <summary>
     /// Cadena de conexion al repositorio de datos
     /// </summary>
-    protected string CadenaDeConexion { get; }
+    private string CadenaDeConexion { get; }
 
     #endregion
 

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Contexto.Migrations
 {
-    [DbContext(typeof(Repositorio.Repositorio))]
+    [DbContext(typeof(Esquema.Repositorio))]
     [Migration("20200207030602_EntidadUsuarios")]
     partial class EntidadUsuarios
     {
