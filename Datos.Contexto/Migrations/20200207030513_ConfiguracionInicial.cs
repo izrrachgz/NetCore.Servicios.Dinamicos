@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Datos.Contexto.Migrations
+namespace Contexto.Migrations
 {
     public partial class ConfiguracionInicial : Migration
     {

@@ -1,9 +1,9 @@
 ﻿using Datos.Configuraciones;
-using Datos.Contexto.Configuraciones;
-using Datos.Contexto.Entidades;
+using Contexto.Configuraciones;
+using Contexto.Entidades;
 using Microsoft.EntityFrameworkCore;
 
-namespace Datos.Contexto.Repositorio
+namespace Contexto.Repositorio
 {
   /// <summary>
   /// Provee un modelo de datos que permite

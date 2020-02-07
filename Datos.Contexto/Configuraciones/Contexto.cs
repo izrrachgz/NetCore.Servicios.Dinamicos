@@ -1,7 +1,7 @@
 ﻿using Datos.Configuraciones;
 using Datos.Extensiones;
 
-namespace Datos.Contexto.Configuraciones
+namespace Contexto.Configuraciones
 {
   /// <summary>
   /// Provee un modelo de datos para representar

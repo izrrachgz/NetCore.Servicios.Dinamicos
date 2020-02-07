@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Datos.Entidades;
 
-namespace Datos.Contexto.Entidades
+namespace Contexto.Entidades
 {
   [Table("Usuario")]
   public class Usuario : EntidadBase
