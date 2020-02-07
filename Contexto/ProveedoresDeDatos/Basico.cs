@@ -1,4 +1,5 @@
-﻿using Datos.Contratos;
+﻿using Contexto.Esquema;
+using Datos.Contratos;
 using Datos.ProveedoresDeDatos;
 
 namespace Contexto.ProveedoresDeDatos
@@ -14,11 +15,11 @@ namespace Contexto.ProveedoresDeDatos
     /// Referencia al repositorio de datos
     /// de las entidades asociadas
     /// </summary>
-    internal Repositorio.Repositorio Repositorio { get; }
+    internal Repositorio Repositorio { get; }
 
     public ProveedorDeDatosBase()
     {
-      Repositorio = new Repositorio.Repositorio();
+      Repositorio = new Repositorio();
     }
 
     //Crea tus sobrecargas o nuevas funcionalidades

@@ -3,7 +3,7 @@ using Contexto.Configuraciones;
 using Contexto.Entidades;
 using Microsoft.EntityFrameworkCore;
 
-namespace Contexto.Repositorio
+namespace Contexto.Esquema
 {
   /// <summary>
   /// Provee un modelo de datos que permite
