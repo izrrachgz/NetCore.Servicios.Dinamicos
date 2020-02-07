@@ -7,13 +7,12 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Datos.Configuraciones;
 using Newtonsoft.Json;
-using Datos.Contexto;
 using Datos.Contratos;
 using Datos.Extensiones;
 using Datos.Mensajes;
 using Datos.Modelos;
-using Microsoft.EntityFrameworkCore;
 
 namespace Datos.ProveedoresDeDatos
 {
@@ -24,6 +23,11 @@ namespace Datos.ProveedoresDeDatos
   public class ProveedorDeDatos<T> : IProveedorDeDatos<T> where T : class, IEntidad, new()
   {
     #region Propiedades
+
+    /// <summary>
+    /// Cadena de conexion al repositorio de datos
+    /// </summary>
+    private string CadenaDeConexion { get; }
 
     /// <summary>
     /// Nombre de la tabla asociada a la entidad
@@ -60,11 +64,6 @@ namespace Datos.ProveedoresDeDatos
     /// </summary>
     private const string SqlActualizar = @"UPDATE [dbo].[{tabla}] SET {columnas=>valores} WHERE {condicion} AND ELIMINADO IS NULL;";
 
-    /// <summary>
-    /// Repositorio de datos
-    /// </summary>
-    internal Repositorio Repositorio { get; set; }
-
     #endregion
 
     #region Constructores
@@ -74,7 +73,7 @@ namespace Datos.ProveedoresDeDatos
     /// </summary>
     public ProveedorDeDatos()
     {
-      Repositorio = new Repositorio();
+      CadenaDeConexion = Configuracion<ConfiguracionDatos>.Instancia.CadenaDeConexion;
       Tipo = typeof(T);
       Tabla = Tipo.Name;
       PropertyInfo[] info = Tipo.GetProperties();
@@ -225,7 +224,7 @@ namespace Datos.ProveedoresDeDatos
       if (ids.NoEsValida() || ids.Any(id => id <= 0))
         return new RespuestaBasica(false, Error.ListaInvalida);
       RespuestaBasica respuesta;
-      using (SqlConnection conexion = new SqlConnection(Repositorio.CadenaDeConexion))
+      using (SqlConnection conexion = new SqlConnection(CadenaDeConexion))
       {
         try
         {
@@ -291,13 +290,51 @@ namespace Datos.ProveedoresDeDatos
       if (id <= 0)
         return new RespuestaModelo<T> { Mensaje = Error.IdentificadorInvalido };
       RespuestaModelo<T> respuesta;
-      try
+      string sql = SqlSeleccionar
+        .Replace("{tabla}", Tabla)
+        .Replace("{columnas}", $"[{string.Join("], [", Columnas)}]")
+        .Replace("{condicion}", "[Eliminado] IS NULL AND [Id] = @Id");
+      using (SqlConnection conexion = new SqlConnection(CadenaDeConexion))
       {
-        respuesta = new RespuestaModelo<T>(await Repositorio.Set<T>().FirstOrDefaultAsync(e => e.Id.Equals(id)));
-      }
-      catch (Exception ex)
-      {
-        respuesta = new RespuestaModelo<T>(ex);
+        try
+        {
+          await conexion.OpenAsync();
+          using (SqlCommand comando = new SqlCommand(sql, conexion))
+          {
+            try
+            {
+              using (SqlDataReader resultado = await comando.ExecuteReaderAsync())
+              {
+                try
+                {
+                  //Obtener la entidad solo con las columnas seleccionadas
+                  T e = new T();
+                  while (await resultado.ReadAsync())
+                    foreach (string columna in Columnas)
+                      Tipo.GetProperty(columna)?.SetValue(e, resultado[columna].Equals(DBNull.Value) ? null : resultado[columna]);
+                  resultado.Close();
+                  respuesta = new RespuestaModelo<T>(e);
+                }
+                catch (Exception ex)
+                {
+                  respuesta = new RespuestaModelo<T>(ex);
+                }
+                resultado.Dispose();
+              }
+            }
+            catch (Exception ex)
+            {
+              respuesta = new RespuestaModelo<T>(ex);
+            }
+            comando.Dispose();
+          }
+          if (conexion.State.Equals(ConnectionState.Open)) conexion.Close();
+        }
+        catch (Exception ex)
+        {
+          respuesta = new RespuestaModelo<T>(ex);
+        }
+        conexion.Dispose();
       }
       return respuesta;
     }
@@ -323,7 +360,7 @@ namespace Datos.ProveedoresDeDatos
       if (condicion != null && !condicion.Select(c => c.Columna).ToList().TrueForAll(c => Columnas.Contains(c)))
         return new RespuestaColeccion<T> { Correcto = false, Mensaje = Error.ColumnasDeBusquedaNoCoinciden };
       RespuestaColeccion<T> respuesta;
-      using (SqlConnection conexion = new SqlConnection(Repositorio.CadenaDeConexion))
+      using (SqlConnection conexion = new SqlConnection(CadenaDeConexion))
       {
         try
         {
@@ -458,7 +495,7 @@ namespace Datos.ProveedoresDeDatos
         .Replace("{tabla}", Tabla)
         .Replace("{columnas}", $"[Id] as Clave, [{columna}] as Valor")
         .Replace("{condicion}", "[Eliminado] IS NULL");
-      using (SqlConnection conexion = new SqlConnection(Repositorio.CadenaDeConexion))
+      using (SqlConnection conexion = new SqlConnection(CadenaDeConexion))
       {
         try
         {
@@ -533,7 +570,7 @@ namespace Datos.ProveedoresDeDatos
       if (condicion != null && !condicion.Select(c => c.Columna).ToList().TrueForAll(columnas.Contains))
         return new RespuestaColeccion<T> { Correcto = false, Mensaje = Error.ColumnasDeBusquedaNoCoinciden };
       RespuestaColeccion<T> respuesta;
-      using (SqlConnection conexion = new SqlConnection(Repositorio.CadenaDeConexion))
+      using (SqlConnection conexion = new SqlConnection(CadenaDeConexion))
       {
         try
         {
@@ -674,7 +711,7 @@ namespace Datos.ProveedoresDeDatos
       if (entidades.NoEsValida())
         return new RespuestaColeccion<int> { Correcto = false, Mensaje = Error.ListaInvalida };
       RespuestaColeccion<int> respuesta;
-      using (SqlConnection conexion = new SqlConnection(Repositorio.CadenaDeConexion))
+      using (SqlConnection conexion = new SqlConnection(CadenaDeConexion))
       {
         try
         {
@@ -732,7 +769,7 @@ namespace Datos.ProveedoresDeDatos
       if (modelo == null || !modelo.Id.Equals(0))
         return new RespuestaModelo<int> { Correcto = false, Mensaje = Error.ModeloInvalido };
       RespuestaModelo<int> respuesta;
-      using (SqlConnection conexion = new SqlConnection(Repositorio.CadenaDeConexion))
+      using (SqlConnection conexion = new SqlConnection(CadenaDeConexion))
       {
         try
         {
@@ -816,7 +853,7 @@ namespace Datos.ProveedoresDeDatos
       if (entidades.NoEsValida() || entidades.Any(m => !m.Id.Equals(0)))
         return new RespuestaColeccion<int> { Correcto = false, Mensaje = Error.ListaInvalida };
       RespuestaColeccion<int> respuesta;
-      using (SqlConnection conexion = new SqlConnection(Repositorio.CadenaDeConexion))
+      using (SqlConnection conexion = new SqlConnection(CadenaDeConexion))
       {
         try
         {
@@ -912,7 +949,7 @@ namespace Datos.ProveedoresDeDatos
       if (modelo == null || modelo.Id.Equals(0))
         return new RespuestaModelo<int> { Correcto = false, Mensaje = Error.ModeloInvalido };
       RespuestaModelo<int> respuesta;
-      using (SqlConnection conexion = new SqlConnection(Repositorio.CadenaDeConexion))
+      using (SqlConnection conexion = new SqlConnection(CadenaDeConexion))
       {
         try
         {
@@ -995,7 +1032,7 @@ namespace Datos.ProveedoresDeDatos
       if (entidades.NoEsValida() || entidades.Any(m => m.Id.Equals(0)))
         return new RespuestaModelo<int> { Correcto = false, Mensaje = Error.ListaInvalida };
       RespuestaModelo<int> respuesta;
-      using (SqlConnection conexion = new SqlConnection(Repositorio.CadenaDeConexion))
+      using (SqlConnection conexion = new SqlConnection(CadenaDeConexion))
       {
         try
         {

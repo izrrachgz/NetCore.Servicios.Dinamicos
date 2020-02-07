@@ -1,4 +1,4 @@
-﻿Agregar una Nueva Migracion>
+﻿﻿Agregar una Nueva Migracion>
 EntityFrameworkCore\Add-Migration Nombre
 
 Actualizar Contexto de Datos>
