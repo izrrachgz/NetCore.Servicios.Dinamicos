@@ -47,7 +47,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Consola.Pruebas", "Consola.
 		{18550CF6-4788-48A6-A018-32D350E9EE7A} = {18550CF6-4788-48A6-A018-32D350E9EE7A}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contexto", "Datos.Contexto\Contexto.csproj", "{E3EAD42B-8BB8-42CA-A41E-A3CC2F761E95}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contexto", "Contexto\Contexto.csproj", "{E3EAD42B-8BB8-42CA-A41E-A3CC2F761E95}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
