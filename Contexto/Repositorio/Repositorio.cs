@@ -10,7 +10,7 @@ namespace Contexto.Repositorio
   /// representar una instancia del repositorio de datos
   /// asociado
   /// </summary>
-  internal class Repositorio : DbContext
+  internal sealed class Repositorio : DbContext
   {
     #region Propiedades
 

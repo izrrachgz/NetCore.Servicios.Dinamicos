@@ -8,7 +8,7 @@ namespace Contexto.ProveedoresDeDatos
   /// datos de una entidad
   /// </summary>
   /// <typeparam name="T">Entidad</typeparam>
-  public class ProveedorDeDatosBase<T> where T : class, IEntidad, new()
+  public class ProveedorDeDatosBase<T> : ProveedorDeDatos<T> where T : class, IEntidad, new()
   {
     /// <summary>
     /// Referencia al repositorio de datos
@@ -16,16 +16,11 @@ namespace Contexto.ProveedoresDeDatos
     /// </summary>
     internal Repositorio.Repositorio Repositorio { get; }
 
-    /// <summary>
-    /// Referencia al proveedor de datos especifico
-    /// de la entidad asociada
-    /// </summary>
-    protected ProveedorDeDatos<T> Datos { get; }
-
     public ProveedorDeDatosBase()
     {
       Repositorio = new Repositorio.Repositorio();
-      Datos = new ProveedorDeDatos<T>();
     }
+
+    //Crea tus sobrecargas o nuevas funcionalidades
   }
 }

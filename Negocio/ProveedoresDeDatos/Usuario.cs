@@ -10,12 +10,13 @@ namespace Negocio.ProveedoresDeDatos
   public class ProveedorUsuario : ProveedorDeDatosBase<Usuario>
   {
     /// <summary>
-    /// 
+    /// Devuelve todos los usuarios dentro de un modelo de datos
+    /// paginado
     /// </summary>
     /// <param name="pagina"></param>
     /// <returns></returns>
     public async Task<RespuestaColeccion<Usuario>> Usuarios(Paginado pagina)
-      => await Datos.Obtener(pagina);
+      => await Obtener(pagina);
 
     /// <summary>
     /// Devuelve todos los usuarios que no tiene un numero de celular
@@ -29,7 +30,7 @@ namespace Negocio.ProveedoresDeDatos
       {
         new Condicion(@"Celular",null,Operador.Es)
       };
-      return await Datos.Obtener(paginado ?? new Paginado(), condiciones);
+      return await Obtener(paginado ?? new Paginado(), condiciones);
     }
   }
 }
