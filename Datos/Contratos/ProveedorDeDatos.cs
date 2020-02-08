@@ -58,7 +58,7 @@ namespace Datos.Contratos
     /// </summary>
     /// <param name="columna">Nombre de la columna para seleccionar</param>
     /// <returns>Lista de clave/valor asociados a la Entidad</returns>
-    Task<RespuestaColeccion<ClaveValor>> Obtener(string columna);
+    Task<RespuestaColeccion<IndiceValor>> Obtener(string columna);
 
     /// <summary>
     /// Deberá regresar una lista de entidades asociadas al servicio conteniendo

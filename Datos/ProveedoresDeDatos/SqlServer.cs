@@ -482,15 +482,15 @@ namespace Datos.ProveedoresDeDatos
     /// </summary>
     /// <param name="columna">Nombre de la columna para seleccionar</param>
     /// <returns>Lista de clave/valor asociados a la Entidad</returns>
-    public virtual async Task<RespuestaColeccion<ClaveValor>> Obtener(string columna)
+    public virtual async Task<RespuestaColeccion<IndiceValor>> Obtener(string columna)
     {
       //Verificar la columna definida
       if (columna.NoEsValida())
-        return new RespuestaColeccion<ClaveValor> { Correcto = false, Mensaje = Error.IdentificadorInvalido };
+        return new RespuestaColeccion<IndiceValor> { Correcto = false, Mensaje = Error.IdentificadorInvalido };
       //Verificar que la columna pertenezca a la entidad
       if (!Columnas.Contains(columna))
-        return new RespuestaColeccion<ClaveValor> { Correcto = false, Mensaje = Error.ColumnasDeBusquedaNoCoinciden };
-      RespuestaColeccion<ClaveValor> respuesta;
+        return new RespuestaColeccion<IndiceValor> { Correcto = false, Mensaje = Error.ColumnasDeBusquedaNoCoinciden };
+      RespuestaColeccion<IndiceValor> respuesta;
       string sql = SqlSeleccionar
         .Replace("{tabla}", Tabla)
         .Replace("{columnas}", $"[Id] as Clave, [{columna}] as Valor")
@@ -509,28 +509,28 @@ namespace Datos.ProveedoresDeDatos
                 try
                 {
                   //Obtener la pagína solo con las columnas seleccionadas
-                  List<ClaveValor> lista = new List<ClaveValor>();
+                  List<IndiceValor> lista = new List<IndiceValor>();
                   while (await resultado.ReadAsync())
                   {
-                    lista.Add(new ClaveValor
+                    lista.Add(new IndiceValor
                     {
                       Clave = resultado.GetInt32(0),
                       Valor = resultado.GetString(1)
                     });
                   }
                   resultado.Close();
-                  respuesta = new RespuestaColeccion<ClaveValor>(lista);
+                  respuesta = new RespuestaColeccion<IndiceValor>(lista);
                 }
                 catch (Exception ex)
                 {
-                  respuesta = new RespuestaColeccion<ClaveValor>(ex);
+                  respuesta = new RespuestaColeccion<IndiceValor>(ex);
                 }
                 resultado.Dispose();
               }
             }
             catch (Exception ex)
             {
-              respuesta = new RespuestaColeccion<ClaveValor>(ex);
+              respuesta = new RespuestaColeccion<IndiceValor>(ex);
             }
             comando.Dispose();
           }
@@ -538,7 +538,7 @@ namespace Datos.ProveedoresDeDatos
         }
         catch (Exception ex)
         {
-          respuesta = new RespuestaColeccion<ClaveValor>(ex);
+          respuesta = new RespuestaColeccion<IndiceValor>(ex);
         }
         conexion.Dispose();
       }

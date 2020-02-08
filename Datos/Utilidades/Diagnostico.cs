@@ -48,7 +48,7 @@ namespace Datos.Utilidades
     /// Inicia la ejecución de la prueba
     /// </summary>
     /// <returns>Resumen de prueba</returns>
-    public async Task<ResumenDePrueba<T>> Ejecutar()
+    public async Task<ResumenDeDiagnostico<T>> Ejecutar()
     {
       return await Task.Run(() =>
       {
@@ -79,7 +79,7 @@ namespace Datos.Utilidades
         }
         while (!hilos.TrueForAll(h => h.ThreadState.Equals(ThreadState.Stopped))) { }
         Cronometro.Stop();
-        return new ResumenDePrueba<T>(resultados);
+        return new ResumenDeDiagnostico<T>(resultados);
       });
     }
   }

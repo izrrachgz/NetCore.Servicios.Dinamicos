@@ -94,7 +94,7 @@ namespace Contexto.Pruebas.Teorias
       ProveedorDeDatos<Usuario> servicio = new ProveedorDeDatos<Usuario>();
       Stopwatch temporizador = new Stopwatch();
       temporizador.Start();
-      RespuestaColeccion<ClaveValor> usuarios = await servicio.Obtener("Correo");
+      RespuestaColeccion<IndiceValor> usuarios = await servicio.Obtener("Correo");
       temporizador.Stop();
       Assert.True(usuarios.Correcto && temporizador.Elapsed.TotalSeconds <= estimado);
       usuarios.Coleccion.Clear();

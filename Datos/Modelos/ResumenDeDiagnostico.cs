@@ -9,7 +9,7 @@ namespace Datos.Modelos
   /// Proporciona el modelo de información detallada
   /// para interpretar una prueba realizada
   /// </summary>
-  public sealed class ResumenDePrueba<T>
+  public sealed class ResumenDeDiagnostico<T>
   {
     /// <summary>
     /// Total de tareas efectuadas
@@ -47,7 +47,7 @@ namespace Datos.Modelos
     /// </summary>
     public List<MetricaDeTarea<T>> Metricas { get; }
 
-    public ResumenDePrueba(List<MetricaDeTarea<T>> metricas)
+    public ResumenDeDiagnostico(List<MetricaDeTarea<T>> metricas)
     {
       Metricas = metricas ?? new List<MetricaDeTarea<T>>(0);
       Total = Metricas.Count;
