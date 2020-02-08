@@ -2,18 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <Authors>Israel Chavez</Authors>
-    <Company>Izrra.Ch</Company>
-    <Description>Permite efectuar pruebas de manera dinamica sobre la funcionalidad de los proveedores de datos</Description>
-    <Copyright>Izrra.Ch@2019</Copyright>
+
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="ConfiguracionDatosPruebas.json" />
+    <None Remove="ConfiguracionContextoPruebas.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="ConfiguracionDatosPruebas.json">
+    <Content Include="ConfiguracionContextoPruebas.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -21,7 +19,13 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.6">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.console" Version="2.4.1">
       <PrivateAssets>all</PrivateAssets>
@@ -42,10 +46,8 @@
     </Reference>
   </ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
-
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy &quot;$(SolutionDir)\Datos\ConfiguracionDatos.json&quot; &quot;$(TargetDir)\ConfiguracionDatos.json&quot;&#xD;&#xA;echo &quot;Copiado archivo de configuracion de Datos al proyecto de Datos.Pruebas&quot;" />
+    <Exec Command="copy &quot;$(SolutionDir)\Datos\ConfiguracionDatos.json&quot; &quot;$(TargetDir)\ConfiguracionDatos.json&quot;&#xD;&#xA;echo &quot;Copiado archivo de configuracion de Datos al proyecto de Contexto.Pruebas&quot;&#xD;&#xA;copy &quot;$(SolutionDir)\Contexto\ConfiguracionContexto.json&quot; &quot;$(TargetDir)\ConfiguracionContexto.json&quot;&#xD;&#xA;echo &quot;Copiado archivo de configuracion de Contexto al proyecto de Contexto.Pruebas&quot;" />
   </Target>
 
 </Project>
