@@ -5,11 +5,11 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Datos.Configuraciones;
 using Datos.Modelos;
+using Datos.Pruebas.Configuraciones;
 using Datos.Utilidades;
-using Negocio.Pruebas.Configuraciones;
 using Xunit;
 
-namespace Negocio.Pruebas.Hechos.Utilidades
+namespace Datos.Pruebas.Hechos.Utilidades
 {
   /// <summary>
   /// Pruebas positivas sobre la utilidad http
@@ -28,8 +28,8 @@ namespace Negocio.Pruebas.Hechos.Utilidades
 
     public UtilidadHttp()
     {
-      UrlBaseBin = Configuracion<ConfiguracionNegocioPruebas>.Instancia.UrlBaseBin;
-      MetodoBin = Configuracion<ConfiguracionNegocioPruebas>.Instancia.MetodoBin;
+      UrlBaseBin = Configuracion<ConfiguracionDatosPruebas>.Instancia.UrlBaseBin;
+      MetodoBin = Configuracion<ConfiguracionDatosPruebas>.Instancia.MetodoBin;
     }
 
     /// <summary>

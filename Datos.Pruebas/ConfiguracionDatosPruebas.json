@@ -1,0 +1,10 @@
+{
+  "UrlBaseBin": "http://requestbin.net/",
+  "MetodoBin": "r/1e7802d1",
+  "Configuraciones": [
+    {
+      "Clave": "UtilizarLog",
+      "Valor": false
+    }
+  ]
+}
