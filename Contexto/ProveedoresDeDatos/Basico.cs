@@ -22,6 +22,6 @@ namespace Contexto.ProveedoresDeDatos
       Repositorio = new Repositorio();
     }
 
-    //Crea tus sobrecargas o nuevas funcionalidades
+    //Agrega sobrecargas o nuevas funcionalidades globales
   }
 }

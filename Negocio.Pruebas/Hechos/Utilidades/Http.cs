@@ -5,8 +5,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Datos.Configuraciones;
 using Datos.Modelos;
+using Datos.Utilidades;
 using Negocio.Pruebas.Configuraciones;
-using Negocio.Utilidades;
 using Xunit;
 
 namespace Negocio.Pruebas.Hechos.Utilidades

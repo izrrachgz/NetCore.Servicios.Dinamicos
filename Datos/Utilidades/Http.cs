@@ -9,10 +9,9 @@ using System.Threading.Tasks;
 using Datos.Extensiones;
 using Datos.Mensajes;
 using Datos.Modelos;
-using Negocio.Modelos;
 using Newtonsoft.Json;
 
-namespace Negocio.Utilidades
+namespace Datos.Utilidades
 {
   /// <summary>
   /// Provee el mecanismo para efectuar solicitudes http
