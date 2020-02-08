@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Api.Pruebas.Utilidades;
+using Datos.Utilidades;
 using Datos.Modelos;
 using Negocio.Utilidades;
 using Newtonsoft.Json;
@@ -28,7 +28,7 @@ namespace Api.Pruebas.Teorias
       {
         http.Post(url, metodo, json)
       };
-      PruebaDeRendimiento<HttpResponseMessage> prueba = new PruebaDeRendimiento<HttpResponseMessage>(tareas, ciclos, hilos);
+      DiagnosticarRendimiento<HttpResponseMessage> prueba = new DiagnosticarRendimiento<HttpResponseMessage>(tareas, ciclos, hilos);
       await prueba.Ejecutar();
       Assert.True(prueba.Cronometro.Elapsed.TotalSeconds <= estimado);
     }

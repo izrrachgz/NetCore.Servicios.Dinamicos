@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Api.Pruebas.Modelos
+namespace Datos.Modelos
 {
   /// <summary>
   /// Proporciona el modelo de información detallada

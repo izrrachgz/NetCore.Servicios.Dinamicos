@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace Api.Pruebas.Modelos
+namespace Datos.Modelos
 {
   /// <summary>
   /// Proporciona el modelo de datos para almacenar

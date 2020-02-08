@@ -2,15 +2,16 @@
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using Api.Pruebas.Modelos;
+using Datos.Modelos;
 using ThreadState = System.Threading.ThreadState;
 
-namespace Api.Pruebas.Utilidades
+namespace Datos.Utilidades
 {
   /// <summary>
   /// Proporciona el mecanismo para realizar una prueba de carga
+  /// y estres sobre un listado de tareas
   /// </summary>
-  public class PruebaDeRendimiento<T>
+  public class DiagnosticarRendimiento<T>
   {
     /// <summary>
     /// Marcador utilizado para medir el tiempo
@@ -35,7 +36,7 @@ namespace Api.Pruebas.Utilidades
     /// </summary>
     public List<Task<T>> Tareas { get; }
 
-    public PruebaDeRendimiento(List<Task<T>> tareas, int ciclos = 1, byte hilos = 1)
+    public DiagnosticarRendimiento(List<Task<T>> tareas, int ciclos = 1, byte hilos = 1)
     {
       Cronometro = new Stopwatch();
       Tareas = tareas ?? new List<Task<T>>(0);

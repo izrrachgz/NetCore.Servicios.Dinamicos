@@ -22,6 +22,8 @@
 
   <ItemGroup>
     <Folder Include="Hechos\" />
+    <Folder Include="Modelos\" />
+    <Folder Include="Utilidades\" />
   </ItemGroup>
 
   <ItemGroup>
