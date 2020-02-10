@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Datos.Modelos;
@@ -57,25 +55,28 @@ namespace Datos.Utilidades
         List<MetricaDeTarea<T>> resultados = new List<MetricaDeTarea<T>>(Hilos * Ciclos * Tareas.Count);
         List<Thread> hilos = new List<Thread>(Hilos);
         Cronometro.Start();
+        //Crear los hilos indicados
         for (int i = 0; i < Hilos; i++)
         {
           Thread h = new Thread(() =>
           {
+            //Ejecutar todas las tareas por cada ciclo indicado
             for (int x = 0; x < Ciclos; x++)
             {
-              MetricaDeTarea<T> metrica = new MetricaDeTarea<T>(Tareas.ElementAt(x));
-              metrica.CalcularMetrica();
-              resultados.Add(metrica);
+              foreach (Task<T> t in Tareas)
+              {
+                MetricaDeTarea<T> metrica = new MetricaDeTarea<T>(t);
+                metrica.CalcularMetrica();
+                resultados.Add(metrica);
+              }
             }
           })
           { IsBackground = true };
           h.Start();
           hilos.Add(h);
         }
-        do
-        {
-          Console.Write(@".");
-        } while (!hilos.TrueForAll(h => h.ThreadState.Equals(ThreadState.Stopped)));
+        //esperar a que todos los hilos concluyan
+        while (!hilos.TrueForAll(h => h.ThreadState.Equals(ThreadState.Stopped))) { }
         Cronometro.Stop();
         return new ResumenDeDiagnostico<T>(resultados);
       });

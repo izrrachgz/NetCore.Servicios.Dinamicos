@@ -51,7 +51,7 @@ namespace Datos.Modelos
     {
       Metricas = metricas ?? new List<MetricaDeTarea<T>>(0);
       Total = Metricas.Count;
-      Correctas = Metricas.Count(m => m.Correcto);
+      Correctas = Metricas.Count(m => m.Tarea.IsCompletedSuccessfully);
       Erroneas = Total - Correctas;
       PromedioDeRespuesta = Metricas.Count > 0 ? new TimeSpan(Metricas.Sum(m => m.Cronometro.Elapsed.Ticks) / Metricas.Count) : TimeSpan.FromTicks(0);
       MasRapida = Metricas.OrderBy(m => m.Cronometro.ElapsedTicks)

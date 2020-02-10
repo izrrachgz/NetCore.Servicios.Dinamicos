@@ -21,17 +21,6 @@ namespace Datos.Modelos
     /// </summary>
     public Task<T> Tarea { get; }
 
-    /// <summary>
-    /// Referencia de la respuesta obtenida
-    /// asociada a la tarea
-    /// </summary>
-    public T Respuesta { get; set; }
-
-    /// <summary>
-    /// Indica si la tarea ha concluido correctamente
-    /// </summary>
-    public bool Correcto { get; set; }
-
     public MetricaDeTarea(Task<T> tarea)
     {
       Cronometro = new Stopwatch();
@@ -46,7 +35,8 @@ namespace Datos.Modelos
     {
       Cronometro.Reset();
       Cronometro.Start();
-      Task.WaitAll(Tarea);
+      //Esperar a que la tarea termine en el hilo asignado
+      Tarea.Wait();
       Cronometro.Stop();
     }
   }
