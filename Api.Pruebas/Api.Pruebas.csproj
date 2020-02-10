@@ -40,7 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Hechos\" />
+    <ProjectReference Include="..\Api\Api.csproj" />
   </ItemGroup>
 
   <ItemGroup>
