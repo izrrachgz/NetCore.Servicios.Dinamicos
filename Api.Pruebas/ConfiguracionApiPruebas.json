@@ -1,0 +1,16 @@
+{
+  "Configuraciones": [
+    {
+      "Clave": "UtilizarLog",
+      "Valor": false
+    },
+    {
+      "Clave": "UrlObtenerUsuariosPorPagina",
+      "Valor": "https://localhost:44330/"
+    },
+    {
+      "Clave": "MetodoObtenerUsuariosPorPagina",
+      "Valor": "Api/Usuarios/Paginado"
+    }
+  ]
+}

@@ -6,7 +6,7 @@ namespace Datos.Pruebas.Configuraciones
   /// <summary>
   /// Provee un modelo de datos para representar
   /// la configuracion que se asocia al contexto
-  /// de pruebas de negocio 
+  /// de pruebas de datos
   /// </summary>
   internal sealed class ConfiguracionDatosPruebas : ConfiguracionBase
   {

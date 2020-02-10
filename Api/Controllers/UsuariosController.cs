@@ -9,7 +9,7 @@ namespace Api.Controllers
   /// <summary>
   /// Provee un mecanismo de acceso a los datos de los usuarios
   /// </summary>
-  [ApiController, Route("api/[controller]")]
+  [ApiController, Route("Api/[controller]")]
   public class UsuariosController : ControllerBase
   {
     /// <summary>

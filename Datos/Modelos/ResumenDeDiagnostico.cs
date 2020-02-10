@@ -53,7 +53,7 @@ namespace Datos.Modelos
       Total = Metricas.Count;
       Correctas = Metricas.Count(m => m.Correcto);
       Erroneas = Total - Correctas;
-      PromedioDeRespuesta = Metricas.Count > 0 ? new TimeSpan(Metricas.Sum(m => m.Cronometro.Elapsed.Ticks) / Metricas.Count) : TimeSpan.MaxValue;
+      PromedioDeRespuesta = Metricas.Count > 0 ? new TimeSpan(Metricas.Sum(m => m.Cronometro.Elapsed.Ticks) / Metricas.Count) : TimeSpan.FromTicks(0);
       MasRapida = Metricas.OrderBy(m => m.Cronometro.ElapsedTicks)
         .Select(m => new Tuple<Task<T>, TimeSpan>(m.Tarea, m.Cronometro.Elapsed))
         .FirstOrDefault();

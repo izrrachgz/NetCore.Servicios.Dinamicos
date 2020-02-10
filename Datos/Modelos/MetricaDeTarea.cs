@@ -37,5 +37,17 @@ namespace Datos.Modelos
       Cronometro = new Stopwatch();
       Tarea = tarea;
     }
+
+    /// <summary>
+    /// Permite calcular la metrica de la tarea asociada
+    /// </summary>
+    /// <returns></returns>
+    public void CalcularMetrica()
+    {
+      Cronometro.Reset();
+      Cronometro.Start();
+      Task.WaitAll(Tarea);
+      Cronometro.Stop();
+    }
   }
 }

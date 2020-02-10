@@ -7,9 +7,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Modelos\**" />
     <Compile Remove="Utilidades\**" />
+    <EmbeddedResource Remove="Modelos\**" />
     <EmbeddedResource Remove="Utilidades\**" />
+    <None Remove="Modelos\**" />
     <None Remove="Utilidades\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="ConfiguracionApiPruebas.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="ConfiguracionApiPruebas.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -28,7 +41,6 @@
 
   <ItemGroup>
     <Folder Include="Hechos\" />
-    <Folder Include="Modelos\" />
   </ItemGroup>
 
   <ItemGroup>

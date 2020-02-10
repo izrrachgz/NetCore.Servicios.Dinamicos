@@ -1,15 +1,13 @@
 ﻿using Datos.Configuraciones;
-using Datos.Extensiones;
 
-namespace Contexto.Pruebas.Configuraciones
+namespace Api.Pruebas.Configuraciones
 {
   /// <summary>
   /// Provee un modelo de datos para representar
   /// la configuracion que se asocia al contexto
-  /// de datos
+  /// de pruebas de api 
   /// </summary>
-  internal sealed class ConfiguracionContextoPruebas : ConfiguracionBase
+  internal sealed class ConfiguracionApiPruebas : ConfiguracionBase
   {
-    
   }
 }

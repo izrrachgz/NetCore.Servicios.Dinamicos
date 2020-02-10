@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Datos.Modelos;
@@ -59,25 +61,21 @@ namespace Datos.Utilidades
         {
           Thread h = new Thread(() =>
           {
-            for (int j = 0; j < Ciclos; j++)
-              Tareas.ForEach(async s =>
-              {
-                MetricaDeTarea<T> metrica = new MetricaDeTarea<T>(s);
-                metrica.Cronometro.Start();
-                //todo: invocar inicio de tarea
-                await s.ContinueWith(task =>
-                {
-                  metrica.Cronometro.Stop();
-                  metrica.Respuesta = task.Result;
-                });
-                resultados.Add(metrica);
-              });
-          });
-          h.IsBackground = true;
+            for (int x = 0; x < Ciclos; x++)
+            {
+              MetricaDeTarea<T> metrica = new MetricaDeTarea<T>(Tareas.ElementAt(x));
+              metrica.CalcularMetrica();
+              resultados.Add(metrica);
+            }
+          })
+          { IsBackground = true };
           h.Start();
           hilos.Add(h);
         }
-        while (!hilos.TrueForAll(h => h.ThreadState.Equals(ThreadState.Stopped))) { }
+        do
+        {
+          Console.Write(@".");
+        } while (!hilos.TrueForAll(h => h.ThreadState.Equals(ThreadState.Stopped)));
         Cronometro.Stop();
         return new ResumenDeDiagnostico<T>(resultados);
       });
