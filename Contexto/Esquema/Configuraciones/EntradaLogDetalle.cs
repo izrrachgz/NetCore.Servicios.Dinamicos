@@ -1,7 +1,7 @@
 ﻿using Contexto.Entidades;
 using Microsoft.EntityFrameworkCore;
 
-namespace Contexto.Esquema.ConfiguracionDeEntidades
+namespace Contexto.Esquema.Configuraciones
 {
   /// <summary>
   /// Provee un metodo para registrar la configuracion

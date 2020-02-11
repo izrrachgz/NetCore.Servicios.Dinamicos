@@ -1,7 +1,7 @@
 ﻿using Datos.Configuraciones;
 using Contexto.Configuraciones;
 using Contexto.Entidades;
-using Contexto.Esquema.ConfiguracionDeEntidades;
+using Contexto.Esquema.Configuraciones;
 using Microsoft.EntityFrameworkCore;
 
 namespace Contexto.Esquema
