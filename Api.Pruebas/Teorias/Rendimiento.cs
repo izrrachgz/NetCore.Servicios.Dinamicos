@@ -39,8 +39,8 @@ namespace Api.Pruebas.Teorias
     public async Task ObtenerUsuariosPorPagina(short estimado, int ciclos, byte hilos)
     {
       SolicitudHttp http = new SolicitudHttp();
-      string url = Config.Obtener<string>(@"UrlObtenerUsuariosPorPagina");
-      string metodo = Config.Obtener<string>(@"MetodoObtenerUsuariosPorPagina");
+      string url = Config.Obtener<string>(@"UrlObtenerEntradasLogPorPagina");
+      string metodo = Config.Obtener<string>(@"MetodoObtenerEntradasLogPorPagina");
       string json = JsonConvert.SerializeObject(new SolicitudPagina());
       List<Task<HttpResponseMessage>> tareas = new List<Task<HttpResponseMessage>>(1)
       {

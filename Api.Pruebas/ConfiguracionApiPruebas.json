@@ -5,12 +5,12 @@
       "Valor": false
     },
     {
-      "Clave": "UrlObtenerUsuariosPorPagina",
+      "Clave": "UrlObtenerEntradasLogPorPagina",
       "Valor": "https://localhost:44330/"
     },
     {
-      "Clave": "MetodoObtenerUsuariosPorPagina",
-      "Valor": "Api/Usuarios/Paginado"
+      "Clave": "MetodoObtenerEntradasLogPorPagina",
+      "Valor": "Api/EntradasLog/Paginado"
     }
   ]
 }
