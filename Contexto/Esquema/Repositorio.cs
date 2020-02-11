@@ -1,6 +1,7 @@
 ﻿using Datos.Configuraciones;
 using Contexto.Configuraciones;
 using Contexto.Entidades;
+using Contexto.Esquema.ConfiguracionDeEntidades;
 using Microsoft.EntityFrameworkCore;
 
 namespace Contexto.Esquema
@@ -23,7 +24,15 @@ namespace Contexto.Esquema
 
     #region Entidades
 
-    public DbSet<Usuario> Usuarios { get; set; }
+    /// <summary>
+    /// Coleccion de entradas de log
+    /// </summary>
+    public DbSet<EntradaLog> EntradasDeLog { get; set; }
+
+    /// <summary>
+    /// Coleccion de detalles asociado a las entradas de log
+    /// </summary>
+    public DbSet<EntradaLogDetalle> DetallesDeEntradaLog { get; set; }
 
     //Agrega tus colecciones aquí
 
@@ -45,7 +54,9 @@ namespace Contexto.Esquema
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
       base.OnModelCreating(modelBuilder);
-      //Agrega tus configuraciones aquí
+      //Registra las configuraciones de tus entidades aquí
+
+      EntradaLogDetalleConfiguracion.Registrar(modelBuilder);
     }
 
     #endregion
