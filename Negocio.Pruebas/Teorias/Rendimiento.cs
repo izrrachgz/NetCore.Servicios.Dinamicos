@@ -25,7 +25,9 @@ namespace Negocio.Pruebas.Teorias
       {
         Nombre = @"Death Note",
         Descripcion = @"6:40",
-        Tipo = EntradaLogTipo.Advertencia
+        Tipo = EntradaLogTipo.Advertencia,
+        Creado = DateTime.Now,
+        Modificado = DateTime.Now
       };
     }
 
