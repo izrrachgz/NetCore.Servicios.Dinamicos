@@ -85,12 +85,16 @@ namespace Datos.Pruebas.Hechos.Extensiones
       Assert.True(http.Content is StreamContent && http.Content.Headers != null);
     }
 
+    /// <summary>
+    /// Comprueba que el contenido adjunto a un mensaje http de tipo json
+    /// puede ser leido de manera inversa (deserializado)
+    /// </summary>
     [Fact]
     public async void ObtenerDeContenidoJson()
     {
       HttpResponseMessage http = new HttpResponseMessage(HttpStatusCode.OK);
-      http.Content = new StringContent(JsonConvert.SerializeObject(new Usuario()));
-      RespuestaModelo<Usuario> respuesta = await http.ObtenerDeContenidoJson<Usuario>();
+      http.Content = new StringContent(JsonConvert.SerializeObject(new EntradaLog()));
+      RespuestaModelo<EntradaLog> respuesta = await http.ObtenerDeContenidoJson<EntradaLog>();
       Assert.True(respuesta.Correcto);
     }
   }

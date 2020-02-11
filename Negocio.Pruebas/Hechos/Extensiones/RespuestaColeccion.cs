@@ -20,18 +20,15 @@ namespace Negocio.Pruebas.Hechos.Extensiones
     [Fact]
     public void ReporteExcel()
     {
-      List<Usuario> usuarios = new List<Usuario>(1)
+      List<EntradaLog> coleccion = new List<EntradaLog>(1)
       {
-        new Usuario()
+        new EntradaLog()
         {
-          Nombre = @"Pruebas",
-          ApellidoPaterno = @"Pruebas",
-          ApellidoMaterno = @"Pruebas",
-          Correo = @"Pruebas@CSharp.com",
-          NumeroContacto = @"6623559566"
+          Nombre = @"Prueba",
+          Descripcion = @"Descripcion de prueba",
         }
       };
-      RespuestaColeccion<Usuario> respuesta = new RespuestaColeccion<Usuario>(usuarios);
+      RespuestaColeccion<EntradaLog> respuesta = new RespuestaColeccion<EntradaLog>(coleccion);
       RespuestaModelo<SpreadsheetDocument> documento = respuesta.ReporteExcel();
       Assert.True(documento.Correcto);
     }

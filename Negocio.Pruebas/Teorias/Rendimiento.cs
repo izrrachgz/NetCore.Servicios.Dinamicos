@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Contexto.Entidades;
+using Contexto.Enumerados;
 using DocumentFormat.OpenXml.Packaging;
 using Negocio.Extensiones;
 using Negocio.Modelos;
@@ -16,17 +17,15 @@ namespace Negocio.Pruebas.Teorias
   /// </summary>
   public class Rendimiento
   {
-    private Usuario Modelo { get; }
+    private EntradaLog Modelo { get; }
 
     public Rendimiento()
     {
-      Modelo = new Usuario()
+      Modelo = new EntradaLog()
       {
-        Nombre = @"Pruebas",
-        ApellidoPaterno = @"Pruebas",
-        ApellidoMaterno = @"Pruebas",
-        Correo = @"Pruebas@CSharp.com",
-        NumeroContacto = @"6623559566"
+        Nombre = @"Death Note",
+        Descripcion = @"6:40",
+        Tipo = EntradaLogTipo.Advertencia
       };
     }
 
@@ -42,11 +41,11 @@ namespace Negocio.Pruebas.Teorias
     public void GuardarListaEnExcel(short estimado = 1, int cantidad = 1000)
     {
       Stopwatch temporizador = new Stopwatch();
-      List<Usuario> lista = Enumerable.Repeat(Modelo, cantidad).ToList();
+      List<EntradaLog> lista = Enumerable.Repeat(Modelo, cantidad).ToList();
       temporizador.Start();
       RespuestaModelo<SpreadsheetDocument> documento = lista.DocumentoExcel(new ConfiguracionReporteExcel()
       {
-        Titulo = @"Reporte de Usuarios",
+        Titulo = @"Reporte de Entradas",
         DirectorioDeSalida = AppDomain.CurrentDomain.BaseDirectory,
       });
       temporizador.Stop();

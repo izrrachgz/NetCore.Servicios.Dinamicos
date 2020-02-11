@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Contexto.Entidades;
+using Contexto.Enumerados;
 using Datos.Modelos;
 using Datos.ProveedoresDeDatos;
 using Xunit;
@@ -15,23 +16,21 @@ namespace Contexto.Pruebas.Teorias
   /// </summary>
   public class Rendimiento
   {
-    private Usuario Usuario { get; }
+    private EntradaLog Entrada { get; }
 
     public Rendimiento()
     {
-      Usuario = new Usuario()
+      Entrada = new EntradaLog()
       {
-        Nombre = @"Pruebas",
-        ApellidoPaterno = @"Pruebas",
-        ApellidoMaterno = @"Pruebas",
-        Correo = @"Pruebas@CSharp.com",
-        NumeroContacto = @"6623559566"
+        Nombre = @"Death Note",
+        Descripcion = @"6:40",
+        Tipo = EntradaLogTipo.Advertencia
       };
     }
 
     /// <summary>
     /// Evalua la posibilidad de guardar n
-    /// usuarios antes de que termine el
+    /// entradas antes de que termine el
     /// intervalo de tiempo en segundos
     /// estimado
     /// </summary>
@@ -39,18 +38,18 @@ namespace Contexto.Pruebas.Teorias
     /// <param name="cantidad">Cantidad de entidades para guardar</param>
     /// <returns>Tarea indicando el estado</returns>
     [Theory, InlineData(1, 1000)]
-    public async Task GuardarUsuarios(short estimado = 1, int cantidad = 1000)
+    public async Task GuardarEntradasDeLog(short estimado = 1, int cantidad = 1000)
     {
-      ProveedorDeDatos<Usuario> servicio = new ProveedorDeDatos<Usuario>();
-      List<Usuario> usuarios = Enumerable.Repeat(Usuario, cantidad).ToList();
+      ProveedorDeDatos<EntradaLog> servicio = new ProveedorDeDatos<EntradaLog>();
+      List<EntradaLog> entradas = Enumerable.Repeat(Entrada, cantidad).ToList();
       Stopwatch temporizador = new Stopwatch();
       temporizador.Start();
-      RespuestaColeccion<int> guardados = await servicio.Guardar(usuarios);
+      RespuestaColeccion<int> guardados = await servicio.Guardar(entradas);
       temporizador.Stop();
       Assert.True(guardados.Correcto && temporizador.Elapsed.TotalSeconds <= estimado);
-      usuarios.Clear();
-      usuarios.TrimExcess();
-      usuarios = null;
+      entradas.Clear();
+      entradas.TrimExcess();
+      entradas = null;
       guardados.Coleccion.Clear();
       guardados.Coleccion.TrimExcess();
       guardados.Coleccion = null;
@@ -58,7 +57,7 @@ namespace Contexto.Pruebas.Teorias
 
     /// <summary>
     /// Evalua la posibilidad de obtener n
-    /// usuarios antes de que termine el
+    /// entradas antes de que termine el
     /// intervalo de tiempo en segundos
     /// estimado
     /// </summary>
@@ -66,45 +65,45 @@ namespace Contexto.Pruebas.Teorias
     /// <param name="cantidad">Cantidad de entidades para obtener</param>
     /// <returns>Tarea indicando el estado</returns>
     [Theory, InlineData(1, 1000)]
-    public async Task ObtenerUsuarios(short estimado = 1, int cantidad = 1000)
+    public async Task ObtenerEntradasDeLog(short estimado = 1, int cantidad = 1000)
     {
-      ProveedorDeDatos<Usuario> servicio = new ProveedorDeDatos<Usuario>();
+      ProveedorDeDatos<EntradaLog> servicio = new ProveedorDeDatos<EntradaLog>();
       Paginado paginado = new Paginado() { Elementos = cantidad };
       Stopwatch temporizador = new Stopwatch();
       temporizador.Start();
-      RespuestaColeccion<Usuario> usuarios = await servicio.Obtener(paginado);
+      RespuestaColeccion<EntradaLog> entradas = await servicio.Obtener(paginado);
       temporizador.Stop();
-      Assert.True(usuarios.Correcto && temporizador.Elapsed.TotalSeconds <= estimado);
-      usuarios.Coleccion.Clear();
-      usuarios.Coleccion.TrimExcess();
-      usuarios.Coleccion = null;
+      Assert.True(entradas.Correcto && temporizador.Elapsed.TotalSeconds <= estimado);
+      entradas.Coleccion.Clear();
+      entradas.Coleccion.TrimExcess();
+      entradas.Coleccion = null;
     }
 
     /// <summary>
     /// Evalua la posibilidad de obtener
-    /// todos losusuarios antes de que
+    /// todas las entradas de log antes de que
     /// termine el intervalo de tiempo
     /// en segundos estimado
     /// </summary>
     /// <param name="estimado">Segundos dados para terminar la tarea</param>
     /// <returns>Tarea indicando el estado</returns>
     [Theory, InlineData(1)]
-    public async Task ObtenerUsuariosClaveValor(short estimado)
+    public async Task ObtenerEntradasDeLogPorIndiceValor(short estimado)
     {
-      ProveedorDeDatos<Usuario> servicio = new ProveedorDeDatos<Usuario>();
+      ProveedorDeDatos<EntradaLog> servicio = new ProveedorDeDatos<EntradaLog>();
       Stopwatch temporizador = new Stopwatch();
       temporizador.Start();
-      RespuestaColeccion<IndiceValor> usuarios = await servicio.Obtener("Correo");
+      RespuestaColeccion<IndiceValor> entradas = await servicio.Obtener("Nombre");
       temporizador.Stop();
-      Assert.True(usuarios.Correcto && temporizador.Elapsed.TotalSeconds <= estimado);
-      usuarios.Coleccion.Clear();
-      usuarios.Coleccion.TrimExcess();
-      usuarios.Coleccion = null;
+      Assert.True(entradas.Correcto && temporizador.Elapsed.TotalSeconds <= estimado);
+      entradas.Coleccion.Clear();
+      entradas.Coleccion.TrimExcess();
+      entradas.Coleccion = null;
     }
 
     /// <summary>
     /// Evalua la posibilidad de obtener
-    /// todos los usuarios con columnas
+    /// todas las entradas de log con columnas
     /// especificas antes de que termine el
     /// intervalo de tiempo en segundos
     /// estimado
@@ -113,19 +112,19 @@ namespace Contexto.Pruebas.Teorias
     /// <param name="cantidad">Cantidad de entidades para obtener</param>
     /// <returns>Tarea indicando el estado</returns>
     [Theory, InlineData(1)]
-    public async Task ObtenerUsuariosColumnas(short estimado, int cantidad = 1000)
+    public async Task ObtenerEntradasDeLogPorColumnas(short estimado, int cantidad = 1000)
     {
-      ProveedorDeDatos<Usuario> servicio = new ProveedorDeDatos<Usuario>();
+      ProveedorDeDatos<EntradaLog> servicio = new ProveedorDeDatos<EntradaLog>();
       Paginado paginado = new Paginado() { Elementos = cantidad };
-      string[] columnas = { "Id", "Nombre", "Correo" };
+      string[] columnas = { "Id", "Nombre", "Descripcion" };
       Stopwatch temporizador = new Stopwatch();
       temporizador.Start();
-      RespuestaColeccion<Usuario> usuarios = await servicio.Obtener(columnas, paginado);
+      RespuestaColeccion<EntradaLog> coleccion = await servicio.Obtener(columnas, paginado);
       temporizador.Stop();
-      Assert.True(usuarios.Correcto && temporizador.Elapsed.TotalSeconds <= estimado);
-      usuarios.Coleccion.Clear();
-      usuarios.Coleccion.TrimExcess();
-      usuarios.Coleccion = null;
+      Assert.True(coleccion.Correcto && temporizador.Elapsed.TotalSeconds <= estimado);
+      coleccion.Coleccion.Clear();
+      coleccion.Coleccion.TrimExcess();
+      coleccion.Coleccion = null;
     }
   }
 }

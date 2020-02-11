@@ -22,17 +22,14 @@ namespace Negocio.Pruebas.Hechos.Extensiones
     [Fact]
     public void AdjuntarRespuestaColeccionComoExcel()
     {
-      List<Usuario> usuarios = new List<Usuario>(1)
+      List<EntradaLog> coleccion = new List<EntradaLog>(1)
       {
-        new Usuario(){
-          Nombre = @"Pruebas",
-          ApellidoPaterno = @"Pruebas",
-          ApellidoMaterno = @"Pruebas",
-          Correo = @"Pruebas@CSharp.com",
-          NumeroContacto = @"6623559566"
+        new EntradaLog(){
+          Nombre = @"Prueba",
+          Descripcion = @"Descripcion de prueba"
         },
       };
-      RespuestaColeccion<Usuario> respuesta = new RespuestaColeccion<Usuario>(usuarios);
+      RespuestaColeccion<EntradaLog> respuesta = new RespuestaColeccion<EntradaLog>(coleccion);
       HttpResponseMessage http = new HttpResponseMessage(HttpStatusCode.OK);
       http.AdjuntarComoExcel(respuesta);
       Assert.True(http.Content is StreamContent && http.Content.Headers != null);
@@ -47,18 +44,15 @@ namespace Negocio.Pruebas.Hechos.Extensiones
     [Fact]
     public void AdjuntarListaComoExcel()
     {
-      List<Usuario> usuarios = new List<Usuario>(1)
+      List<EntradaLog> coleccion = new List<EntradaLog>(1)
       {
-        new Usuario(){
+        new EntradaLog(){
           Nombre = @"Pruebas",
-          ApellidoPaterno = @"Pruebas",
-          ApellidoMaterno = @"Pruebas",
-          Correo = @"Pruebas@CSharp.com",
-          NumeroContacto = @"6623559566"
+          Descripcion = @"Descripcion de prueba"
         },
       };
       HttpResponseMessage http = new HttpResponseMessage(HttpStatusCode.OK);
-      http.AdjuntarComoExcel(usuarios);
+      http.AdjuntarComoExcel(coleccion);
       Assert.True(http.Content is StreamContent && http.Content.Headers != null);
     }
 
@@ -70,18 +64,15 @@ namespace Negocio.Pruebas.Hechos.Extensiones
     [Fact]
     public void AdjuntarComoJson()
     {
-      List<Usuario> usuarios = new List<Usuario>(1)
+      List<EntradaLog> coleccion = new List<EntradaLog>(1)
       {
-        new Usuario(){
+        new EntradaLog(){
           Nombre = @"Pruebas",
-          ApellidoPaterno = @"Pruebas",
-          ApellidoMaterno = @"Pruebas",
-          Correo = @"Pruebas@CSharp.com",
-          NumeroContacto = @"6623559566"
+          Descripcion = @"Descripcion de prueba"
         },
       };
       HttpResponseMessage http = new HttpResponseMessage(HttpStatusCode.OK);
-      http.AdjuntarComoJson(usuarios);
+      http.AdjuntarComoJson(coleccion);
       Assert.True(http.Content is StringContent && http.Content.Headers != null);
     }
 
@@ -94,18 +85,15 @@ namespace Negocio.Pruebas.Hechos.Extensiones
     [Fact]
     public void AdjuntarExcel()
     {
-      List<Usuario> usuarios = new List<Usuario>(1)
+      List<EntradaLog> coleccion = new List<EntradaLog>(1)
       {
-        new Usuario(){
+        new EntradaLog(){
           Nombre = @"Pruebas",
-          ApellidoPaterno = @"Pruebas",
-          ApellidoMaterno = @"Pruebas",
-          Correo = @"Pruebas@CSharp.com",
-          NumeroContacto = @"6623559566"
+          Descripcion = @"Descripcion de prueba"
         },
       };
       HttpResponseMessage http = new HttpResponseMessage(HttpStatusCode.OK);
-      http.AdjuntarExcel(usuarios.DocumentoExcel().Modelo);
+      http.AdjuntarExcel(coleccion.DocumentoExcel().Modelo);
       Assert.True(http.Content is StreamContent && http.Content.Headers != null);
     }
   }

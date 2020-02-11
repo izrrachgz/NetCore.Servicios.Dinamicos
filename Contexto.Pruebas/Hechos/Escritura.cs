@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Contexto.Entidades;
+using Contexto.Enumerados;
 using Datos.ProveedoresDeDatos;
 using Datos.Modelos;
 using Xunit;
@@ -11,31 +12,29 @@ namespace Contexto.Pruebas.Hechos
   /// </summary>
   public class Escritura
   {
-    public Usuario Usuario { get; }
+    public EntradaLog Entrada { get; }
 
     public Escritura()
     {
-      Usuario = new Usuario()
+      Entrada = new EntradaLog()
       {
-        Nombre = @"Pruebas",
-        ApellidoPaterno = @"Pruebas",
-        ApellidoMaterno = @"Pruebas",
-        Correo = @"Pruebas@CSharp.com",
-        NumeroContacto = @"6623559566"
+        Nombre = @"Death Note",
+        Descripcion = @"6:40",
+        Tipo = EntradaLogTipo.Advertencia
       };
     }
 
     /// <summary>
-    /// Comprueba que se guarde un usuario
+    /// Comprueba que se guarde una entrada de log
     /// en el repositorio de datos utilizando
-    /// el proveedor de datos
+    /// el mecanismo de proveedor de datos
     /// </summary>
     /// <returns></returns>
     [Fact]
-    public async Task GuardarUsuario()
+    public async Task GuardarEntrada()
     {
-      ProveedorDeDatos<Usuario> servicio = new ProveedorDeDatos<Usuario>();
-      RespuestaBasica guardado = await servicio.Guardar(Usuario);
+      ProveedorDeDatos<EntradaLog> servicio = new ProveedorDeDatos<EntradaLog>();
+      RespuestaBasica guardado = await servicio.Guardar(Entrada);
       Assert.True(guardado.Correcto);
     }
   }
