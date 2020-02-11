@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.852
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Datos", "Datos\Datos.csproj", "{18550CF6-4788-48A6-A018-32D350E9EE7A}"
 EndProject
@@ -56,7 +56,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contexto", "Contexto\Contex
 		{18550CF6-4788-48A6-A018-32D350E9EE7A} = {18550CF6-4788-48A6-A018-32D350E9EE7A}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contexto.Pruebas", "Contexto.Pruebas\Contexto.Pruebas.csproj", "{F56ADA0C-64A2-49D4-BC4D-A08C27BA1DF0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contexto.Pruebas", "Contexto.Pruebas\Contexto.Pruebas.csproj", "{F56ADA0C-64A2-49D4-BC4D-A08C27BA1DF0}"
 	ProjectSection(ProjectDependencies) = postProject
 		{E3EAD42B-8BB8-42CA-A41E-A3CC2F761E95} = {E3EAD42B-8BB8-42CA-A41E-A3CC2F761E95}
 		{18550CF6-4788-48A6-A018-32D350E9EE7A} = {18550CF6-4788-48A6-A018-32D350E9EE7A}

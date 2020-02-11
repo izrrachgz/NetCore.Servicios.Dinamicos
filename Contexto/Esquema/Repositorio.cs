@@ -57,6 +57,10 @@ namespace Contexto.Esquema
       //Registra las configuraciones de tus entidades aquí
 
       EntradaLogDetalleConfiguracion.Registrar(modelBuilder);
+
+      //::TODO validar 
+      modelBuilder.ApplyConfiguration(new EntradaLogDetalleConfig());
+
     }
 
     #endregion
