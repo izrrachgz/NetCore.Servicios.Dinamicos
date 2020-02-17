@@ -22,14 +22,14 @@ namespace Negocio.Pruebas.Hechos.Extensiones
     [Fact]
     public void AdjuntarRespuestaColeccionComoExcel()
     {
-      List<EntradaLog> coleccion = new List<EntradaLog>(1)
+      List<Bitacora> coleccion = new List<Bitacora>(1)
       {
-        new EntradaLog(){
+        new Bitacora(){
           Nombre = @"Prueba",
           Descripcion = @"Descripcion de prueba"
         },
       };
-      RespuestaColeccion<EntradaLog> respuesta = new RespuestaColeccion<EntradaLog>(coleccion);
+      RespuestaColeccion<Bitacora> respuesta = new RespuestaColeccion<Bitacora>(coleccion);
       HttpResponseMessage http = new HttpResponseMessage(HttpStatusCode.OK);
       http.AdjuntarComoExcel(respuesta);
       Assert.True(http.Content is StreamContent && http.Content.Headers != null);
@@ -44,9 +44,9 @@ namespace Negocio.Pruebas.Hechos.Extensiones
     [Fact]
     public void AdjuntarListaComoExcel()
     {
-      List<EntradaLog> coleccion = new List<EntradaLog>(1)
+      List<Bitacora> coleccion = new List<Bitacora>(1)
       {
-        new EntradaLog(){
+        new Bitacora(){
           Nombre = @"Pruebas",
           Descripcion = @"Descripcion de prueba"
         },
@@ -64,9 +64,9 @@ namespace Negocio.Pruebas.Hechos.Extensiones
     [Fact]
     public void AdjuntarComoJson()
     {
-      List<EntradaLog> coleccion = new List<EntradaLog>(1)
+      List<Bitacora> coleccion = new List<Bitacora>(1)
       {
-        new EntradaLog(){
+        new Bitacora(){
           Nombre = @"Pruebas",
           Descripcion = @"Descripcion de prueba"
         },
@@ -85,9 +85,9 @@ namespace Negocio.Pruebas.Hechos.Extensiones
     [Fact]
     public void AdjuntarExcel()
     {
-      List<EntradaLog> coleccion = new List<EntradaLog>(1)
+      List<Bitacora> coleccion = new List<Bitacora>(1)
       {
-        new EntradaLog(){
+        new Bitacora(){
           Nombre = @"Pruebas",
           Descripcion = @"Descripcion de prueba"
         },

@@ -11,7 +11,7 @@ namespace Api.Controllers
   /// de log
   /// </summary>
   [ApiController, Route("Api/[controller]")]
-  public class EntradasLogController : ControllerBase
+  public class BitacoraController : ControllerBase
   {
     /// <summary>
     /// Referencia de acceso al repositorio de datos
@@ -19,7 +19,7 @@ namespace Api.Controllers
     /// </summary>
     private ProveedorEntradaLog DatosEntradaLog { get; }
 
-    public EntradasLogController()
+    public BitacoraController()
     {
       DatosEntradaLog = new ProveedorEntradaLog();
     }
@@ -31,7 +31,7 @@ namespace Api.Controllers
     /// <param name="solicitud">Solicitud de pagina</param>
     /// <returns></returns>
     [HttpPost, Route(@"Paginado")]
-    public async Task<RespuestaColeccion<EntradaLog>> Obtener(SolicitudPagina solicitud)
+    public async Task<RespuestaColeccion<Bitacora>> Obtener(SolicitudPagina solicitud)
       => await DatosEntradaLog.Obtener(new Paginado(solicitud));
   }
 }

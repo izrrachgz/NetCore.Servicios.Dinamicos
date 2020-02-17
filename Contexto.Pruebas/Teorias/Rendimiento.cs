@@ -16,15 +16,15 @@ namespace Contexto.Pruebas.Teorias
   /// </summary>
   public class Rendimiento
   {
-    private EntradaLog Entrada { get; }
+    private Bitacora Entrada { get; }
 
     public Rendimiento()
     {
-      Entrada = new EntradaLog()
+      Entrada = new Bitacora()
       {
         Nombre = @"Death Note",
         Descripcion = @"6:40",
-        Tipo = EntradaLogTipo.Advertencia
+        Tipo = BitacoraTipo.Advertencia
       };
     }
 
@@ -40,8 +40,8 @@ namespace Contexto.Pruebas.Teorias
     [Theory, InlineData(1, 1000)]
     public async Task GuardarEntradasDeLog(short estimado = 1, int cantidad = 1000)
     {
-      ProveedorDeDatos<EntradaLog> servicio = new ProveedorDeDatos<EntradaLog>();
-      List<EntradaLog> entradas = Enumerable.Repeat(Entrada, cantidad).ToList();
+      ProveedorDeDatos<Bitacora> servicio = new ProveedorDeDatos<Bitacora>();
+      List<Bitacora> entradas = Enumerable.Repeat(Entrada, cantidad).ToList();
       Stopwatch temporizador = new Stopwatch();
       temporizador.Start();
       RespuestaColeccion<int> guardados = await servicio.Guardar(entradas);
@@ -67,11 +67,11 @@ namespace Contexto.Pruebas.Teorias
     [Theory, InlineData(1, 1000)]
     public async Task ObtenerEntradasDeLog(short estimado = 1, int cantidad = 1000)
     {
-      ProveedorDeDatos<EntradaLog> servicio = new ProveedorDeDatos<EntradaLog>();
+      ProveedorDeDatos<Bitacora> servicio = new ProveedorDeDatos<Bitacora>();
       Paginado paginado = new Paginado() { Elementos = cantidad };
       Stopwatch temporizador = new Stopwatch();
       temporizador.Start();
-      RespuestaColeccion<EntradaLog> entradas = await servicio.Obtener(paginado);
+      RespuestaColeccion<Bitacora> entradas = await servicio.Obtener(paginado);
       temporizador.Stop();
       Assert.True(entradas.Correcto && temporizador.Elapsed.TotalSeconds <= estimado);
       entradas.Coleccion.Clear();
@@ -90,7 +90,7 @@ namespace Contexto.Pruebas.Teorias
     [Theory, InlineData(1)]
     public async Task ObtenerEntradasDeLogPorIndiceValor(short estimado)
     {
-      ProveedorDeDatos<EntradaLog> servicio = new ProveedorDeDatos<EntradaLog>();
+      ProveedorDeDatos<Bitacora> servicio = new ProveedorDeDatos<Bitacora>();
       Stopwatch temporizador = new Stopwatch();
       temporizador.Start();
       RespuestaColeccion<IndiceValor> entradas = await servicio.Obtener("Nombre");
@@ -114,12 +114,12 @@ namespace Contexto.Pruebas.Teorias
     [Theory, InlineData(1)]
     public async Task ObtenerEntradasDeLogPorColumnas(short estimado, int cantidad = 1000)
     {
-      ProveedorDeDatos<EntradaLog> servicio = new ProveedorDeDatos<EntradaLog>();
+      ProveedorDeDatos<Bitacora> servicio = new ProveedorDeDatos<Bitacora>();
       Paginado paginado = new Paginado() { Elementos = cantidad };
       string[] columnas = { "Id", "Nombre", "Descripcion" };
       Stopwatch temporizador = new Stopwatch();
       temporizador.Start();
-      RespuestaColeccion<EntradaLog> coleccion = await servicio.Obtener(columnas, paginado);
+      RespuestaColeccion<Bitacora> coleccion = await servicio.Obtener(columnas, paginado);
       temporizador.Stop();
       Assert.True(coleccion.Correcto && temporizador.Elapsed.TotalSeconds <= estimado);
       coleccion.Coleccion.Clear();

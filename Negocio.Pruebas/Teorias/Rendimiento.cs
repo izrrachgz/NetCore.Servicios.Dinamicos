@@ -17,15 +17,15 @@ namespace Negocio.Pruebas.Teorias
   /// </summary>
   public class Rendimiento
   {
-    private EntradaLog Modelo { get; }
+    private Bitacora Modelo { get; }
 
     public Rendimiento()
     {
-      Modelo = new EntradaLog()
+      Modelo = new Bitacora()
       {
         Nombre = @"Death Note",
         Descripcion = @"6:40",
-        Tipo = EntradaLogTipo.Advertencia,
+        Tipo = BitacoraTipo.Advertencia,
         Creado = DateTime.Now,
         Modificado = DateTime.Now
       };
@@ -43,7 +43,7 @@ namespace Negocio.Pruebas.Teorias
     public void GuardarListaEnExcel(short estimado = 1, int cantidad = 1000)
     {
       Stopwatch temporizador = new Stopwatch();
-      List<EntradaLog> lista = Enumerable.Repeat(Modelo, cantidad).ToList();
+      List<Bitacora> lista = Enumerable.Repeat(Modelo, cantidad).ToList();
       temporizador.Start();
       RespuestaModelo<SpreadsheetDocument> documento = lista.DocumentoExcel(new ConfiguracionReporteExcel()
       {

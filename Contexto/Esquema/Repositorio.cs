@@ -27,12 +27,12 @@ namespace Contexto.Esquema
     /// <summary>
     /// Coleccion de entradas de log
     /// </summary>
-    public DbSet<EntradaLog> EntradasDeLog { get; set; }
+    public DbSet<Bitacora> Bitacora { get; set; }
 
     /// <summary>
     /// Coleccion de detalles asociado a las entradas de log
     /// </summary>
-    public DbSet<EntradaLogDetalle> DetallesDeEntradaLog { get; set; }
+    public DbSet<BitacoraDetalle> BitacoraDetalle { get; set; }
 
     //Agrega tus colecciones aquí
 
@@ -56,7 +56,7 @@ namespace Contexto.Esquema
       base.OnModelCreating(modelBuilder);
       //Registra las configuraciones de tus entidades aquí
 
-      EntradaLogDetalleConfiguracion.Registrar(modelBuilder);
+      EsquemaBitacoraDetalle.Registrar(modelBuilder);
     }
 
     #endregion

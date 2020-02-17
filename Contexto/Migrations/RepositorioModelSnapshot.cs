@@ -19,7 +19,7 @@ namespace Contexto.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Contexto.Entidades.EntradaLog", b =>
+            modelBuilder.Entity("Contexto.Entidades.Bitacora", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -42,10 +42,10 @@ namespace Contexto.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EntradaLog");
+                    b.ToTable("Bitacora");
                 });
 
-            modelBuilder.Entity("Contexto.Entidades.EntradaLogDetalle", b =>
+            modelBuilder.Entity("Contexto.Entidades.BitacoraDetalle", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -55,7 +55,7 @@ namespace Contexto.Migrations
 
                     b.Property<DateTime?>("Eliminado");
 
-                    b.Property<int>("IdEntradaLog");
+                    b.Property<int>("IdBitacora");
 
                     b.Property<DateTime>("Modificado");
 
@@ -64,16 +64,16 @@ namespace Contexto.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IdEntradaLog");
+                    b.HasIndex("IdBitacora");
 
-                    b.ToTable("EntradaLogDetalle");
+                    b.ToTable("BitacoraDetalle");
                 });
 
-            modelBuilder.Entity("Contexto.Entidades.EntradaLogDetalle", b =>
+            modelBuilder.Entity("Contexto.Entidades.BitacoraDetalle", b =>
                 {
-                    b.HasOne("Contexto.Entidades.EntradaLog", "EntradaLog")
+                    b.HasOne("Contexto.Entidades.Bitacora", "Bitacora")
                         .WithMany()
-                        .HasForeignKey("IdEntradaLog")
+                        .HasForeignKey("IdBitacora")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

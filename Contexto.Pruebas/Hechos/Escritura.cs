@@ -12,15 +12,15 @@ namespace Contexto.Pruebas.Hechos
   /// </summary>
   public class Escritura
   {
-    public EntradaLog Entrada { get; }
+    public Bitacora Entrada { get; }
 
     public Escritura()
     {
-      Entrada = new EntradaLog()
+      Entrada = new Bitacora()
       {
         Nombre = @"Death Note",
         Descripcion = @"6:40",
-        Tipo = EntradaLogTipo.Advertencia
+        Tipo = BitacoraTipo.Advertencia
       };
     }
 
@@ -33,7 +33,7 @@ namespace Contexto.Pruebas.Hechos
     [Fact]
     public async Task GuardarEntrada()
     {
-      ProveedorDeDatos<EntradaLog> servicio = new ProveedorDeDatos<EntradaLog>();
+      ProveedorDeDatos<Bitacora> servicio = new ProveedorDeDatos<Bitacora>();
       RespuestaBasica guardado = await servicio.Guardar(Entrada);
       Assert.True(guardado.Correcto);
     }

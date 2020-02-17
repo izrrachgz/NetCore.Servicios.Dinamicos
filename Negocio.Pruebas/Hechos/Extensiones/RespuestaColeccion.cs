@@ -20,15 +20,15 @@ namespace Negocio.Pruebas.Hechos.Extensiones
     [Fact]
     public void ReporteExcel()
     {
-      List<EntradaLog> coleccion = new List<EntradaLog>(1)
+      List<Bitacora> coleccion = new List<Bitacora>(1)
       {
-        new EntradaLog()
+        new Bitacora()
         {
           Nombre = @"Prueba",
           Descripcion = @"Descripcion de prueba",
         }
       };
-      RespuestaColeccion<EntradaLog> respuesta = new RespuestaColeccion<EntradaLog>(coleccion);
+      RespuestaColeccion<Bitacora> respuesta = new RespuestaColeccion<Bitacora>(coleccion);
       RespuestaModelo<SpreadsheetDocument> documento = respuesta.ReporteExcel();
       Assert.True(documento.Correcto);
     }

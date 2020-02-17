@@ -7,7 +7,7 @@ namespace Contexto.Esquema.Configuraciones
   /// Provee un metodo para registrar la configuracion
   /// de la entidad
   /// </summary>
-  internal static class EntradaLogDetalleConfiguracion
+  internal static class EsquemaBitacoraDetalle
   {
     /// <summary>
     /// Permite registrar la configuracion
@@ -16,10 +16,10 @@ namespace Contexto.Esquema.Configuraciones
     /// <param name="model"></param>
     internal static void Registrar(ModelBuilder model)
     {
-      model.Entity<EntradaLogDetalle>()
-        .HasOne(e => e.EntradaLog)
+      model.Entity<BitacoraDetalle>()
+        .HasOne(e => e.Bitacora)
         .WithMany()
-        .HasForeignKey(e => e.IdEntradaLog)
+        .HasForeignKey(e => e.IdBitacora)
         .OnDelete(DeleteBehavior.Cascade);
     }
   }

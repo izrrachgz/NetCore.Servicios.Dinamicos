@@ -9,8 +9,8 @@ namespace Contexto.Entidades
   /// <summary>
   /// Representa una entrada de log
   /// </summary>
-  [Table(@"EntradaLog")]
-  public class EntradaLog : EntidadBase
+  [Table(@"Bitacora")]
+  public class Bitacora : EntidadBase
   {
     /// <summary>
     /// Nombre de la entrada
@@ -27,7 +27,7 @@ namespace Contexto.Entidades
     /// <summary>
     /// Tipo de entrada
     /// </summary>
-    [Required, DefaultValue(EntradaLogTipo.Informacion)]
-    public EntradaLogTipo Tipo { get; set; }
+    [Required, DefaultValue(BitacoraTipo.Informacion)]
+    public BitacoraTipo Tipo { get; set; }
   }
 }

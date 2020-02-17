@@ -9,21 +9,21 @@ namespace Contexto.Entidades
   /// Representa los detalles de una entrada
   /// de log
   /// </summary>
-  [Table(@"EntradaLogDetalle")]
-  public class EntradaLogDetalle : EntidadBase
+  [Table(@"BitacoraDetalle")]
+  public class BitacoraDetalle : EntidadBase
   {
     /// <summary>
     /// Llave foranea que hace referencia
     /// a la entrada de log
     /// </summary>
-    [Required, ForeignKey(@"EntradaLog")]
-    public int IdEntradaLog { get; set; }
+    [Required, ForeignKey(@"Bitacora")]
+    public int IdBitacora { get; set; }
 
     /// <summary>
     /// Relacion hacia la entrada de log
     /// </summary>
     [JsonIgnore]
-    public EntradaLog EntradaLog { get; set; }
+    public Bitacora Bitacora { get; set; }
 
     /// <summary>
     /// Valor de detalle

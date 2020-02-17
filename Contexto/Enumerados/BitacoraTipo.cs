@@ -2,9 +2,9 @@
 {
   /// <summary>
   /// Tipos de entradas admitidas en
-  /// el log
+  /// el la bitacora
   /// </summary>
-  public enum EntradaLogTipo
+  public enum BitacoraTipo
   {
     /// <summary>
     /// Utilizada cuando la entrada

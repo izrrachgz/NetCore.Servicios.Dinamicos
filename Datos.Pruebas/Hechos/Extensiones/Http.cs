@@ -93,8 +93,8 @@ namespace Datos.Pruebas.Hechos.Extensiones
     public async void ObtenerDeContenidoJson()
     {
       HttpResponseMessage http = new HttpResponseMessage(HttpStatusCode.OK);
-      http.Content = new StringContent(JsonConvert.SerializeObject(new EntradaLog()));
-      RespuestaModelo<EntradaLog> respuesta = await http.ObtenerDeContenidoJson<EntradaLog>();
+      http.Content = new StringContent(JsonConvert.SerializeObject(new Bitacora()));
+      RespuestaModelo<Bitacora> respuesta = await http.ObtenerDeContenidoJson<Bitacora>();
       Assert.True(respuesta.Correcto);
     }
   }
