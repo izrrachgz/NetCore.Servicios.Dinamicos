@@ -5,12 +5,12 @@
       "Valor": false
     },
     {
-      "Clave": "UrlObtenerEntradasLogPorPagina",
+      "Clave": "UrlObtenerBitacoraPorPagina",
       "Valor": "https://localhost:44330/"
     },
     {
-      "Clave": "MetodoObtenerEntradasLogPorPagina",
-      "Valor": "Api/EntradasLog/Paginado"
+      "Clave": "MetodoObtenerBitacoraPorPagina",
+      "Valor": "Api/Bitacora/Paginado"
     }
   ]
 }

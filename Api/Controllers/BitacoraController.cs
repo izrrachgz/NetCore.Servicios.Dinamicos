@@ -17,11 +17,11 @@ namespace Api.Controllers
     /// Referencia de acceso al repositorio de datos
     /// de la entidad EntradaLog
     /// </summary>
-    private ProveedorEntradaLog DatosEntradaLog { get; }
+    private ProveedorBitacora ProveedorBitacora { get; }
 
     public BitacoraController()
     {
-      DatosEntradaLog = new ProveedorEntradaLog();
+      ProveedorBitacora = new ProveedorBitacora();
     }
 
     /// <summary>
@@ -32,6 +32,6 @@ namespace Api.Controllers
     /// <returns></returns>
     [HttpPost, Route(@"Paginado")]
     public async Task<RespuestaColeccion<Bitacora>> Obtener(SolicitudPagina solicitud)
-      => await DatosEntradaLog.Obtener(new Paginado(solicitud));
+      => await ProveedorBitacora.Obtener(new Paginado(solicitud));
   }
 }

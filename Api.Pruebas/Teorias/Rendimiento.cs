@@ -36,11 +36,11 @@ namespace Api.Pruebas.Teorias
     /// <param name="ciclos">Cantidad de veces que se debe realizar la prueba</param>
     /// <param name="hilos">Cantidad de instancias que deben realizar la prueba</param>
     [Theory, InlineData(10, 1, 1)]
-    public async Task ObtenerEntradasDeLogPorPagina(short estimado, int ciclos, byte hilos)
+    public async Task ObtenerBitacoraPorPagina(short estimado, int ciclos, byte hilos)
     {
       SolicitudHttp http = new SolicitudHttp();
-      string url = Config.Obtener<string>(@"UrlObtenerEntradasLogPorPagina");
-      string metodo = Config.Obtener<string>(@"MetodoObtenerEntradasLogPorPagina");
+      string url = Config.Obtener<string>(@"UrlObtenerBitacoraPorPagina");
+      string metodo = Config.Obtener<string>(@"MetodoObtenerBitacoraPorPagina");
       string json = JsonConvert.SerializeObject(new SolicitudPagina());
       List<Task<HttpResponseMessage>> tareas = new List<Task<HttpResponseMessage>>(1)
       {
