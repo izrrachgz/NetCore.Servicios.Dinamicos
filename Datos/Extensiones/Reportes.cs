@@ -2,7 +2,7 @@
 using System.Linq;
 using DocumentFormat.OpenXml.Packaging;
 
-namespace Negocio.Extensiones
+namespace Datos.Extensiones
 {
   /// <summary>
   /// Provee metodos de extensión para reportes del tipo excel

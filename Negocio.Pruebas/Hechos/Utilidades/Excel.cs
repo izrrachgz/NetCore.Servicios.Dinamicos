@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Negocio.Utilidades;
+using Datos.Utilidades;
 using Xunit;
 
 namespace Negocio.Pruebas.Hechos.Utilidades

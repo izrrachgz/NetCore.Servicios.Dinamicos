@@ -12,15 +12,20 @@
 
   <ItemGroup>
     <None Remove="ConfiguracionDatos.json" />
+    <None Remove="Plantillas\Reportes\RespuestaColeccion.xlsx" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="ConfiguracionDatos.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Plantillas\Reportes\RespuestaColeccion.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.10.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.6">

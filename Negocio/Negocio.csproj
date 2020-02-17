@@ -46,6 +46,10 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Modelos\" />
+  </ItemGroup>
+
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="copy &quot;$(SolutionDir)\Datos\ConfiguracionDatos.json&quot; &quot;$(TargetDir)\ConfiguracionDatos.json&quot;&#xD;&#xA;echo &quot;Copiado archivo de configuracion de Datos al proyecto de Negocio&quot;&#xD;&#xA;copy &quot;$(SolutionDir)\Contexto\ConfiguracionContexto.json&quot; &quot;$(TargetDir)\ConfiguracionContexto.json&quot;&#xD;&#xA;echo &quot;Copiado archivo de configuracion de Contexto al proyecto de Negocio&quot;" />
   </Target>

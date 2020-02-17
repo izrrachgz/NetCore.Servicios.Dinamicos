@@ -5,8 +5,7 @@ using System.Linq;
 using Contexto.Entidades;
 using Contexto.Enumerados;
 using DocumentFormat.OpenXml.Packaging;
-using Negocio.Extensiones;
-using Negocio.Modelos;
+using Datos.Extensiones;
 using Datos.Modelos;
 using Xunit;
 

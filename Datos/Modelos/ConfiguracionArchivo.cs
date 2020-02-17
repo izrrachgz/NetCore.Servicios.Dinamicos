@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace Negocio.Modelos
+namespace Datos.Modelos
 {
   /// <summary>
   /// Provee un modelo de datos para

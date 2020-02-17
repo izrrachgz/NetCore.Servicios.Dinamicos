@@ -1,8 +1,7 @@
 ﻿using DocumentFormat.OpenXml.Packaging;
-using Negocio.Modelos;
 using Datos.Modelos;
 
-namespace Negocio.Extensiones
+namespace Datos.Extensiones
 {
   /// <summary>
   /// Provee metodos de extensión para respuestas del tipo coleccion

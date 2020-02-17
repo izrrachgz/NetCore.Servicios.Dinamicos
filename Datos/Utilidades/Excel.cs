@@ -8,13 +8,12 @@ using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.ExtendedProperties;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
-using Negocio.Modelos;
 using Newtonsoft.Json;
 using Datos.Extensiones;
 using Datos.Mensajes;
 using Datos.Modelos;
 
-namespace Negocio.Utilidades
+namespace Datos.Utilidades
 {
   public static class Excel
   {

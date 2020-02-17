@@ -2,7 +2,7 @@
 using System.Net;
 using System.Net.Http;
 using Contexto.Entidades;
-using Negocio.Extensiones;
+using Datos.Extensiones;
 using Datos.Modelos;
 using Xunit;
 
