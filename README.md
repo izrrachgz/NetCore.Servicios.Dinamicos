@@ -1,13 +1,13 @@
 # Proveedores de Datos Dinamicos
-	Permite crear proveedores de datos genéricos de manera dinámica
-	de las entidades registradas
+	Permite crear proveedores de datos de manera dinámica
+	de las entidades asociadas a un repositorio
 
 ### Agrega tu entidad dentro del nombre de espacio de "Entidades"
 	
 	¡Deberá extender la clase EntidadBase!
 
 ```sh
-namespace Servicio.Entidades
+namespace Contexto.Entidades
 {
   [Table("Usuario")]
   public class Usuario : EntidadBase
@@ -36,7 +36,7 @@ namespace Servicio.Entidades
 ### Agrega tu referencia dentro del nombre de espacio "Contexto"
 
 ```sh
-namespace Datos.Contexto
+namespace Contexto.Esquema
 {
   internal class Repositorio : DbContext
   {
@@ -74,6 +74,8 @@ namespace Datos.Contexto
     {
       base.OnModelCreating(modelBuilder);
       //Agrega tus configuraciones aquí
+      
+      EsquemaUsuario.Registrar(modelBuilder);
     }
 
     #endregion
