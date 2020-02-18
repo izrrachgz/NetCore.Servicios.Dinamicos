@@ -3,7 +3,7 @@ using System.Linq;
 using Utilidades.Herramientas;
 using Xunit;
 
-namespace Negocio.Pruebas.Hechos.Utilidades
+namespace Utilidades.Pruebas.Hechos.Utilidades
 {
   /// <summary>
   /// Pruebas positivas de la utilidad Excel

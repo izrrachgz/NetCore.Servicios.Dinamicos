@@ -2,7 +2,7 @@
 using Utilidades.Extensiones;
 using Xunit;
 
-namespace Negocio.Pruebas.Hechos.Extensiones
+namespace Utilidades.Pruebas.Hechos.Extensiones
 {
   /// <summary>
   /// Pruebas positivas de extensiones de reportes
