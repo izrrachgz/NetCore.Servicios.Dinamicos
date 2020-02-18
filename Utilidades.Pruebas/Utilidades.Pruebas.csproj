@@ -43,6 +43,12 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Plantillas\Reportes\RespuestaColeccion.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
   <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

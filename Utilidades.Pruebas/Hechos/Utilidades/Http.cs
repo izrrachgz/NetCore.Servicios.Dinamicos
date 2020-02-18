@@ -86,7 +86,7 @@ namespace Utilidades.Pruebas.Hechos.Utilidades
     public async Task PostStream()
     {
       SolicitudHttp http = new SolicitudHttp();
-      Stream contenido = File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + @"ConfiguracionNegocio.json");
+      Stream contenido = File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + @"ConfiguracionUtilidades.json");
       HttpResponseMessage mensaje = await http.Post(UrlBaseBin, MetodoBin, contenido);
       Assert.True(mensaje.IsSuccessStatusCode);
     }
@@ -145,7 +145,7 @@ namespace Utilidades.Pruebas.Hechos.Utilidades
     public async Task PutStream()
     {
       SolicitudHttp http = new SolicitudHttp();
-      Stream contenido = File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + @"ConfiguracionNegocio.json");
+      Stream contenido = File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + @"ConfiguracionUtilidades.json");
       HttpResponseMessage mensaje = await http.Put(UrlBaseBin, MetodoBin, contenido);
       Assert.True(mensaje.IsSuccessStatusCode);
     }
