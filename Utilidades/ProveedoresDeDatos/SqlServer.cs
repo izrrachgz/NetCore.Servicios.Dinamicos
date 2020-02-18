@@ -514,7 +514,7 @@ namespace Utilidades.ProveedoresDeDatos
                   {
                     lista.Add(new IndiceValor
                     {
-                      Clave = resultado.GetInt32(0),
+                      Indice = resultado.GetInt32(0),
                       Valor = resultado.GetString(1)
                     });
                   }
