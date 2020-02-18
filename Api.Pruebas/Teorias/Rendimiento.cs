@@ -2,10 +2,10 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Api.Pruebas.Configuraciones;
-using Datos.Configuraciones;
-using Datos.Extensiones;
-using Datos.Utilidades;
-using Datos.Modelos;
+using Utilidades.Configuraciones;
+using Utilidades.Extensiones;
+using Utilidades.Herramientas;
+using Utilidades.Modelos;
 using Newtonsoft.Json;
 using Xunit;
 

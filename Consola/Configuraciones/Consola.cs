@@ -1,4 +1,4 @@
-﻿using Datos.Configuraciones;
+﻿using Utilidades.Configuraciones;
 
 namespace Consola.Configuraciones
 {

@@ -1,0 +1,52 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <Authors>Israel Chavez</Authors>
+    <Company>Izrra.Ch</Company>
+    <Description>Permite efectuar pruebas de manera dinamica sobre la funcionalidad de los proveedores de datos</Description>
+    <Copyright>Izrra.Ch@2019</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="ConfiguracionUtilidadesPruebas.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="ConfiguracionUtilidadesPruebas.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.10.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.6" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.console" Version="2.4.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Contexto">
+      <HintPath>..\Contexto\bin\Debug\netcoreapp2.2\Contexto.dll</HintPath>
+    </Reference>
+    <Reference Include="Utilidades">
+      <HintPath>..\Utilidades\bin\Debug\netcoreapp2.2\Utilidades.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="copy &quot;$(SolutionDir)\Utilidades\ConfiguracionUtilidades.json&quot; &quot;$(TargetDir)\ConfiguracionUtilidades.json&quot;&#xD;&#xA;echo &quot;Copiado archivo de configuracion de Utilidadess al proyecto de Utilidades.Pruebas&quot;" />
+  </Target>
+
+</Project>

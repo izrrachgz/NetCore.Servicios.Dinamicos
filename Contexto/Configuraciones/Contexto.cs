@@ -1,5 +1,5 @@
-﻿using Datos.Configuraciones;
-using Datos.Extensiones;
+﻿using Utilidades.Configuraciones;
+using Utilidades.Extensiones;
 
 namespace Contexto.Configuraciones
 {

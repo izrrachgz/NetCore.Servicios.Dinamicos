@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Datos.Entidades;
+using Utilidades.Entidades;
 using Newtonsoft.Json;
 
 namespace Contexto.Entidades

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Consola.Configuraciones;
-using Datos.Configuraciones;
+using Utilidades.Configuraciones;
 
 namespace Consola
 {

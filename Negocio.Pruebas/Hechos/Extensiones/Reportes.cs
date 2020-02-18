@@ -1,5 +1,5 @@
 ﻿using DocumentFormat.OpenXml.Packaging;
-using Datos.Extensiones;
+using Utilidades.Extensiones;
 using Xunit;
 
 namespace Negocio.Pruebas.Hechos.Extensiones

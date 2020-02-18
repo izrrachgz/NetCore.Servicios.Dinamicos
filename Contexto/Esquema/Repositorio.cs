@@ -1,4 +1,4 @@
-﻿using Datos.Configuraciones;
+﻿using Utilidades.Configuraciones;
 using Contexto.Configuraciones;
 using Contexto.Entidades;
 using Contexto.Esquema.Configuraciones;

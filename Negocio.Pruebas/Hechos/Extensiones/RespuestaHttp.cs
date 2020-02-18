@@ -2,8 +2,8 @@
 using System.Net;
 using System.Net.Http;
 using Contexto.Entidades;
-using Datos.Extensiones;
-using Datos.Modelos;
+using Utilidades.Extensiones;
+using Utilidades.Modelos;
 using Xunit;
 
 namespace Negocio.Pruebas.Hechos.Extensiones

@@ -40,20 +40,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Api\Api.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Datos">
-      <HintPath>..\Datos\bin\Debug\netcoreapp2.2\Datos.dll</HintPath>
-    </Reference>
     <Reference Include="Negocio">
       <HintPath>..\Negocio\bin\Debug\netcoreapp2.2\Negocio.dll</HintPath>
+    </Reference>
+    <Reference Include="Utilidades">
+      <HintPath>..\Utilidades\bin\Debug\netcoreapp2.2\Utilidades.dll</HintPath>
     </Reference>
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy &quot;$(SolutionDir)\Datos\ConfiguracionDatos.json&quot; &quot;$(TargetDir)\ConfiguracionDatos.json&quot;&#xD;&#xA;echo &quot;Copiado archivo de configuracion de Datos al proyecto de Api.Pruebas&quot;&#xD;&#xA;copy &quot;$(SolutionDir)\Contexto\ConfiguracionContexto.json&quot; &quot;$(TargetDir)\ConfiguracionContexto.json&quot;&#xD;&#xA;echo &quot;Copiado archivo de configuracion de Contexto al proyecto de Api.Pruebas&quot;&#xD;&#xA;copy &quot;$(SolutionDir)\Negocio\ConfiguracionNegocio.json&quot; &quot;$(TargetDir)\ConfiguracionNegocio.json&quot;&#xD;&#xA;echo &quot;Copiado archivo de configuracion de Negocio al proyecto de Api.Pruebas&quot;&#xD;&#xA;copy &quot;$(SolutionDir)\Api\ConfiguracionApi.json&quot; &quot;$(TargetDir)\ConfiguracionApi.json&quot;&#xD;&#xA;echo &quot;Copiado archivo de configuracion de Api al proyecto de Api.Pruebas&quot;" />
+    <Exec Command="copy &quot;$(SolutionDir)\Utilidades\ConfiguracionUtilidades.json&quot; &quot;$(TargetDir)\ConfiguracionUtilidades.json&quot;&#xD;&#xA;echo &quot;Copiado archivo de configuracion de Utilidades al proyecto de Api.Pruebas&quot;&#xD;&#xA;copy &quot;$(SolutionDir)\Contexto\ConfiguracionContexto.json&quot; &quot;$(TargetDir)\ConfiguracionContexto.json&quot;&#xD;&#xA;echo &quot;Copiado archivo de configuracion de Contexto al proyecto de Api.Pruebas&quot;&#xD;&#xA;copy &quot;$(SolutionDir)\Negocio\ConfiguracionNegocio.json&quot; &quot;$(TargetDir)\ConfiguracionNegocio.json&quot;&#xD;&#xA;echo &quot;Copiado archivo de configuracion de Negocio al proyecto de Api.Pruebas&quot;&#xD;&#xA;copy &quot;$(SolutionDir)\Api\ConfiguracionApi.json&quot; &quot;$(TargetDir)\ConfiguracionApi.json&quot;&#xD;&#xA;echo &quot;Copiado archivo de configuracion de Api al proyecto de Api.Pruebas&quot;" />
   </Target>
 
 </Project>

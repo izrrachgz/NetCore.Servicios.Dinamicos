@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Contexto.Entidades;
 using Contexto.Enumerados;
-using Datos.ProveedoresDeDatos;
-using Datos.Modelos;
+using Utilidades.ProveedoresDeDatos;
+using Utilidades.Modelos;
 using Xunit;
 
 namespace Contexto.Pruebas.Hechos

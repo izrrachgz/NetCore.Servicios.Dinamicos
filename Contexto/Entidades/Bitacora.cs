@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Contexto.Enumerados;
-using Datos.Entidades;
+using Utilidades.Entidades;
 
 namespace Contexto.Entidades
 {

@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Contexto.Entidades;
 using Contexto.Enumerados;
-using Datos.Modelos;
-using Datos.ProveedoresDeDatos;
+using Utilidades.Modelos;
+using Utilidades.ProveedoresDeDatos;
 using Xunit;
 
 namespace Contexto.Pruebas.Teorias

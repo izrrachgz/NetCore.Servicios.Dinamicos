@@ -5,8 +5,8 @@ using System.Linq;
 using Contexto.Entidades;
 using Contexto.Enumerados;
 using DocumentFormat.OpenXml.Packaging;
-using Datos.Extensiones;
-using Datos.Modelos;
+using Utilidades.Extensiones;
+using Utilidades.Modelos;
 using Xunit;
 
 namespace Negocio.Pruebas.Teorias

@@ -1,6 +1,6 @@
 ﻿using Contexto.Esquema;
-using Datos.Contratos;
-using Datos.ProveedoresDeDatos;
+using Utilidades.Contratos;
+using Utilidades.ProveedoresDeDatos;
 
 namespace Contexto.ProveedoresDeDatos
 {

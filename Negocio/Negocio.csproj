@@ -38,11 +38,11 @@
     <Reference Include="Contexto">
       <HintPath>..\Contexto\bin\Debug\netcoreapp2.2\Contexto.dll</HintPath>
     </Reference>
-    <Reference Include="Datos">
-      <HintPath>..\Datos\bin\Debug\netcoreapp2.2\Datos.dll</HintPath>
-    </Reference>
     <Reference Include="System.Data.SqlClient">
       <HintPath>..\..\..\Users\Israel\.nuget\packages\system.data.sqlclient\4.6.1\ref\netcoreapp2.1\System.Data.SqlClient.dll</HintPath>
+    </Reference>
+    <Reference Include="Utilidades">
+      <HintPath>..\Utilidades\bin\Debug\netcoreapp2.2\Utilidades.dll</HintPath>
     </Reference>
   </ItemGroup>
 
@@ -51,7 +51,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy &quot;$(SolutionDir)\Datos\ConfiguracionDatos.json&quot; &quot;$(TargetDir)\ConfiguracionDatos.json&quot;&#xD;&#xA;echo &quot;Copiado archivo de configuracion de Datos al proyecto de Negocio&quot;&#xD;&#xA;copy &quot;$(SolutionDir)\Contexto\ConfiguracionContexto.json&quot; &quot;$(TargetDir)\ConfiguracionContexto.json&quot;&#xD;&#xA;echo &quot;Copiado archivo de configuracion de Contexto al proyecto de Negocio&quot;" />
+    <Exec Command="copy &quot;$(SolutionDir)\Utilidades\ConfiguracionUtilidades.json&quot; &quot;$(TargetDir)\ConfiguracionUtilidades.json&quot;&#xD;&#xA;echo &quot;Copiado archivo de configuracion de Utilidades al proyecto de Negocio&quot;&#xD;&#xA;copy &quot;$(SolutionDir)\Contexto\ConfiguracionContexto.json&quot; &quot;$(TargetDir)\ConfiguracionContexto.json&quot;&#xD;&#xA;echo &quot;Copiado archivo de configuracion de Contexto al proyecto de Negocio&quot;" />
   </Target>
 
 </Project>

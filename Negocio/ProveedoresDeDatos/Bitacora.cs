@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Contexto.Entidades;
 using Contexto.ProveedoresDeDatos;
-using Datos.Modelos;
+using Utilidades.Modelos;
 
 namespace Negocio.ProveedoresDeDatos
 {
