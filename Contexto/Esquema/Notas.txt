@@ -1,0 +1,21 @@
+﻿||				CONFIGURACIONES				 ||
+Dentro de las configuraciones deberan ir
+todas las configuraciones de entidad denotadas
+a traves de fluent api de EFCore.
+
+Deberan definir el comportamiento y/o relacion
+que no pueda indicarse a travez de anotaciones
+de datos.
+
+||				FUNCIONES					 ||
+Dentro de las funciones deberan ir las todas
+las definiciones de funciones realizados en
+el servidor de datos SQL, para tener unido
+el control de cambios.
+
+
+||				PROCEDIMIENTOS				 ||
+Dentro de los procedimientos deberan ir todas
+las definiciones de procedimientos realizados en
+el servidor de datos SQL, para tener unido
+el control de cambios.
