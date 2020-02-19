@@ -14,10 +14,10 @@ namespace Contexto.Esquema.Configuraciones
     /// Permite registrar la configuracion
     /// de esquema asociado a la entidad
     /// </summary>
-    /// <param name="model"></param>
-    internal static void Registrar(ModelBuilder model)
+    /// <param name="constructor">Constructor de esquema</param>
+    internal static void Registrar(ModelBuilder constructor)
     {
-      model.Entity<BitacoraDetalle>()
+      constructor.Entity<BitacoraDetalle>()
         .AgregarIndicesBasicos()
         .HasOne(e => e.Bitacora)
         .WithMany()
