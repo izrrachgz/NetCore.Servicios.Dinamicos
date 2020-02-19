@@ -1,4 +1,5 @@
 ﻿using Contexto.Entidades;
+using Utilidades.Extensiones;
 using Microsoft.EntityFrameworkCore;
 
 namespace Contexto.Esquema.Configuraciones
@@ -17,7 +18,7 @@ namespace Contexto.Esquema.Configuraciones
     internal static void Registrar(ModelBuilder model)
     {
       model.Entity<Bitacora>()
-        .HasIndex(e => new { e.Creado, e.Modificado });
+        .AgregarIndicesBasicos();
     }
   }
 }

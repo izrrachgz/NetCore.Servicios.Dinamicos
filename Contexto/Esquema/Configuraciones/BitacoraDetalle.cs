@@ -1,5 +1,6 @@
 ﻿using Contexto.Entidades;
 using Microsoft.EntityFrameworkCore;
+using Utilidades.Extensiones;
 
 namespace Contexto.Esquema.Configuraciones
 {
@@ -17,9 +18,7 @@ namespace Contexto.Esquema.Configuraciones
     internal static void Registrar(ModelBuilder model)
     {
       model.Entity<BitacoraDetalle>()
-        .HasIndex(e => new { e.Creado, e.Modificado });
-
-      model.Entity<BitacoraDetalle>()
+        .AgregarIndicesBasicos()
         .HasOne(e => e.Bitacora)
         .WithMany()
         .HasForeignKey(e => e.IdBitacora)
