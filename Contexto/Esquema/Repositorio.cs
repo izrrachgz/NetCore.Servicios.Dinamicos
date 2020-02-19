@@ -56,6 +56,7 @@ namespace Contexto.Esquema
       base.OnModelCreating(modelBuilder);
       //Registra las configuraciones de tus entidades aquí
 
+      EsquemaBitacora.Registrar(modelBuilder);
       EsquemaBitacoraDetalle.Registrar(modelBuilder);
     }
 

@@ -50,9 +50,19 @@ namespace Contexto.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Bitacora_Creado_Modificado",
+                table: "Bitacora",
+                columns: new[] { "Creado", "Modificado" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_BitacoraDetalle_IdBitacora",
                 table: "BitacoraDetalle",
                 column: "IdBitacora");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BitacoraDetalle_Creado_Modificado",
+                table: "BitacoraDetalle",
+                columns: new[] { "Creado", "Modificado" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

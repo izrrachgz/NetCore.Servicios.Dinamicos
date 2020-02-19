@@ -42,6 +42,8 @@ namespace Contexto.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Creado", "Modificado");
+
                     b.ToTable("Bitacora");
                 });
 
@@ -65,6 +67,8 @@ namespace Contexto.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("IdBitacora");
+
+                    b.HasIndex("Creado", "Modificado");
 
                     b.ToTable("BitacoraDetalle");
                 });

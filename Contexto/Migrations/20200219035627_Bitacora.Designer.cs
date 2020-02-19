@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Contexto.Migrations
 {
     [DbContext(typeof(Repositorio))]
-    [Migration("20200217002321_Bitacora")]
+    [Migration("20200219035627_Bitacora")]
     partial class Bitacora
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,6 +44,8 @@ namespace Contexto.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Creado", "Modificado");
+
                     b.ToTable("Bitacora");
                 });
 
@@ -67,6 +69,8 @@ namespace Contexto.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("IdBitacora");
+
+                    b.HasIndex("Creado", "Modificado");
 
                     b.ToTable("BitacoraDetalle");
                 });
