@@ -9,7 +9,7 @@
    */
   this.Post = function (urlBase, metodo, parametros) {
     //Si los parametros no son validos se omite la solicitud.
-    if (ObjetoInvalido(urlBase) || ObjetoInvalido(metodo) || ObjetoInvalido(parametros)) {
+    if (NoEsValido(urlBase) || NoEsValido(metodo) || NoEsValido(parametros)) {
       return undefined;
     }
     return fetch(urlBase + metodo,
@@ -31,10 +31,10 @@
    */
   this.Get = function (urlBase, metodo, parametros) {
     //Si los parametros no son validos se omite la solicitud
-    if (ObjetoInvalido(urlBase) || ObjetoInvalido(metodo)) {
+    if (NoEsValido(urlBase) || NoEsValido(metodo)) {
       return undefined;
     }
-    if (!ObjetoInvalido(parametros)) {
+    if (!NoEsValido(parametros)) {
       parametros = parametros.substr(0, 1) === "?" ? parametros : "?" + parametros;
     }
     return fetch(urlBase + metodo + parametros,
@@ -52,10 +52,10 @@
    */
   this.Delete = function (urlBase, metodo, parametros) {
     //Si los parametros no son validos se omite la solicitud
-    if (ObjetoInvalido(urlBase) || ObjetoInvalido(metodo)) {
+    if (NoEsValido(urlBase) || NoEsValido(metodo)) {
       return undefined;
     }
-    if (!ObjetoInvalido(parametros)) {
+    if (!NoEsValido(parametros)) {
       parametros = parametros.substr(0, 1) === "?" ? parametros : "?" + parametros;
     }
     return fetch(urlBase + metodo + parametros,
