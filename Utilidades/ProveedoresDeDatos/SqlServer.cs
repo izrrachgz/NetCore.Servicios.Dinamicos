@@ -493,7 +493,7 @@ namespace Utilidades.ProveedoresDeDatos
       RespuestaColeccion<IndiceValor> respuesta;
       string sql = SqlSeleccionar
         .Replace("{tabla}", Tabla)
-        .Replace("{columnas}", $"[Id] as Clave, [{columna}] as Valor")
+        .Replace("{columnas}", $"[Id] as Indice, [{columna}] as Valor")
         .Replace("{condicion}", "[Eliminado] IS NULL");
       using (SqlConnection conexion = new SqlConnection(CadenaDeConexion))
       {
