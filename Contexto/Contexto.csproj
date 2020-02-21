@@ -26,7 +26,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Esquema\Funciones\" />
+    <Folder Include="Esquema\Funciones\Escalar\" />
+    <Folder Include="Esquema\Funciones\Tabla\" />
     <Folder Include="Esquema\Procedimientos\" />
   </ItemGroup>
 

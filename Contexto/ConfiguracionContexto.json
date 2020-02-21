@@ -1,5 +1,7 @@
 {
   "CadenaDeConexion": "Data Source =.\\SQLEXPRESS;Initial Catalog =Utilidades.Contexto;Integrated Security = true;",
+  "DirectorioFunciones": "C:\\NetCore\\Servicio\\Contexto\\Esquema\\Funciones\\Escalar\\",
+  "DirectorioProcedimientos": "C:\\NetCore\\Servicio\\Contexto\\Esquema\\Procedimientos\\",
   "Configuraciones": [
     {
       "Clave": "UtilizarLog",
