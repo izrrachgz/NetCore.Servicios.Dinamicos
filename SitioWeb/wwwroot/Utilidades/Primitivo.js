@@ -77,16 +77,44 @@ function EsNulo(o) {
 /**
  * @description Revierte el arreglo de valores
  * @param {any} arreglo Coleccion de valores
+ * @return {Array<number>} Arreglo invertido
  */
 function RevertirArreglo(arreglo) {
-
+  //Si el arreglo no es valido para su uso se termina la tarea
+  if (NoEsValido(arreglo) || arreglo.length === 0) {
+    return [];
+  }
+  //Por si a alguien se hace el gracioso 😒
+  if (arreglo.length === 1) {
+    return arreglo;
+  }
+  //Establecer indice de arreglo envuelto
+  var indices = [];
+  for (var i = 0; i < arreglo.length; i++) {
+    indices.push({
+      "valor": arreglo[i]
+    });
+  }
+  var total = indices.length - 1;
+  //Navegar solo la mitad y revertir mediante intercambio
+  for (var x = 0; x <= total / 2; x++) {
+    var actual = indices[x].valor;
+    arreglo[x] = indices[total - x].valor;
+    arreglo[total - x] = actual;
+  }
+  //Limpiar indice utilizado
+  indices = [];
+  return arreglo;
 }
 
 /**
  * @description Revierte el listado de elementos 
  * @param {any} elementos Elementos html
+ * @return {Array<Object<number>>} Coleccion invertida
  */
-function RevertirElementos(elementos) { }
+function RevertirElementos(elementos) {
+  return RevertirArreglo(elementos);
+}
 
 //#endregion
 
@@ -94,11 +122,26 @@ function RevertirElementos(elementos) { }
 
 /**
  * @description Realiza una busqueda dentro de una tabla y oculta las filas que no coinciden con la palabra buscada
- * @param {any} tabla Elemento tabla
+ * @param {any} coleccion Elemento tabla
  * @param {any} busqueda Palabras de busqueda
+ * @return {Array<Object<number>>} Coleccion de elementos que coinciden con la busqueda
  */
-function EncontrarFilaEnTabla(tabla, busqueda) {
-
+function EncontrarFilaEnColeccion(coleccion, busqueda) {
+  //Si el arreglo no es valido para su uso se termina la tarea
+  if (NoEsValido(coleccion) || NoEsValido(busqueda)) {
+    return [];
+  }
+  var indices = [];
+  busqueda = busqueda.toLowerCase();
+  for (var x = 0; x < coleccion.length; x++) {
+    var actual = coleccion[x];
+    var text = actual.innerText;
+    text = text.toLowerCase();
+    if (text.indexOf(busqueda) >= 0) {
+      indices.push(actual);
+    }
+  }
+  return indices;
 }
 
 //#endregion
