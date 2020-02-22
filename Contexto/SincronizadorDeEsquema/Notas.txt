@@ -1,4 +1,4 @@
 ﻿Ejecutar el siguiente comando en la consola administradora de paquetes
 para sincronizar el esquema (Funciones y Procedimientos)
 
-C:\NetCore\Servicio\Contexto\SincronizadorDeEsquema\SincronizacionDeEsquema "C:\NetCore\Servicio\Contexto\ConfiguracionContexto.json"
+SincronizacionDeEsquema "C:\NetCore\Servicio\Contexto\ConfiguracionContexto.json"
