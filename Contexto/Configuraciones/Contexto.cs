@@ -16,6 +16,12 @@ namespace Contexto.Configuraciones
     public string CadenaDeConexion { get; set; }
 
     /// <summary>
+    /// Direccion hacia la carpeta fisica donde
+    /// reside el esquema de repositorio
+    /// </summary>
+    public string DirectorioEsquema { get; set; }
+
+    /// <summary>
     /// Verifica que el contenido de la configuracion
     /// de datos contenga la definicion de la cadena
     /// de conexion hacia el repositorio de los datos
