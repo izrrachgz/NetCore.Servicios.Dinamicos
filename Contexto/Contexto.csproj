@@ -26,15 +26,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Esquema\Funciones\Escalar\" />
-    <Folder Include="Esquema\Funciones\Tabla\" />
-    <Folder Include="Esquema\Procedimientos\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="Utilidades">
       <HintPath>..\Utilidades\bin\Debug\netcoreapp2.2\Utilidades.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Esquema\Funciones\Escalar\" />
+    <Folder Include="Esquema\Funciones\Tabla\" />
+    <Folder Include="Esquema\Procedimientos\" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
