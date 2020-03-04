@@ -1,4 +1,6 @@
-﻿var SolicitudHttp = function () {
+﻿var SolicitudHttp = function (encabezados) {
+
+  var headers = encabezados;
 
   /**
    * @description Efectua una solicitud Http via Fetch de tipo POST
