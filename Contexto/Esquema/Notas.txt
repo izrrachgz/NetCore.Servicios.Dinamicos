@@ -19,3 +19,9 @@ Dentro de los procedimientos deberan ir todas
 las definiciones de procedimientos realizados en
 el servidor de datos SQL, para tener unido
 el control de cambios.
+
+||				SINCRONIZACION				 ||
+Para sincronizar la definicion de rutinas del
+esquema de repositorio de datos deberas ejecutar
+el comando "Watari Sql -RutinasSql -Sincronizar"
+en la consola administradora de paquetes

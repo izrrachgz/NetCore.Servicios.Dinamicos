@@ -64,7 +64,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contexto.Pruebas", "Context
 		{18550CF6-4788-48A6-A018-32D350E9EE7A} = {18550CF6-4788-48A6-A018-32D350E9EE7A}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SitioWeb", "SitioWeb\SitioWeb.csproj", "{9E90F30B-1BA0-42D3-A159-9830EA2826AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SitioWeb", "SitioWeb\SitioWeb.csproj", "{9E90F30B-1BA0-42D3-A159-9830EA2826AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
