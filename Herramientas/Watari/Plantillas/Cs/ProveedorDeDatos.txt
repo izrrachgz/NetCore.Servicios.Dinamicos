@@ -8,38 +8,38 @@ namespace Negocio.ProveedoresDeDatos
 {
   /// <summary>
   /// Provee los mecanismos para acceder a los datos
-  /// de la entidad Bitacora
+  /// de la entidad {{Nombre}}
   /// </summary>
-  public class ProveedorBitacora : ProveedorDeDatosBase<Bitacora>
+  public class Proveedor{{Nombre}} : ProveedorDeDatosBase<{{Nombre}}>
   {
     /// <summary>
-    /// Devuelve todos los registros de Bitacora dentro de un modelo de datos paginado
+    /// Devuelve todos los registros de {{Nombre}} dentro de un modelo de datos paginado
     /// </summary>
     /// <param name="pagina">Solicitud de Pagina</param>
-    /// <returns>Coleccion de elementos de Bitacora</returns>
-    public async Task<RespuestaColeccion<Bitacora>> Paginado(Paginado pagina)
+    /// <returns>Coleccion de elementos de {{Nombre}}</returns>
+    public async Task<RespuestaColeccion<{{Nombre}}>> Paginado(Paginado pagina)
       => await base.Obtener(pagina);
 
     /// <summary>
-    /// Devuelve un registro de Bitacora cuyo identificador primario
+    /// Devuelve un registro de {{Nombre}} cuyo identificador primario
     /// es igual al proporcionado
     /// </summary>
-    /// <param name="id">Identificador Primario de Bitacora</param>
-    /// <returns>Elemento de Bitacora</returns>
-    public async Task<RespuestaModelo<Bitacora>> ObtenerPorId(int id)
+    /// <param name="id">Identificador Primario de {{Nombre}}</param>
+    /// <returns>Elemento de {{Nombre}}</returns>
+    public async Task<RespuestaModelo<{{Nombre}}>> ObtenerPorId(int id)
       => await base.Obtener(id);
 
     /// <summary>
-    /// Devuelve todos los registros de Bitacora dentro de un modelo de datos paginado
+    /// Devuelve todos los registros de {{Nombre}} dentro de un modelo de datos paginado
     /// </summary>
     /// <param name="paginado">Solicitud de Pagina</param>
     /// <param name="condicion">Condiciones de busqueda</param>
-    /// <returns>Coleccion de elementos de Bitacora</returns>
-    public async Task<RespuestaColeccion<Bitacora>> Paginado(Paginado paginado, List<Condicion> condicion)
+    /// <returns>Coleccion de elementos de {{Nombre}}</returns>
+    public async Task<RespuestaColeccion<{{Nombre}}>> Paginado(Paginado paginado, List<Condicion> condicion)
       => await base.Obtener(paginado, condicion);
 
     /// <summary>
-    /// Devuelve todos los registros de Bitacora incluyendo solo la columna
+    /// Devuelve todos los registros de {{Nombre}} incluyendo solo la columna
     /// indicada
     /// </summary>
     /// <param name="columna">Nombre de la columna</param>
@@ -48,14 +48,14 @@ namespace Negocio.ProveedoresDeDatos
       => await base.Obtener(columna);
 
     /// <summary>
-    /// Devuelve todos los registros de Bitacora dentro de un modelo de datos paginado
+    /// Devuelve todos los registros de {{Nombre}} dentro de un modelo de datos paginado
     /// incluyrendo solo las columnas indicadas
     /// </summary>
     /// <param name="columnas">Nombres de columnas</param>
     /// <param name="paginado">Solicitud de pagina</param>
     /// <param name="condicion">Condiciones de busqueda</param>
-    /// <returns>Coleccion de elementos de Bitacora</returns>
-    public async Task<RespuestaColeccion<Bitacora>> PaginadoPorColumnas(string[] columnas, Paginado paginado, List<Condicion> condicion = null)
+    /// <returns>Coleccion de elementos de {{Nombre}}</returns>
+    public async Task<RespuestaColeccion<{{Nombre}}>> PaginadoPorColumnas(string[] columnas, Paginado paginado, List<Condicion> condicion = null)
       => await base.Obtener(columnas, paginado, condicion);
 
     /// <summary>
@@ -64,7 +64,7 @@ namespace Negocio.ProveedoresDeDatos
     /// </summary>
     /// <param name="modelo">Entidad</param>
     /// <returns>Respuesta basica</returns>
-    public async Task<RespuestaBasica> GuardarUno(Bitacora modelo)
+    public async Task<RespuestaBasica> GuardarUno({{Nombre}} modelo)
       => await base.Guardar(modelo);
 
     /// <summary>
@@ -73,7 +73,7 @@ namespace Negocio.ProveedoresDeDatos
     /// </summary>
     /// <param name="entidades">Entidades</param>
     /// <returns>Coleccion con identificadores primarios</returns>
-    public async Task<RespuestaColeccion<int>> GuardarListado(List<Bitacora> entidades)
+    public async Task<RespuestaColeccion<int>> GuardarListado(List<{{Nombre}}> entidades)
       => await base.Guardar(entidades);
 
     /// <summary>
@@ -82,7 +82,7 @@ namespace Negocio.ProveedoresDeDatos
     /// </summary>
     /// <param name="modelo">Entidad</param>
     /// <returns>Identificador primario de la entidad insertada</returns>
-    public async Task<RespuestaModelo<int>> InsertarUno(Bitacora modelo)
+    public async Task<RespuestaModelo<int>> InsertarUno({{Nombre}} modelo)
       => await base.Insertar(modelo);
 
     /// <summary>
@@ -91,7 +91,7 @@ namespace Negocio.ProveedoresDeDatos
     /// </summary>
     /// <param name="entidades">Entidades</param>
     /// <returns>Coleccion de identificadores primarios de las entidades insertadas</returns>
-    public async Task<RespuestaColeccion<int>> InsertarListado(List<Bitacora> entidades)
+    public async Task<RespuestaColeccion<int>> InsertarListado(List<{{Nombre}}> entidades)
       => await base.Insertar(entidades);
 
     /// <summary>
@@ -100,7 +100,7 @@ namespace Negocio.ProveedoresDeDatos
     /// </summary>
     /// <param name="modelo">Entidad</param>
     /// <returns>Cantidad de filas afectadas</returns>
-    public async Task<RespuestaModelo<int>> ActualizarUno(Bitacora modelo)
+    public async Task<RespuestaModelo<int>> ActualizarUno({{Nombre}} modelo)
       => await base.Actualizar(modelo);
 
     /// <summary>
@@ -109,7 +109,7 @@ namespace Negocio.ProveedoresDeDatos
     /// </summary>
     /// <param name="entidades">Entidades</param>
     /// <returns>Cantidad de filas afectadas</returns>
-    public async Task<RespuestaModelo<int>> ActualizarListado(List<Bitacora> entidades)
+    public async Task<RespuestaModelo<int>> ActualizarListado(List<{{Nombre}}> entidades)
       => await base.Actualizar(entidades);
   }
 }
