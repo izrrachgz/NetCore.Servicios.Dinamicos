@@ -38,7 +38,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="echo &quot;Copiado archivo de configuracion de Utilidades al proyecto de Contexto&quot;&#xD;&#xA;copy &quot;$(SolutionDir)\Utilidades\ConfiguracionUtilidades.json&quot; &quot;$(TargetDir)\ConfiguracionUtilidades.json&quot;&#xD;&#xA;echo &quot;Ejecutando sincronizacion de esquema&quot;&#xD;&#xA;$(SolutionDir)\Herramientas\Watari\Watari Sql -RutinasSql -Sincronizar&#xD;&#xA;" />
+    <Exec Command="echo &quot;Copiado archivo de configuracion de Utilidades al proyecto de Contexto&quot;&#xD;&#xA;copy &quot;$(SolutionDir)Utilidades\ConfiguracionUtilidades.json&quot; &quot;$(TargetDir)ConfiguracionUtilidades.json&quot;&#xD;&#xA;echo &quot;Ejecutando sincronizacion de esquema&quot;&#xD;&#xA;$(SolutionDir)Herramientas\Watari\Watari Sql -RutinasSql -Sincronizar&#xD;&#xA;" />
   </Target>
 
 </Project>
