@@ -11,10 +11,10 @@ namespace Utilidades.Entidades
     [Key, Column(Order = 1), Required]
     public int Id { get; set; }
 
-    [/*Index(IsUnique = false, IsClustered = false),*/ Required]
+    [Required]
     public DateTime Creado { get; set; }
 
-    [/*Index(IsUnique = false, IsClustered = false),*/ Required]
+    [Required]
     public DateTime Modificado { get; set; }
 
     [DefaultValue(null)]
