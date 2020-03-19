@@ -9,7 +9,7 @@
     /// <summary>
     /// Identificador primario
     /// </summary>
-    public int Indice { get; set; }
+    public long Indice { get; set; }
 
     /// <summary>
     /// Valor Asociado

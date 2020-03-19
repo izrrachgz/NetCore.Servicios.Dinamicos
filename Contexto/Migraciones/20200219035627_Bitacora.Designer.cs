@@ -23,7 +23,7 @@ namespace Contexto.Migraciones
 
       modelBuilder.Entity("Contexto.Entidades.Bitacora", b =>
           {
-            b.Property<int>("Id")
+            b.Property<long>("Id")
                       .ValueGeneratedOnAdd()
                       .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -51,7 +51,7 @@ namespace Contexto.Migraciones
 
       modelBuilder.Entity("Contexto.Entidades.BitacoraDetalle", b =>
           {
-            b.Property<int>("Id")
+            b.Property<long>("Id")
                       .ValueGeneratedOnAdd()
                       .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -59,7 +59,7 @@ namespace Contexto.Migraciones
 
             b.Property<DateTime?>("Eliminado");
 
-            b.Property<int>("IdBitacora");
+            b.Property<long>("IdBitacora");
 
             b.Property<DateTime>("Modificado");
 

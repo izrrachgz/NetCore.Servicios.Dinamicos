@@ -34,17 +34,17 @@ namespace Utilidades.Modelos
     /// Indica el indice de pagina actual => 0
     /// </summary>
     [JsonIgnore]
-    public int PaginaIndice { get; set; }
+    public long PaginaIndice { get; set; }
 
     /// <summary>
     /// Indica el indice de pagina solicitado => 1
     /// </summary>
-    public int Pagina { get; set; }
+    public long Pagina { get; set; }
 
     /// <summary>
     /// Indica el total de paginas que hay con base con los resultados de consulta => TotalElementos/Elementos
     /// </summary>
-    public int TotalPaginas { get; set; }
+    public long TotalPaginas { get; set; }
 
     /// <summary>
     /// Cantidad de elementos que se incluyen en la pagina => 10
@@ -54,7 +54,7 @@ namespace Utilidades.Modelos
     /// <summary>
     /// Total de elementos que hay con base con los resultados de consulta => query.Count()
     /// </summary>
-    public int TotalElementos { get; set; }
+    public long TotalElementos { get; set; }
 
     /// <summary>
     /// Especifica la manera de ordenamiento
@@ -118,7 +118,7 @@ namespace Utilidades.Modelos
     /// Este metodo debe usarse siempre al obtener el objeto de consulta completo
     /// </summary>
     /// <param name="total"></param>
-    public void CalcularPaginado(int total)
+    public void CalcularPaginado(long total)
     {
       TotalElementos = total;
       TotalPaginas = TotalElementos / Elementos;

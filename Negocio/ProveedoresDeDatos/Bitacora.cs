@@ -26,7 +26,7 @@ namespace Negocio.ProveedoresDeDatos
     /// </summary>
     /// <param name="id">Identificador Primario de Bitacora</param>
     /// <returns>Elemento de Bitacora</returns>
-    public async Task<RespuestaModelo<Bitacora>> ObtenerPorId(int id)
+    public async Task<RespuestaModelo<Bitacora>> ObtenerPorId(long id)
       => await base.Obtener(id);
 
     /// <summary>
@@ -73,7 +73,7 @@ namespace Negocio.ProveedoresDeDatos
     /// </summary>
     /// <param name="entidades">Entidades</param>
     /// <returns>Coleccion con identificadores primarios</returns>
-    public async Task<RespuestaColeccion<int>> GuardarListado(List<Bitacora> entidades)
+    public async Task<RespuestaColeccion<long>> GuardarListado(List<Bitacora> entidades)
       => await base.Guardar(entidades);
 
     /// <summary>
@@ -82,7 +82,7 @@ namespace Negocio.ProveedoresDeDatos
     /// </summary>
     /// <param name="modelo">Entidad</param>
     /// <returns>Identificador primario de la entidad insertada</returns>
-    public async Task<RespuestaModelo<int>> InsertarUno(Bitacora modelo)
+    public async Task<RespuestaModelo<long>> InsertarUno(Bitacora modelo)
       => await base.Insertar(modelo);
 
     /// <summary>
@@ -91,7 +91,7 @@ namespace Negocio.ProveedoresDeDatos
     /// </summary>
     /// <param name="entidades">Entidades</param>
     /// <returns>Coleccion de identificadores primarios de las entidades insertadas</returns>
-    public async Task<RespuestaColeccion<int>> InsertarListado(List<Bitacora> entidades)
+    public async Task<RespuestaColeccion<long>> InsertarListado(List<Bitacora> entidades)
       => await base.Insertar(entidades);
 
     /// <summary>
@@ -100,7 +100,7 @@ namespace Negocio.ProveedoresDeDatos
     /// </summary>
     /// <param name="modelo">Entidad</param>
     /// <returns>Cantidad de filas afectadas</returns>
-    public async Task<RespuestaModelo<int>> ActualizarUno(Bitacora modelo)
+    public async Task<RespuestaModelo<long>> ActualizarUno(Bitacora modelo)
       => await base.Actualizar(modelo);
 
     /// <summary>
@@ -109,7 +109,7 @@ namespace Negocio.ProveedoresDeDatos
     /// </summary>
     /// <param name="entidades">Entidades</param>
     /// <returns>Cantidad de filas afectadas</returns>
-    public async Task<RespuestaModelo<int>> ActualizarListado(List<Bitacora> entidades)
+    public async Task<RespuestaModelo<long>> ActualizarListado(List<Bitacora> entidades)
       => await base.Actualizar(entidades);
   }
 }

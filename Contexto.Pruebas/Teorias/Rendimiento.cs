@@ -44,7 +44,7 @@ namespace Contexto.Pruebas.Teorias
       List<Bitacora> entradas = Enumerable.Repeat(Entrada, cantidad).ToList();
       Stopwatch temporizador = new Stopwatch();
       temporizador.Start();
-      RespuestaColeccion<int> guardados = await servicio.Guardar(entradas);
+      RespuestaColeccion<long> guardados = await servicio.Guardar(entradas);
       temporizador.Stop();
       Assert.True(guardados.Correcto && temporizador.Elapsed.TotalSeconds <= estimado);
       entradas.Clear();

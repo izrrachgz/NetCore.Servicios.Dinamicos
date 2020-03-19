@@ -14,18 +14,18 @@ namespace Utilidades.Contratos
     /// Identificador primario de la Entidad
     /// </summary>
     [Key, Column(Order = 1), Required]
-    int Id { get; set; }
+    long Id { get; set; }
 
     /// <summary>
     /// Momento en el que se ha creado la entidad
     /// </summary>
-    [/*Index(IsUnique = false, IsClustered = false),*/ Required]
+    [Required]
     DateTime Creado { get; set; }
 
     /// <summary>
     /// Momento en el que se ha efectuado el ultimo cambio a la entidad
     /// </summary>
-    [/*Index(IsUnique = false, IsClustered = false),*/ Required]
+    [Required]
     DateTime Modificado { get; set; }
 
     /// <summary>

@@ -43,7 +43,7 @@ namespace Utilidades.Contratos
     /// </summary>
     /// <param name="id">Identificador primario de la entidad</param>
     /// <returns>Entidad</returns>
-    Task<RespuestaModelo<T>> Obtener(int id);
+    Task<RespuestaModelo<T>> Obtener(long id);
 
     /// <summary>
     /// Deberá regresar una entidades de entidades dentro de un modelo de datos paginado
@@ -82,28 +82,28 @@ namespace Utilidades.Contratos
     /// </summary>
     /// <param name="entidades">Entidades para guardar o actualizar</param>
     /// <returns>Verdadero o falso</returns>
-    Task<RespuestaColeccion<int>> Guardar(List<T> entidades);
+    Task<RespuestaColeccion<long>> Guardar(List<T> entidades);
 
     /// <summary>
     /// Deberá actualizar la fecha de eliminado en el modelo encontrado
     /// </summary>
     /// <param name="id">Identificador primario de modelo</param>
     /// <returns>Verdadero o falso</returns>
-    Task<RespuestaBasica> Eliminar(int id);
+    Task<RespuestaBasica> Eliminar(long id);
 
     /// <summary>
     /// Deberá actualizar la fecha de eliminado en los modelos encontrados
     /// </summary>
     /// <param name="ids">Identificador primario de modelo</param>
     /// <returns>Verdadero o falso</returns>
-    Task<RespuestaBasica> Eliminar(List<int> ids);
+    Task<RespuestaBasica> Eliminar(List<long> ids);
 
     /// <summary>
     /// Deberá insertar el elemento en el contexto de datos y devolver su identificador primario
     /// </summary>
     /// <param name="modelo">Elemento a insertar</param>
     /// <returns>Identificador primario</returns>
-    Task<RespuestaModelo<int>> Insertar(T modelo);
+    Task<RespuestaModelo<long>> Insertar(T modelo);
 
     /// <summary>
     /// Deberá insertar el elemento en el contexto de datos y devolver su identificador primario
@@ -111,14 +111,14 @@ namespace Utilidades.Contratos
     /// <param name="modelo">Elemento a insertar</param>
     /// <param name="transaccion">Transacción abierta asociada a la conexión vigente</param>
     /// <returns>Identificador primario</returns>
-    Task<RespuestaModelo<int>> Insertar(T modelo, SqlTransaction transaccion);
+    Task<RespuestaModelo<long>> Insertar(T modelo, SqlTransaction transaccion);
 
     /// <summary>
     /// Deberá insertar todos los elementos en el Contexto de datos y devolver sus identificadores primarios
     /// </summary>
     /// <param name="entidades">Elementos a insertar</param>
     /// <returns>Arreglo de itentificadores primarios de modelo</returns>
-    Task<RespuestaColeccion<int>> Insertar(List<T> entidades);
+    Task<RespuestaColeccion<long>> Insertar(List<T> entidades);
 
     /// <summary>
     /// Deberá Insertar todos los elementos en el Contexto de datos y devolver sus identificadores primarios
@@ -126,14 +126,14 @@ namespace Utilidades.Contratos
     /// <param name="entidades">Elementos a insertar</param>
     /// <param name="transaccion">Transacción abierta asociada a la conexión vigente</param>
     /// <returns>Arreglo de identificadores primarios de modelo</returns>
-    Task<RespuestaColeccion<int>> Insertar(List<T> entidades, SqlTransaction transaccion);
+    Task<RespuestaColeccion<long>> Insertar(List<T> entidades, SqlTransaction transaccion);
 
     /// <summary>
     /// Deberá actualizar el elemento en el contexto de datos y devolver la cantidad de registros afectados
     /// </summary>
     /// <param name="modelo">Elemento a actualizar</param>
     /// <returns>Cantidad de filas afectadas</returns>
-    Task<RespuestaModelo<int>> Actualizar(T modelo);
+    Task<RespuestaModelo<long>> Actualizar(T modelo);
 
     /// <summary>
     /// Deberá actualizar el elemento en el contexto de datos y devolver la cantidad de registros afectados
@@ -141,14 +141,14 @@ namespace Utilidades.Contratos
     /// <param name="modelo">Elemento a actualizar</param>
     /// <param name="transaccion">Transacción abierta asociada a la conexión vigente</param>
     /// <returns>Cantidad de filas afectadas</returns>
-    Task<RespuestaModelo<int>> Actualizar(T modelo, SqlTransaction transaccion);
+    Task<RespuestaModelo<long>> Actualizar(T modelo, SqlTransaction transaccion);
 
     /// <summary>
     /// Deberá actualizar todos los elementos en el Contexto de datos y devolver la cantidad de registros afectados
     /// </summary>
     /// <param name="entidades">Elementos a actualizar</param>
     /// <returns>Cantidad de filas afectadas</returns>
-    Task<RespuestaModelo<int>> Actualizar(List<T> entidades);
+    Task<RespuestaModelo<long>> Actualizar(List<T> entidades);
 
     /// <summary>
     /// Deberá actualizar todos los elementos en el Contexto de datos y devolver la cantidad de registros afectados
@@ -156,6 +156,6 @@ namespace Utilidades.Contratos
     /// <param name="entidades">Elementos a actualizar</param>
     /// <param name="transaccion">Transacción abierta asociada a la conexión vigente</param>
     /// <returns>Cantidad de filas afectadas</returns>
-    Task<RespuestaModelo<int>> Actualizar(List<T> entidades, SqlTransaction transaccion);
+    Task<RespuestaModelo<long>> Actualizar(List<T> entidades, SqlTransaction transaccion);
   }
 }

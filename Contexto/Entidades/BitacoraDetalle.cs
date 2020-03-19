@@ -17,7 +17,7 @@ namespace Contexto.Entidades
     /// a la entrada de log
     /// </summary>
     [Required, ForeignKey(@"Bitacora")]
-    public int IdBitacora { get; set; }
+    public long IdBitacora { get; set; }
 
     /// <summary>
     /// Relacion hacia la entrada de log

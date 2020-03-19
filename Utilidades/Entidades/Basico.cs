@@ -9,7 +9,7 @@ namespace Utilidades.Entidades
   public class EntidadBase : IEntidad
   {
     [Key, Column(Order = 1), Required]
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     [Required]
     public DateTime Creado { get; set; }

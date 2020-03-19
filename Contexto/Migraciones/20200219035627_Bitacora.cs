@@ -12,7 +12,7 @@ namespace Contexto.Migraciones
           name: "Bitacora",
           columns: table => new
           {
-            Id = table.Column<int>(nullable: false)
+            Id = table.Column<long>(nullable: false)
                   .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
             Creado = table.Column<DateTime>(nullable: false),
             Modificado = table.Column<DateTime>(nullable: false),
@@ -30,12 +30,12 @@ namespace Contexto.Migraciones
           name: "BitacoraDetalle",
           columns: table => new
           {
-            Id = table.Column<int>(nullable: false)
+            Id = table.Column<long>(nullable: false)
                   .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
             Creado = table.Column<DateTime>(nullable: false),
             Modificado = table.Column<DateTime>(nullable: false),
             Eliminado = table.Column<DateTime>(nullable: true),
-            IdBitacora = table.Column<int>(nullable: false),
+            IdBitacora = table.Column<long>(nullable: false),
             Valor = table.Column<string>(nullable: false)
           },
           constraints: table =>

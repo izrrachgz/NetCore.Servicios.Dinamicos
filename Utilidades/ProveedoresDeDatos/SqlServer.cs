@@ -205,12 +205,12 @@ namespace Utilidades.ProveedoresDeDatos
     /// </summary>
     /// <param name="id">Identificador primario del modelo</param>
     /// <returns>Verdadero o Falso</returns>
-    public async Task<RespuestaBasica> Eliminar(int id)
+    public async Task<RespuestaBasica> Eliminar(long id)
     {
       //Verificar identificador primario de entidad
       if (id <= 0)
         return new RespuestaBasica(false, Error.IdentificadorInvalido);
-      return await Eliminar(new List<int>(1) { id });
+      return await Eliminar(new List<long>(1) { id });
     }
 
     /// <summary>
@@ -218,7 +218,7 @@ namespace Utilidades.ProveedoresDeDatos
     /// </summary>
     /// <param name="ids">Lista de Identificadores primarios de Entidades</param>
     /// <returns>Verdadero o Falso</returns>
-    public async Task<RespuestaBasica> Eliminar(List<int> ids)
+    public async Task<RespuestaBasica> Eliminar(List<long> ids)
     {
       //Verificar identificador primario de entidades
       if (ids.NoEsValida() || ids.Any(id => id <= 0))
@@ -239,7 +239,7 @@ namespace Utilidades.ProveedoresDeDatos
                 comando.CommandType = CommandType.Text;
                 try
                 {
-                  int eliminados = await comando.ExecuteNonQueryAsync();
+                  long eliminados = await comando.ExecuteNonQueryAsync();
                   bool correcto = eliminados.Equals(ids.Count);
                   respuesta = new RespuestaBasica(correcto)
                   {
@@ -284,7 +284,7 @@ namespace Utilidades.ProveedoresDeDatos
     /// </summary>
     /// <param name="id">Identificador primario del modelo</param>
     /// <returns>Entidad</returns>
-    public virtual async Task<RespuestaModelo<T>> Obtener(int id)
+    public virtual async Task<RespuestaModelo<T>> Obtener(long id)
     {
       //Verificar el identificador primario de la entidad
       if (id <= 0)
@@ -405,13 +405,13 @@ namespace Utilidades.ProveedoresDeDatos
             //Agregar parametros extra
             if (condicionesExtra != null) comando.Parameters.AddRange(condicionesExtra.Item2);
             //Contar la cantidad de registros acorde a las condiciones
-            int total;
+            long total;
             using (SqlDataReader lector = await comando.ExecuteReaderAsync())
             {
               try
               {
                 bool leido = await lector.ReadAsync();
-                total = leido ? lector.GetInt32(0) : 0;
+                total = leido ? lector.GetInt64(0) : 0;
                 lector.Close();
               }
               catch (Exception)
@@ -514,7 +514,7 @@ namespace Utilidades.ProveedoresDeDatos
                   {
                     lista.Add(new IndiceValor
                     {
-                      Indice = resultado.GetInt32(0),
+                      Indice = resultado.GetInt64(0),
                       Valor = resultado.GetString(1)
                     });
                   }
@@ -615,13 +615,13 @@ namespace Utilidades.ProveedoresDeDatos
             //Agregar parametros extra
             if (condicionesExtra != null) comando.Parameters.AddRange(condicionesExtra.Item2);
             //Contar la cantidad de registros acorde a las condiciones
-            int total;
+            long total;
             using (SqlDataReader lector = await comando.ExecuteReaderAsync())
             {
               try
               {
                 bool leido = await lector.ReadAsync();
-                total = leido ? lector.GetInt32(0) : 0;
+                total = leido ? lector.GetInt64(0) : 0;
                 lector.Close();
               }
               catch (Exception)
@@ -705,12 +705,12 @@ namespace Utilidades.ProveedoresDeDatos
     /// </summary>
     /// <param name="entidades">Lista de Entidades</param>
     /// <returns>Arreglo de identificadores primarios guardados</returns>
-    public virtual async Task<RespuestaColeccion<int>> Guardar(List<T> entidades)
+    public virtual async Task<RespuestaColeccion<long>> Guardar(List<T> entidades)
     {
       //Verificar la lista de modelos de datos asociados a la entidad
       if (entidades.NoEsValida())
-        return new RespuestaColeccion<int> { Correcto = false, Mensaje = Error.ListaInvalida };
-      RespuestaColeccion<int> respuesta;
+        return new RespuestaColeccion<long> { Correcto = false, Mensaje = Error.ListaInvalida };
+      RespuestaColeccion<long> respuesta;
       using (SqlConnection conexion = new SqlConnection(CadenaDeConexion))
       {
         try
@@ -719,20 +719,20 @@ namespace Utilidades.ProveedoresDeDatos
           using (SqlTransaction transaccion = conexion.BeginTransaction())
           {
             //Coleccion de ids insertados/actualizados
-            List<int> ids = new List<int>(entidades.Count);
+            List<long> ids = new List<long>(entidades.Count);
             //Insertar las entidades
             if (entidades.Any(e => e.Id.Equals(0)))
             {
-              RespuestaColeccion<int> insertados = await Insertar(entidades.Where(e => e.Id.Equals(0)).ToList(), transaccion);
+              RespuestaColeccion<long> insertados = await Insertar(entidades.Where(e => e.Id.Equals(0)).ToList(), transaccion);
               if (insertados.Correcto) ids.AddRange(insertados.Coleccion);
             }
             //Actualizar las entidades
             if (entidades.Any(e => !e.Id.Equals(0)))
             {
-              RespuestaModelo<int> actualizados = await Actualizar(entidades.Where(e => !e.Id.Equals(0)).ToList(), transaccion);
+              RespuestaModelo<long> actualizados = await Actualizar(entidades.Where(e => !e.Id.Equals(0)).ToList(), transaccion);
               if (actualizados.Correcto) ids.AddRange(entidades.Where(e => !e.Id.Equals(0)).Select(e => e.Id).ToList());
             }
-            respuesta = new RespuestaColeccion<int>(ids) { Correcto = !ids.NoEsValida() && ids.All(id => id > 0) };
+            respuesta = new RespuestaColeccion<long>(ids) { Correcto = !ids.NoEsValida() && ids.All(id => id > 0) };
             try
             {
               if (respuesta.Correcto)
@@ -742,7 +742,7 @@ namespace Utilidades.ProveedoresDeDatos
             }
             catch (Exception ex)
             {
-              respuesta = new RespuestaColeccion<int>(ex);
+              respuesta = new RespuestaColeccion<long>(ex);
               transaccion.Rollback();
             }
             transaccion.Dispose();
@@ -751,7 +751,7 @@ namespace Utilidades.ProveedoresDeDatos
         }
         catch (Exception ex)
         {
-          respuesta = new RespuestaColeccion<int>(ex);
+          respuesta = new RespuestaColeccion<long>(ex);
         }
         conexion.Dispose();
       }
@@ -763,12 +763,12 @@ namespace Utilidades.ProveedoresDeDatos
     /// </summary>
     /// <param name="modelo">Entidad</param>
     /// <returns>Identificador primario insertado</returns>
-    public virtual async Task<RespuestaModelo<int>> Insertar(T modelo)
+    public virtual async Task<RespuestaModelo<long>> Insertar(T modelo)
     {
       //Verificar el modelo de datos y el identificador primario del modelo asociado a la entidad
       if (modelo == null || !modelo.Id.Equals(0))
-        return new RespuestaModelo<int> { Correcto = false, Mensaje = Error.ModeloInvalido };
-      RespuestaModelo<int> respuesta;
+        return new RespuestaModelo<long> { Correcto = false, Mensaje = Error.ModeloInvalido };
+      RespuestaModelo<long> respuesta;
       using (SqlConnection conexion = new SqlConnection(CadenaDeConexion))
       {
         try
@@ -786,7 +786,7 @@ namespace Utilidades.ProveedoresDeDatos
             }
             catch (Exception ex)
             {
-              respuesta = new RespuestaModelo<int>(ex);
+              respuesta = new RespuestaModelo<long>(ex);
               transaccion.Rollback();
             }
             transaccion.Dispose();
@@ -795,7 +795,7 @@ namespace Utilidades.ProveedoresDeDatos
         }
         catch (Exception ex)
         {
-          respuesta = new RespuestaModelo<int>(ex);
+          respuesta = new RespuestaModelo<long>(ex);
         }
         conexion.Dispose();
       }
@@ -808,12 +808,12 @@ namespace Utilidades.ProveedoresDeDatos
     /// <param name="modelo">Entidad</param>
     /// <param name="transaccion">Transacción abierta asociada a la conexión vigente</param>
     /// <returns>Identificador primario insertado</returns>
-    public virtual async Task<RespuestaModelo<int>> Insertar(T modelo, SqlTransaction transaccion)
+    public virtual async Task<RespuestaModelo<long>> Insertar(T modelo, SqlTransaction transaccion)
     {
       //Verificar el modelo de datos y el identificador primario del modelo asociado a la entidad
       if (modelo == null || !modelo.Id.Equals(0))
-        return new RespuestaModelo<int> { Correcto = false, Mensaje = Error.ModeloInvalido };
-      RespuestaModelo<int> respuesta;
+        return new RespuestaModelo<long> { Correcto = false, Mensaje = Error.ModeloInvalido };
+      RespuestaModelo<long> respuesta;
       using (SqlCommand comando = new SqlCommand(CrearSqlInsertar(out List<SqlParameter> parametros), transaccion.Connection, transaccion))
       {
         try
@@ -826,16 +826,16 @@ namespace Utilidades.ProveedoresDeDatos
             comando.Parameters.Add(p);
           });
           //Id de la entidad insertada
-          int id = Convert.ToInt32(await comando.ExecuteScalarAsync());
+          long id = Convert.ToInt32(await comando.ExecuteScalarAsync());
           //Limpiar objetos utilizados
           parametros.Clear();
           parametros.TrimExcess();
           comando.Parameters.Clear();
-          respuesta = new RespuestaModelo<int>(id) { Correcto = id > 0 };
+          respuesta = new RespuestaModelo<long>(id) { Correcto = id > 0 };
         }
         catch (Exception ex)
         {
-          respuesta = new RespuestaModelo<int>(ex);
+          respuesta = new RespuestaModelo<long>(ex);
         }
         comando.Dispose();
       }
@@ -847,12 +847,12 @@ namespace Utilidades.ProveedoresDeDatos
     /// </summary>
     /// <param name="entidades">Lista de Entidades</param>
     /// <returns>Arreglo de identificadores primarios insertados</returns>
-    public virtual async Task<RespuestaColeccion<int>> Insertar(List<T> entidades)
+    public virtual async Task<RespuestaColeccion<long>> Insertar(List<T> entidades)
     {
       //Verificar la lista de modelo de datos y el identificador primario del modelo asociado a la entidad
       if (entidades.NoEsValida() || entidades.Any(m => !m.Id.Equals(0)))
-        return new RespuestaColeccion<int> { Correcto = false, Mensaje = Error.ListaInvalida };
-      RespuestaColeccion<int> respuesta;
+        return new RespuestaColeccion<long> { Correcto = false, Mensaje = Error.ListaInvalida };
+      RespuestaColeccion<long> respuesta;
       using (SqlConnection conexion = new SqlConnection(CadenaDeConexion))
       {
         try
@@ -870,7 +870,7 @@ namespace Utilidades.ProveedoresDeDatos
             }
             catch (Exception ex)
             {
-              respuesta = new RespuestaColeccion<int>(ex);
+              respuesta = new RespuestaColeccion<long>(ex);
               transaccion.Rollback();
             }
             transaccion.Dispose();
@@ -879,7 +879,7 @@ namespace Utilidades.ProveedoresDeDatos
         }
         catch (Exception ex)
         {
-          respuesta = new RespuestaColeccion<int>(ex);
+          respuesta = new RespuestaColeccion<long>(ex);
         }
         conexion.Dispose();
       }
@@ -892,14 +892,14 @@ namespace Utilidades.ProveedoresDeDatos
     /// <param name="entidades">Lista de Entidades</param>
     /// <param name="transaccion">Transacción abierta asociada a la conexión vigente</param>
     /// <returns>Arreglo de identificadores primarios insertados</returns>
-    public virtual async Task<RespuestaColeccion<int>> Insertar(List<T> entidades, SqlTransaction transaccion)
+    public virtual async Task<RespuestaColeccion<long>> Insertar(List<T> entidades, SqlTransaction transaccion)
     {
       //Verificar el modelo de datos y el identificador primario del modelo asociado a la entidad
       //y que la transacción proporcionada se encuentra activa
       if (entidades.NoEsValida() || entidades.Any(m => !m.Id.Equals(0)) || transaccion.Connection.NoEsValida())
-        return new RespuestaColeccion<int> { Correcto = false, Mensaje = Error.ListaInvalida };
-      RespuestaColeccion<int> respuesta;
-      List<int> ids = new List<int>(entidades.Count);
+        return new RespuestaColeccion<long> { Correcto = false, Mensaje = Error.ListaInvalida };
+      RespuestaColeccion<long> respuesta;
+      List<long> ids = new List<long>(entidades.Count);
       using (SqlCommand comando = new SqlCommand(CrearSqlInsertar(out List<SqlParameter> parametros), transaccion.Connection, transaccion))
       {
         try
@@ -913,7 +913,7 @@ namespace Utilidades.ProveedoresDeDatos
               valor = valor ?? DBNull.Value;
               comando.Parameters[p.ParameterName].Value = valor;
             });
-            int id = Convert.ToInt32(await comando.ExecuteScalarAsync());
+            long id = Convert.ToInt32(await comando.ExecuteScalarAsync());
             if (id <= 0) break;
             ids.Add(id);
           }
@@ -923,7 +923,7 @@ namespace Utilidades.ProveedoresDeDatos
           comando.Parameters.Clear();
           //Todos los ids insertados deben ser mayor a 0
           bool correcto = !ids.NoEsValida() && ids.All(id => id > 0);
-          respuesta = new RespuestaColeccion<int>(ids)
+          respuesta = new RespuestaColeccion<long>(ids)
           {
             Correcto = correcto,
             Mensaje = correcto ? Correcto.SolicitudCompletada : Error.DiferenciaDeElementosAfectados
@@ -931,7 +931,7 @@ namespace Utilidades.ProveedoresDeDatos
         }
         catch (Exception ex)
         {
-          respuesta = new RespuestaColeccion<int>(ex);
+          respuesta = new RespuestaColeccion<long>(ex);
         }
         comando.Dispose();
       }
@@ -943,12 +943,12 @@ namespace Utilidades.ProveedoresDeDatos
     /// </summary>
     /// <param name="modelo">Entidad</param>
     /// <returns>Cantidad de filas afectadas</returns>
-    public virtual async Task<RespuestaModelo<int>> Actualizar(T modelo)
+    public virtual async Task<RespuestaModelo<long>> Actualizar(T modelo)
     {
       //Verificar el modelo de datos y el identificador primario del modelo asociado a la entidad
       if (modelo == null || modelo.Id.Equals(0))
-        return new RespuestaModelo<int> { Correcto = false, Mensaje = Error.ModeloInvalido };
-      RespuestaModelo<int> respuesta;
+        return new RespuestaModelo<long> { Correcto = false, Mensaje = Error.ModeloInvalido };
+      RespuestaModelo<long> respuesta;
       using (SqlConnection conexion = new SqlConnection(CadenaDeConexion))
       {
         try
@@ -966,7 +966,7 @@ namespace Utilidades.ProveedoresDeDatos
             }
             catch (Exception ex)
             {
-              respuesta = new RespuestaModelo<int>(ex);
+              respuesta = new RespuestaModelo<long>(ex);
               transaccion.Rollback();
             }
             transaccion.Dispose();
@@ -975,7 +975,7 @@ namespace Utilidades.ProveedoresDeDatos
         }
         catch (Exception ex)
         {
-          respuesta = new RespuestaModelo<int>(ex);
+          respuesta = new RespuestaModelo<long>(ex);
         }
         conexion.Dispose();
       }
@@ -988,12 +988,12 @@ namespace Utilidades.ProveedoresDeDatos
     /// <param name="modelo">Entidad</param>
     /// <param name="transaccion">Transacción abierta asociada a la conexión vigente</param>
     /// <returns>Cantidad de filas afectadas</returns>
-    public virtual async Task<RespuestaModelo<int>> Actualizar(T modelo, SqlTransaction transaccion)
+    public virtual async Task<RespuestaModelo<long>> Actualizar(T modelo, SqlTransaction transaccion)
     {
       //Verificar el modelo de datos y el identificador primario del modelo asociado a la entidad
       if (modelo == null || modelo.Id.Equals(0))
-        return new RespuestaModelo<int> { Correcto = false, Mensaje = Error.ModeloInvalido };
-      RespuestaModelo<int> respuesta;
+        return new RespuestaModelo<long> { Correcto = false, Mensaje = Error.ModeloInvalido };
+      RespuestaModelo<long> respuesta;
       using (SqlCommand comando = new SqlCommand(CrearSqlActualizar(out List<SqlParameter> parametros), transaccion.Connection, transaccion))
       {
         try
@@ -1005,16 +1005,16 @@ namespace Utilidades.ProveedoresDeDatos
             comando.Parameters.Add(p);
           });
           //El número de afectados debe ser al menos 1
-          int afectados = await comando.ExecuteNonQueryAsync();
+          long afectados = await comando.ExecuteNonQueryAsync();
           //Limpiar objetos utilizados
           parametros.Clear();
           parametros.TrimExcess();
           comando.Parameters.Clear();
-          respuesta = new RespuestaModelo<int>(afectados) { Correcto = afectados > 0 };
+          respuesta = new RespuestaModelo<long>(afectados) { Correcto = afectados > 0 };
         }
         catch (Exception ex)
         {
-          respuesta = new RespuestaModelo<int>(ex);
+          respuesta = new RespuestaModelo<long>(ex);
         }
         comando.Dispose();
       }
@@ -1026,12 +1026,12 @@ namespace Utilidades.ProveedoresDeDatos
     /// </summary>
     /// <param name="entidades">Lista de Entidades</param>
     /// <returns>Cantidad de filas afectadas</returns>
-    public virtual async Task<RespuestaModelo<int>> Actualizar(List<T> entidades)
+    public virtual async Task<RespuestaModelo<long>> Actualizar(List<T> entidades)
     {
       //Verificar el modelo de datos y el identificador primario del modelo asociado a la entidad
       if (entidades.NoEsValida() || entidades.Any(m => m.Id.Equals(0)))
-        return new RespuestaModelo<int> { Correcto = false, Mensaje = Error.ListaInvalida };
-      RespuestaModelo<int> respuesta;
+        return new RespuestaModelo<long> { Correcto = false, Mensaje = Error.ListaInvalida };
+      RespuestaModelo<long> respuesta;
       using (SqlConnection conexion = new SqlConnection(CadenaDeConexion))
       {
         try
@@ -1049,7 +1049,7 @@ namespace Utilidades.ProveedoresDeDatos
             }
             catch (Exception ex)
             {
-              respuesta = new RespuestaModelo<int>(ex);
+              respuesta = new RespuestaModelo<long>(ex);
               transaccion.Rollback();
             }
             transaccion.Dispose();
@@ -1058,7 +1058,7 @@ namespace Utilidades.ProveedoresDeDatos
         }
         catch (Exception ex)
         {
-          respuesta = new RespuestaModelo<int>(ex);
+          respuesta = new RespuestaModelo<long>(ex);
         }
         conexion.Dispose();
       }
@@ -1071,18 +1071,18 @@ namespace Utilidades.ProveedoresDeDatos
     /// <param name="entidades">Lista de Entidades</param>
     /// <param name="transaccion">Transacción abierta asociada a la conexión vigente</param>
     /// <returns>Cantidad de filas afectadas</returns>
-    public virtual async Task<RespuestaModelo<int>> Actualizar(List<T> entidades, SqlTransaction transaccion)
+    public virtual async Task<RespuestaModelo<long>> Actualizar(List<T> entidades, SqlTransaction transaccion)
     {
       //Verificar el modelo de datos y el identificador primario del modelo asociado a la entidad
       //y que la transacción proporcionada se encuentra activa
       if (entidades.NoEsValida() || entidades.Any(m => m.Id.Equals(0)) || transaccion.Connection.NoEsValida())
-        return new RespuestaModelo<int> { Correcto = false, Mensaje = Error.ListaInvalida };
-      RespuestaModelo<int> respuesta;
+        return new RespuestaModelo<long> { Correcto = false, Mensaje = Error.ListaInvalida };
+      RespuestaModelo<long> respuesta;
       using (SqlCommand comando = new SqlCommand(CrearSqlActualizar(out List<SqlParameter> parametros), transaccion.Connection, transaccion))
       {
         try
         {
-          int afectadas = 0;
+          long afectadas = 0;
           comando.Parameters.AddRange(parametros.ToArray());
           foreach (T e in entidades)
           {
@@ -1095,11 +1095,11 @@ namespace Utilidades.ProveedoresDeDatos
             afectadas += await comando.ExecuteNonQueryAsync();
           }
           //La cantidad de filas afectadas debe ser igual a la cantidad total de elementos contenidos en la lista de entidades
-          respuesta = new RespuestaModelo<int>(afectadas) { Correcto = afectadas.Equals(entidades.Count) };
+          respuesta = new RespuestaModelo<long>(afectadas) { Correcto = afectadas.Equals(entidades.Count) };
         }
         catch (Exception ex)
         {
-          respuesta = new RespuestaModelo<int>(ex);
+          respuesta = new RespuestaModelo<long>(ex);
         }
         comando.Dispose();
       }
