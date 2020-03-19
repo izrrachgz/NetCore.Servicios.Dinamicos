@@ -13,13 +13,7 @@ namespace Contexto.Configuraciones
     /// <summary>
     /// Cadena de conexion al repositorio de datos
     /// </summary>
-    public string CadenaDeConexion { get; set; }
-
-    /// <summary>
-    /// Direccion hacia la carpeta fisica donde
-    /// reside el esquema de repositorio
-    /// </summary>
-    public string DirectorioEsquema { get; set; }
+    public string CadenaDeConexion { get; set; }    
 
     /// <summary>
     /// Verifica que el contenido de la configuracion
