@@ -9,7 +9,7 @@ namespace Negocio.ProveedoresDeDatos
   /// Provee los mecanismos para acceder a los datos
   /// de la entidad Bitacora
   /// </summary>
-  public class ProveedorBitacora : ProveedorDeDatosBase<Bitacora>
+  public sealed class ProveedorBitacora : ProveedorDeDatosBase<Bitacora>
   {
     /// <summary>
     /// Devuelve todos los registros de Bitacora dentro de un modelo de datos paginado

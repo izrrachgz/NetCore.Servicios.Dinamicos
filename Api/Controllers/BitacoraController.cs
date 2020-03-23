@@ -11,7 +11,7 @@ namespace Api.Controllers
   /// de negocio de Bitacora
   /// </summary>
   [ApiController, Route("Api/[controller]")]
-  public class BitacoraController : ControllerBase
+  public sealed class BitacoraController : ControllerBase
   {
     /// <summary>
     /// Referencia de acceso hacia los datos de Bitacora via Negocio
