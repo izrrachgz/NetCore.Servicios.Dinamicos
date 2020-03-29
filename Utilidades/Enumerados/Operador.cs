@@ -64,5 +64,17 @@
     /// proporcionado (LIKE)
     /// </summary>
     Parecido = 9,
+
+    /// <summary>
+    /// Se utiliza cuando se requiere comparar un valor dentro de una lista de valores
+    /// proporcionados (IN)
+    /// </summary>
+    DentroDe = 10,
+
+    /// <summary>
+    /// Se utiliza cuando se requiere comparar un valor fuera de una lista de valores
+    /// proporcionados (NOT IN)
+    /// </summary>
+    FueraDe = 11,
   }
 }

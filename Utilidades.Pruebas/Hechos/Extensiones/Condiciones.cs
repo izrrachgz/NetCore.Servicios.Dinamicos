@@ -32,13 +32,15 @@ namespace Utilidades.Pruebas.Hechos.Extensiones
     [Fact]
     public void Sql()
     {
-      List<Condicion> condiciones = new List<Condicion>(2)
+      List<Condicion> condiciones = new List<Condicion>()
       {
         new Condicion(@"Id",0,Operador.Mayor),
-        new Condicion(@"Nombre",@"israel", Operador.Parecido)
+        new Condicion(@"Nombre",@"israel", Operador.Parecido),
+        new Condicion(@"Id",new string []{@"1",@"2",@"3"}, Operador.DentroDe),
+        new Condicion(@"Id",new int []{1,2,3}, Operador.DentroDe),
       };
       Tuple<string, SqlParameter[]> valores = condiciones.Sql();
-      Assert.True(!valores.Item1.NoEsValida() && valores.Item2.Length.Equals(2));
+      Assert.True(!valores.Item1.NoEsValida() && valores.Item2.Length.Equals(condiciones.Count));
     }
   }
 }
