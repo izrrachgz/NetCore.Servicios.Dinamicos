@@ -28,8 +28,10 @@ BEGIN
 		SET @Total = (
 			SELECT 
 				COUNT(*) AS Total
-			FROM Bitacora B
-			WHERE B.Creado >= @FechaInicio 
+			FROM
+				Bitacora B
+			WHERE
+				B.Creado >= @FechaInicio 
 				AND B.Creado <= @FechaFin
 				AND B.Eliminado IS NULL
 		);
@@ -41,8 +43,10 @@ BEGIN
 		SET @Total = (
 			SELECT 
 				COUNT(*) AS Total
-			FROM Bitacora B
-			WHERE B.Creado >= @FechaInicio 					
+			FROM
+				Bitacora B
+			WHERE
+				B.Creado >= @FechaInicio 					
 				AND B.Eliminado IS NULL
 		);
 	END
@@ -53,8 +57,10 @@ BEGIN
 		SET @Total = (
 			SELECT 
 				COUNT(*) AS Total
-			FROM Bitacora B
-			WHERE B.Creado <= @FechaFin 					
+			FROM
+				Bitacora B
+			WHERE
+				B.Creado <= @FechaFin 					
 				AND B.Eliminado IS NULL
 		);
 	END

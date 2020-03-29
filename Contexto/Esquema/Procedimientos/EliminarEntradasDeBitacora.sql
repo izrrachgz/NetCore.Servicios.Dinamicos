@@ -31,16 +31,20 @@ BEGIN
 		--Marcar como eliminado todos los registros de bitacora
 		UPDATE B
 			SET B.Eliminado = GETDATE()
-		FROM Bitacora B
-		WHERE B.Creado >= @FechaInicio
+		FROM 
+			Bitacora B
+		WHERE
+			 B.Creado >= @FechaInicio
 			 AND B.Creado <= @FechaFin
 			 AND B.Eliminado IS NULL;
 
 		--Marcar como eliminado todos los detalles de bitacora
 		UPDATE D
 			SET D.Eliminado = GETDATE()
-		FROM BitacoraDetalle D
-		WHERE D.Creado >= @FechaInicio
+		FROM
+			 BitacoraDetalle D
+		WHERE
+			 D.Creado >= @FechaInicio
 			 AND D.Creado <= @FechaFin
 			 AND D.Eliminado IS NULL;
 			 		
@@ -53,7 +57,9 @@ BEGIN
 			Mensaje
 		)
 		VALUES (
+			--Correcto
 			1,
+			--Mensaje
 			N'Se han marcado todos los registros dentro del rango especificado como eliminados'
 		)
 	END TRY
@@ -67,7 +73,9 @@ BEGIN
 			Mensaje
 		)
 		VALUES (
-			0,
+			--Correcto
+			0,			
+			--Mensaje
 			ERROR_MESSAGE()
 		)
 	END CATCH		
