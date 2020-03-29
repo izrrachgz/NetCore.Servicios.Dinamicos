@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Text;
 using Utilidades.Enumerados;
 using Utilidades.Extensiones;
 using Utilidades.Modelos;
@@ -34,10 +33,10 @@ namespace Utilidades.Pruebas.Hechos.Extensiones
     {
       List<Condicion> condiciones = new List<Condicion>()
       {
-        new Condicion(@"Id",0,Operador.Mayor),
-        new Condicion(@"Nombre",@"israel", Operador.Parecido),
-        new Condicion(@"Id",new string []{@"1",@"2",@"3"}, Operador.DentroDe),
-        new Condicion(@"Id",new int []{1,2,3}, Operador.DentroDe),
+        new Condicion(@"Id",Operador.Mayor,0),
+        new Condicion(@"Nombre",Operador.Parecido, @"israel"),
+        new Condicion(@"Id",Operador.DentroDe,new string []{@"1",@"2",@"3"}),
+        new Condicion(@"Id",Operador.DentroDe,new int []{1,2,3} ),
       };
       Tuple<string, SqlParameter[]> valores = condiciones.Sql();
       Assert.True(!valores.Item1.NoEsValida() && valores.Item2.Length.Equals(condiciones.Count));

@@ -30,7 +30,13 @@ namespace Utilidades.Modelos
       Valor = 0;
     }
 
-    public Condicion(string columna, object valor, Operador operador = Operador.Igual)
+    /// <summary>
+    /// Crea una nueva instancia de condicion
+    /// </summary>
+    /// <param name="columna">Propiedad referente de comparacion</param>    
+    /// <param name="operador">Operador de comparacion</param>
+    /// <param name="valor">Valor referente de comparacion contra el valor de propiedad</param>
+    public Condicion(string columna, Operador operador, object valor)
     {
       Columna = columna;
       Operador = operador;
