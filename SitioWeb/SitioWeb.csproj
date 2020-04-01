@@ -3,6 +3,9 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <Authors>Israel Ch.</Authors>
+    <Company>Israel Ch.</Company>
+    <Description>Aplicacion web que implementa las funciones definidas a traves de las utilidades.</Description>
   </PropertyGroup>
 
 
